@@ -13,4 +13,7 @@ function atualizarRelogio() {
     document.getElementById("ponteiro-segundo").style.transform = `translate(-50%, -100%) rotate(${rotacaoSegundo}deg)`;
   }
   
-  setInterval(atualizarRelogio, 1000);
+  document.addEventListener("DOMContentLoaded", function() {
+    atualizarRelogio();
+    setInterval(atualizarRelogio, 1000);
+  });

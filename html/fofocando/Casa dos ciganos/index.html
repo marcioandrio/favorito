@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FofoCando</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+<!-- Pop-up -->
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <h2>Fofoca Quente!</h2>
+                <button onclick="fecharPopup()">Fechar</button>
+            </div>
+        </div>
+<!--site-->
+        <div class="site">
+        <div class="fofoca-tag">🔥 FOFOCA QUENTE 🔥</div>
+        <section>
+            <h2>
+                Um Almoço na Casa dos Ciganos e o Melhor Bolo de Chocolate<br>
+                📅 30 de março de 2025 | 🕒 Redação CAPS Portugal
+            </h2>
+
+            <div class="organizar">
+                <div class="texto">
+                    <p>
+                        Hoje fui almoçar na casa dos ciganos, e como sempre, a comida estava farta e cheia de sabor. A mesa era longa, cheia de pratos típicos, risadas e histórias sendo contadas entre uma garfada e outra. Mas o destaque do dia veio no final: um bolo de chocolate inesquecível, feito pela cigana-chefe.
+                        <br>A massa era macia, o recheio derretia na boca, e a cobertura brilhava de tão perfeita. Não sobrou um pedaço sequer. Os ciganos repetiram, os convidados também, e dois ciganinhos gordinhos praticamente se afogaram no bolo, com as mãos e rostos sujos de chocolate.
+                        <br>Foi um almoço como tem que ser: comida boa, gente animada e um doce que fechou tudo com chave de ouro. Se toda refeição terminasse assim, ninguém reclamaria! 🍫✨
+
+
+
+
+
+
+
+
+                    </p>
+                    <a href="#" class="link-noticia">Leia mais sobre o caso</a>
+                </div>
+                    <img src="foto.jpeg" alt="Imagem">
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <script>
+        // Mostra o pop-up ao carregar a página
+        window.onload = function() {
+            document.getElementById("popup").style.display = "flex";
+        };
+
+        // Função para fechar o pop-up
+        function fecharPopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

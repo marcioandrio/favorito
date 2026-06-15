@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA - Esquematizado Penal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            color: #333333;
+            padding-top: 220px;
+            padding-bottom: 160px;
+            line-height: 1.8;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 20px;
+        }
+
+        .logo {
+            width: 100px;
+            max-width: 90%;
+            margin-bottom: 15px;
+        }
+
+        .titulo-principal {
+            font-size: 24pt;
+            color: #4a0e1b;
+            text-align: center;
+        }
+
+        .subtitulo {
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .conteudo {
+            width: 900px;
+            max-width: 95%;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .indice {
+            background: #f8f8f8;
+            border-left: 5px solid #4a0e1b;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 50px;
+        }
+
+        .indice h2 {
+            margin-bottom: 20px;
+            color: #4a0e1b;
+        }
+
+        .indice ul {
+            list-style: none;
+        }
+
+        .indice li {
+            margin-bottom: 10px;
+        }
+
+        .indice a {
+            text-decoration: none;
+            color: #333;
+            transition: 0.2s;
+        }
+
+        .indice a:hover {
+            color: #4a0e1b;
+        }
+
+        .secao {
+            margin-bottom: 60px;
+            scroll-margin-top: 260px;
+        }
+
+        .secao h2 {
+            font-size: 24pt;
+            text-align: center;
+            color: #4a0e1b;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ececec;
+            padding-bottom: 10px;
+        }
+
+        .secao h3 {
+            font-size: 18pt;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .secao p {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+
+        .destaque {
+            background: #f2f2f2;
+            border-left: 5px solid #4a0e1b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .quadro {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: #4a0e1b;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 14px;
+            vertical-align: top;
+        }
+
+        .topo {
+            position: fixed;
+            right: 20px;
+            bottom: 180px;
+            background: #4a0e1b;
+            color: white;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 20px 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        footer p {
+            margin: 6px 0;
+        }
+
+        footer a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .icone {
+            width: 18px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding-top: 260px;
+            }
+
+            .conteudo {
+                padding: 25px;
+            }
+
+            .titulo-principal {
+                font-size: 22pt;
+            }
+
+            .secao h2 {
+                font-size: 20pt;
+            }
+        }
+h4 {
+    text-align: justify;    /* Alinha o texto */
+    font-style: italic;     /* Aplica o itálico */
+    color: #4a0e1b;         /* Cor do texto */
+    margin-left: 4cm;       /* Recuo de 4cm à esquerda (como no Word) */
+    margin-right: 20px;     /* Recuo opcional à direita para melhor leitura */
+    font-size: 12pt;        /* Tamanho levemente menor é comum em citações */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.titulo-toggle{
+    cursor:pointer;
+    background:#4a0e1b;
+    color:white;
+    padding:15px;
+    border-radius:12px;
+    transition:0.3s;
+    user-select:none;
+}
+
+.titulo-toggle:hover{
+    background:#6d1629;
+}
+
+.conteudo-secao{
+    display:none;
+    margin-top:25px;
+    animation:abrir 0.3s ease;
+}
+
+@keyframes abrir{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
+
+</head>
+
+
+
+
+
+
+
+
+<body>
+<header>
+    <img src="png/logositema.png" alt="Logo" class="logo">
+    <h1 class="titulo-principal">Esquematizado Penal</h1>
+    <p class="subtitulo">Código Penal • Processo Penal • Leis Especiais</p>
+
+
+    <title>MA - Reagrupamento</title>
+    <link rel="icon" href="../../img/icone/ma.png">
+
+
+
+
+</header>
+
+<div class="container">
+    <div class="conteudo">
+        <div class="indice">
+            <h2>Índice</h2>
+            <ul>
+                <li><a href="#intercriminis">Inter Criminis</a></li>
+                <li><a href="#concurso">Concurso de Crimes</a></li>
+                <li><a href="#crimesvida">Crimes Contra a Vida</a></li>
+                <li><a href="#honra">Crimes Contra a Honra</a></li>
+                <li><a href="#patrimonio">Crimes Contra o Patrimônio</a></li>
+            </ul>
+        </div>
+
+<section class="secao" id="intercriminis"> <!-- Conteúdo da seção intercriminis -->
+    <h2 class="titulo-toggle" onclick="toggleSecao('conteudoInter')">▶ Inter Criminis</h2>
+    <div id="conteudoInter" class="conteudo-secao"> <!-- Conteúdo da seção -->
+        <p>O Inter Criminis representa as fases do caminho do crime.</p>
+        <div class="destaque">
+            <strong>Fases:</strong><br>
+            1ª Cogitação<br>
+            2ª Preparação<br>
+            3ª Execução<br>
+            4ª Consumação
+        </div>
+        <h3>Cogitação e Preparação</h3>
+        <p>
+            Em regra, são impuníveis, salvo quando houver previsão legal específica,
+            como nos crimes de organização criminosa ou terrorismo.
+        </p>
+        <p>
+            Exemplo: Terrorismo, Organização Criminosa, Associação Criminosa
+        </p>
+        <h4>
+            “Considera-se organização criminosa a associação de 4 (quatro)
+            ou mais pessoas, estruturalmente ordenada e caracterizada pela
+            divisão de tarefas, ainda que de forma informal, com o objetivo
+            de obter, direta ou indiretamente, vantagem de qualquer natureza,
+            mediante a prática de infrações penais cujas penas máximas sejam
+            superiores a 4 (quatro) anos, ou que possuam caráter transnacional.”
+        </h4>
+        <p>
+            Atenção: se a conduta não se enquadrar em nenhum desses crimes e o agente
+            não iniciar os atos executórios, o fato será considerado atípico.<br><br>
+            <i>Contextualização:</i><br><br>
+            Mônica descobre que Magali está tendo um relacionamento com Cebolinha,
+            <i>ad hoc</i>.
+        </p>
+        <div style="text-align:center;">
+            <img src="img penal/0.jpeg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+        <p>
+            Ao perceber que poderá ser trocada, ela pensa:
+            <br><i>“E se eu matar essa filha da puta?”</i>
+        </p>
+        <div style="text-align:center;">
+            <img src="img penal/2.jpeg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+        <p>
+            Nesse momento, existe apenas a cogitação do crime, isto é, uma ideia
+            interna que ainda não produz relevância penal.<br><br>
+            Em seguida, Mônica compra uma Glock para executar o plano.
+            Aqui, há apenas a fase de preparação.
+        </p>
+        <div style="text-align:center;">
+            <img src="img penal/1.jpeg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+        <p>
+            Até esse momento, Mônica ainda não praticou o crime de homicídio,
+            pois não iniciou os atos executórios.<br><br>
+            De acordo com o Código Penal, a responsabilização criminal,
+            em regra, somente ocorre quando o agente dá início à execução do crime.
+        </p>
+        <h3>Execução</h3>
+        <div class="quadro">
+            <table>
+                <tr>
+                    <th>Instituto</th>
+                    <th>Conceito</th>
+                </tr>
+                <tr>
+                    <td>Desistência Voluntária</td>
+                    <td>O agente pode continuar, mas desiste por vontade própria.</td>
+                </tr>
+                <tr>
+                    <td>Arrependimento Eficaz</td>
+                    <td>O agente tenta impedir o resultado após esgotar os meios executórios.</td>
+                </tr>
+                <tr>
+                    <td>Tentativa</td>
+                    <td>O crime não se consuma por circunstâncias alheias à vontade do agente.</td>
+                </tr>
+            </table>
+        </div>
+
+        <p><b>Desistência voluntária</b></p>
+        <p>
+            Eu posso, mas, não quero.<br>
+            Paro por vontade própria, súplica da vítima, pedido de 3º.
+        </p>
+        <div style="text-align:center;">
+            <img src="img penal/3.jpeg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+
+    </div> <!-- Fim do Conteúdo da seção -->
+</section><!-- Fim do Conteúdo da seção intercriminis -->
+
+<section class="secao" id="concurso"> <!-- Conteúdo da seção concurso -->
+    <h2 class="titulo-toggle" onclick="toggleSecao('conteudoconcurso')">▶ Concurso de Crimes</h2>
+    <div id="conteudoconcurso" class="conteudo-secao"> <!-- Conteúdo da seção -->
+        <p>O Inter Criminis representa as fases do caminho do crime.</p>
+        <section class="secao" id="concurso">
+            <h2>Concurso de Crimes</h2>
+            <p>
+                O concurso de crimes ocorre quando o agente pratica dois ou mais crimes.
+            </p>
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Espécie</th>
+                        <th>Requisitos</th>
+                        <th>Sistema</th>
+                    </tr>
+                    <tr>
+                        <td>Concurso Material</td>
+                        <td>Duas ou mais condutas</td>
+                        <td>Cumulação das penas</td>
+                    </tr>
+                    <tr>
+                        <td>Concurso Formal</td>
+                        <td>Uma conduta e vários resultados</td>
+                        <td>Exasperação</td>
+                    </tr>
+                    <tr>
+                        <td>Crime Continuado</td>
+                        <td>Pluralidade de condutas com continuidade</td>
+                        <td>Aumento de pena</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+    </div> <!-- Fim do Conteúdo da seção -->        
+</section><!-- Fim do Conteúdo da seção concurso -->
+
+
+<section class="secao" id="crimesvida"><!-- Conteúdo da seção crimesvida -->
+    <h2 class="titulo-toggle"
+        onclick="toggleSecao('conteudocrimesvida')">
+        ▶ Crimes Contra a Vida
+    </h2>
+    <div id="conteudocrimesvida" class="conteudo-secao">
+        <div class="destaque">
+            <strong>H.I.I.S.A</strong><br>
+            Homicídio<br>
+            Infanticídio<br>
+            Instigação ao suicídio<br>
+            Aborto
+        </div>
+        <p>
+            Os crimes contra a vida estão previstos entre os artigos
+            121 ao 128 do Código Penal.
+        </p>
+        <p>
+            São julgados pelo Tribunal do Júri os crimes dolosos contra
+            a vida consumados ou tentados, por conexão ou continência.
+        </p>
+        <p>
+            Tentados
+        </p>
+        <div style="text-align:center;">
+            <video width="400" controls
+                style="display:block; margin:15px auto; border-radius:12px;">
+                <source src="avi/tentado.mp4" type="video/mp4">
+                Seu navegador não suporta vídeo.
+            </video>
+        </div>
+
+        <div class="destaque">
+            <strong>Procedimento Especial do Tribunal do Júri (74, §1º, CPP)</strong><br>
+            • Homicídio doloso<br>
+            • Infanticídio<br>
+            • Induzimento ao suicídio<br>
+            • Aborto
+        </div>
+        <p>
+            Crime passional
+        </p>
+        <div style="text-align:center;">
+            <img src="img penal/4.jpg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+        <div style="text-align:center;">
+            <img src="img penal/5.jpg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+        <div style="text-align:center;">
+            <img src="img penal/6.jpg"
+            style="display:block; margin:15px auto;"
+            width="400">
+        </div>
+
+        <div class="destaque">
+            <strong>Exceção ao Procedimento Especial do Tribunal do Júri</strong><br>
+            • Latrocínio<br>
+            • Culposo<br>
+            • PreterDolosos (dolo+culpa)<br>
+            -- Todos vão para a vara criminal, com Juiz Singular.
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <h3>Homicídio Doloso</h3>
+
+        <div class="quadro">
+            <table>
+                <tr>
+                    <th>Espécie</th>
+                    <th>Características</th>
+                </tr>
+
+                <tr>
+                    <td>Simples</td>
+                    <td>Art. 121 caput</td>
+                </tr>
+
+                <tr>
+                    <td>Privilegiado</td>
+                    <td>
+                        Relevante valor moral ou social.<br>
+                        Sob violenta emoção logo após injusta provocação.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Qualificado</td>
+                    <td>Crime hediondo</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio Privilegiado</h3>
+
+        <div class="destaque">
+            Redução de pena: 1/6 até 1/3.
+        </div>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Hipótese</th>
+                    <th>Exemplo</th>
+                </tr>
+
+                <tr>
+                    <td>Relevante valor social</td>
+                    <td>Matar traidor da pátria.</td>
+                </tr>
+
+                <tr>
+                    <td>Relevante valor moral</td>
+                    <td>Matar o estuprador da filha.</td>
+                </tr>
+
+                <tr>
+                    <td>Violenta emoção</td>
+                    <td>Logo após injusta provocação da vítima.</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio Qualificado</h3>
+
+        <p>
+            O homicídio qualificado será sempre hediondo.
+        </p>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Qualificadora</th>
+                    <th>Descrição</th>
+                </tr>
+
+                <tr>
+                    <td>Feminicídio</td>
+                    <td>
+                        Matar mulher por razão da condição do sexo feminino
+                        ou violência doméstica.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Homicídio funcional</td>
+                    <td>
+                        Contra autoridade ou agente de segurança pública.
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio na Direção de Veículo</h3>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Doloso</th>
+                    <th>Culposo</th>
+                </tr>
+
+                <tr>
+                    <td>
+                        Dolo eventual.<br>
+                        Assume o risco.<br>
+                        Racha.<br>
+                        Alta velocidade.
+                    </td>
+
+                    <td>
+                        Imprudência.<br>
+                        Negligência.<br>
+                        Imperícia.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Tribunal do Júri</td>
+                    <td>Vara Criminal</td>
+                </tr>
+
+            </table>
+        </div>
+        <p>
+            Negrigência
+        </p>
+        <div style="text-align:center;">
+            <video width="400" controls
+                style="display:block; margin:15px auto; border-radius:12px;">
+                <source src="avi/1.mp4" type="video/mp4">
+                Seu navegador não suporta vídeo.
+            </video>
+        </div>
+
+        <h3>Aborto</h3>
+
+        <p>
+            O sujeito passivo é o feto.
+            Não existe modalidade culposa.
+        </p>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Crime</th>
+                    <th>Artigo</th>
+                </tr>
+
+                <tr>
+                    <td>Autoaborto</td>
+                    <td>Art. 124</td>
+                </tr>
+
+                <tr>
+                    <td>Sem consentimento da gestante</td>
+                    <td>Art. 125</td>
+                </tr>
+
+                <tr>
+                    <td>Com consentimento da gestante</td>
+                    <td>Art. 126</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="destaque">
+            <strong>Aborto permitido:</strong><br>
+            Aborto necessário.<br>
+            Gravidez resultante de estupro.
+        </div>
+
+        <h3>Infanticídio</h3>
+
+        <p>
+            Mãe que mata o próprio filho durante ou logo após o parto,
+            sob influência do estado puerperal.
+        </p>
+
+        <h3>Induzimento, Instigação ou Auxílio ao Suicídio</h3>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Conduta</th>
+                    <th>Descrição</th>
+                </tr>
+
+                <tr>
+                    <td>Induzir</td>
+                    <td>Plantar a ideia.</td>
+                </tr>
+
+                <tr>
+                    <td>Instigar</td>
+                    <td>Reforçar a ideia.</td>
+                </tr>
+
+                <tr>
+                    <td>Auxiliar</td>
+                    <td>Dar meios para o ato.</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="destaque">
+            Automutilação → Vara Criminal.<br>
+            Instigação ao suicídio → Tribunal do Júri.
+        </div>
+
+    </div>
+
+</section><!-- Fim do Conteúdo da seção crimesvida -->
+
+
+
+
+
+
+
+
+<section class="secao" id="honra"> <!-- Conteúdo da seção honra -->
+    <h2 class="titulo-toggle" onclick="toggleSecao('conteudoHonra')">▶ Crimes Contra a Honra</h2>
+    <div id="conteudoHonra" class="conteudo-secao"> <!-- Conteúdo da seção -->
+
+
+    </div> <!-- Fim do Conteúdo da seção -->        
+</section><!-- Fim do Conteúdo da seção honra -->
+
+<section class="secao" id="patrimonio"> <!-- Conteúdo da seção patrimonio -->
+    <h2 class="titulo-toggle" onclick="toggleSecao('conteudopatrimonio')">▶ Crimes Contra o Patrimônio</h2>
+    <div id="conteudopatrimonio" class="conteudo-secao"> <!-- Conteúdo da seção -->
+
+
+    </div> <!-- Fim do Conteúdo da seção -->        
+
+</section><!-- Fim do Conteúdo da seção patrimonio -->
+
+
+
+<a href="#top" class="topo">↑ Topo</a>
+
+
+
+    </div> <!-- Fim do Conteúdo -->
+
+</div> <!-- Fim do Container -->
+
+
+<footer>
+    <p>
+        <img src="https://img.icons8.com/ios-filled/50/000000/phone.png"
+             alt="Telefone"
+             class="icone">
+        +351 960 389 573
+    </p>
+
+    <p>
+        <img src="https://img.icons8.com/ios-filled/50/000000/email.png"
+             alt="Email"
+             class="icone">
+
+        <a href="mailto:marcio.andrio@ma-advocacia.com">
+            marcio.andrio@ma-advocacia.com
+        </a>
+    </p>
+
+    <p>
+        © 2026 Marcio Andrio Advocacia. Todos os direitos reservados.
+    </p>
+</footer>
+
+<script>
+    function toggleSecao(id){
+    const secao = document.getElementById(id);
+    if(secao.style.display === "block"){
+        secao.style.display = "none";
+    } else {
+        secao.style.display = "block";
+    }
+}
+
+</script>
+</body>
+</html>

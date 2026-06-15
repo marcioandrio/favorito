@@ -1,0 +1,482 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    background: url('img/fundodesktop.jpg') no-repeat center fixed;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+/* Header */
+.cabecalho {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: transparent;
+    z-index: 1000;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.cabecalho.solid {
+    background-color: rgba(236, 229, 229, 0.95);
+    box-shadow: 0px 4px 6px rgba(10, 10, 10, 0.3);
+}
+
+.cabecalho-imagem {
+    height: 72px;
+    filter: drop-shadow(4px 4px 3px rgba(255, 255, 255, 1));
+}
+
+.cabecalho-menu {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.cabecalho-menu-item {
+    color: #0b0b0b;
+    font-weight: 400;
+    font-size: 24px;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.8);
+}
+
+.cabecalho-menu-item:hover,
+.cabecalho-menu-item:focus {
+    text-decoration: underline;
+    outline: none;
+}
+
+/* Main */
+.site {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 36px;
+    align-items: center;
+    color: aliceblue;
+    padding-bottom: 5px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Caixa de Ícones */
+.caixa-icone {
+    display: flex;
+    padding: 20px;
+    margin: 0;
+    max-width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+/* Botões */
+.botao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.targeta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(249, 247, 247, 0.40);
+    padding: 10px 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    width: 40px;
+    height: 40px;
+}
+
+.icone, .icone-law, .icone-branco, .icone-pdf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    font-size: 30px;
+    text-decoration: none;
+}
+
+.icone-law { color: rgba(243, 7, 7, 0.7); }
+.icone-branco { color: rgba(254, 254, 254, 0.5); }
+.icone-pdf { color: rgb(126, 0, 0, 0.7); }
+
+.icone-local {
+    width: 50px;
+    height: 50px;
+}
+
+span {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Relógio e Calendário */
+.relogio-calendario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+#relogio {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid black;
+    position: relative;
+    z-index: 9999;
+}
+
+#ponteiro-hora, #ponteiro-minuto, #ponteiro-segundo {
+    position: absolute;
+    transform-origin: bottom center;
+}
+
+#ponteiro-hora {
+    width: 6px;
+    height: 50px;
+    background-color: black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+#ponteiro-minuto {
+    width: 4px;
+    height: 70px;
+    background-color: black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+#ponteiro-segundo {
+    width: 2px;
+    height: 90px;
+    background-color: red;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+#calendario {
+    width: 250px;
+}
+
+.mes {
+    text-align: center;
+    padding: 10px;
+    background-color: rgb(255, 255, 255, 0.15);
+}
+
+.semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    background-color: rgba(223, 146, 64, 0.15);
+}
+
+.dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.dias span {
+    padding: 10px;
+}
+
+.dias span.hoje {
+    background-color: red;
+    color: rgb(250, 251, 250);
+    border-radius: 50%;
+}
+
+/* Logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+}
+
+.logo {
+    filter: invert(1);
+    max-width: 500px;
+    height: auto;
+}
+
+/* Contato */
+#contato {
+    padding: 50px 20px;
+    background-color: rgba(215, 209, 209, 0.95);
+    border-radius: 10px;
+    margin: 20px;
+    text-align: center;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+form textarea {
+    height: 150px;
+}
+
+form button {
+    background-color: #33a85e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+form button:hover,
+form button:focus {
+    background-color: #2b8f4e;
+    outline: none;
+}
+
+.contato-info p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0b0b0b;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.icones {
+    width: 20px;
+    margin-right: 10px;
+    filter: invert(1) drop-shadow(4px 4px 2px rgba(0, 0, 0, 1));
+}
+
+/* Footer */
+.rodape {
+    background-color: rgba(50, 43, 43, 0.9);
+    color: #fbf8f8;
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.titulo-rodape-texto h2 {
+    font-size: 18px;
+    text-shadow: 4px 4px 2px rgba(0, 0, 0, 1);
+}
+
+.titulo-rodape-texto p a {
+    color: #fbf8f8;
+    margin: 0 5px;
+}
+
+.titulo-rodape-texto p a:hover,
+.titulo-rodape-texto p a:focus {
+    text-decoration: underline;
+    outline: none;
+}
+
+/* Botão Voltar ao Topo */
+.botao-topo {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #33a85e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+.botao-topo:hover,
+.botao-topo:focus {
+    background-color: #2b8f4e;
+    outline: none;
+}
+
+/* Pop-up */
+.popup {  
+    display: none;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    max-width: 90%;
+}
+
+.popup button {
+    background-color: #33a85e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.popup button:hover,
+.popup button:focus {
+    background-color: #2b8f4e;
+    outline: none;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+/* Scroll Margin */
+#advocaciabr, #hora, #documentos, #ferramentas, #arquivvos, #contato {
+    scroll-margin-top: 100px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    body {
+        background: url('img/fundocelular.jpeg') no-repeat center fixed;
+        background-size: cover;
+    }
+
+    .cabecalho {
+        flex-direction: column;
+        padding: 5px 10px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: rgba(236, 229, 229, 0.95);
+        box-shadow: 0px 4px 6px rgba(10, 10, 10, 0.3);
+    }
+
+    .cabecalho-imagem {
+        height: 24px;
+        margin-bottom: 5px;
+    }
+
+    .cabecalho-menu {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .cabecalho-menu-item {
+        font-size: 14px;
+        padding: 5px 0;
+    }
+
+    .site {
+        padding: 80px 20px 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .caixa-icone {
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .relogio-calendario {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #relogio {
+        width: 120px;
+        height: 120px;
+    }
+
+    #calendario {
+        width: 200px;
+    }
+
+    .logo-container {
+        padding-top: 40px;
+    }
+
+    .logo {
+        max-width: 250px;
+    }
+
+    .botao-topo {
+        display: block;
+    }
+
+    .contato-info p {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 769px) {
+    .botao-topo {
+        display: block;
+    }
+}

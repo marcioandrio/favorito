@@ -1,0 +1,342 @@
+/* Quando a tela for menor que 1200px (ajuste se precisar) */
+@media (max-width: 768px) { /* Estilos para telas menores (celulares) */
+    body {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        min-height: 100vh;
+        
+        /* Fundo fixo corrigido */
+        /*background: url('img/fundocelular.jpg') no-repeat center center fixed;
+        /*background-size: cover;           /* melhor que 100% 100% na maioria dos casos */
+        background-color: rgb(0, 0, 0);
+        /*background-attachment: fixed;     /* mantém o fundo parado enquanto rola */
+        
+        /* Remove qualquer coisa que possa fazer o fundo se mover */
+        overflow-x: hidden;
+    }
+    .site{
+        display: flex;
+        flex-direction: column; /**/
+        /*flex-direction: row; /**/
+        align-items: center; /**/
+        justify-content: center;
+        gap: 24px;
+    }
+    .relogio-calendario {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; /**/
+        gap: 24px;
+        position: relative; /* Adicionado para posicionar o container */
+    }
+    .logo{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 60px;
+        filter: invert(1);
+        max-width: 250px;
+        height: auto;
+
+        width: 80%; /* Ou outra largura desejada */
+        margin: 0 auto; /* Centraliza o elemento pai horizontalmente */
+    }
+    .conteiner{
+        width: 100%;
+    }
+}
+  
+@media (min-width: 769px) { /* Estilos para telas maiores (tablets e desktops) */
+
+    body {
+        font-size: 1em; /* Usando unidade relativa */
+        background: url('img/fundodesktop.webp') no-repeat center fixed;
+        background-size: cover;
+        opacity: 1;
+        display: flex; /* Ativa o Flexbox no body */
+        justify-content: center; /* Centraliza horizontalmente */
+        /* align-items: center; /* Removi a centralização vertical por enquanto, teste sem ela */
+        min-height: 100vh; /* Garante que o body tenha pelo menos a altura da tela */
+        margin: 0; /* Remove margens padrão do body */
+    }
+    .site{
+        display: flex;
+        /* flex-direction: column; */
+        /* flex-direction: row; /**/
+        justify-content: center;
+        gap: 24px;
+        width: 100%; /* O site ocupa toda a largura disponível */
+        padding: 20px; /* Adiciona um espaçamento interno */
+        box-sizing: border-box; /* Garante que o padding não aumente a largura */
+    }
+
+    body1 {
+        font-size: 16px;
+        background: url('img/fundodesktop.webp') no-repeat center fixed;
+        background-size: 100% 100%; /* Faz o fundo cobrir toda a tela, independentemente da orientação */
+        /*height: 100vh; /* Garante que o fundo cubra toda a altura da tela */
+        font-size: 100%;
+        background-size: cover;
+        opacity: 1;
+        display: flex; /* Ativa o Flexbox no body */
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center; /* Centraliza verticalmente */
+    
+    }
+    .site1{
+        display: flex;
+        /*flex-direction: column;
+        flex-direction: row; /**/
+        justify-content: center;
+        gap: 24px;
+    }
+    .relogio-calendario {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative; /* Adicionado para posicionar o container */
+    }
+    .logo{
+        display: flex;
+        padding-top: 60px;
+        filter: invert(1);
+        max-width: 500px; /* Define a largura máxima da caixa-icone */
+        height: auto; /* Permite que a altura da caixa-icone se ajuste ao conteúdo */
+    }    
+    .conteiner{
+        width: 80%;
+    }
+}
+
+#advocaciabr {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}
+/*-----------------------------------------------------Section-----------------------------------------------------*/
+.caixa-icone {
+    display: flex;
+    justify-content: center; /* Centraliza os ícones dentro da caixa */
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 20px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.03);/**/
+    border: 1px solid rgba(255, 255, 255, 0.1); /**/
+    width: 100%;             /* Faz a caixa respeitar o limite da section */
+    box-sizing: border-box;  /* Garante que o padding não "estoure" a largura */
+}
+/*-----------------------------------------------------Botões-----------------------------------------------------*/
+section {
+    display: flex;
+    flex-direction: column; /* Coloca o título em cima da caixa */
+    align-items: center;    /* Centraliza o título e a caixa horizontalmente entre si */
+    width: 100%;            /* Garante que use o espaço disponível */
+    max-width: 500px; 
+    margin: 0 auto;         /* Centraliza a seção inteira na tela, se necessário */
+}
+h1 {
+    display: block;         /* Mudando de flex para block simplifica a centralização de texto */
+    width: 100%;            /* Ocupa toda a largura da section */
+    text-align: center;     /* Centraliza o texto internamente */
+    font-size: 24px;        /* Tamanho sugerido para maior elegância */
+    color: #ffffff;         /* Cor branca para contraste no fundo escuro */
+    margin: 0 0 20px 0;     /* Remove margens laterais e adiciona espaço apenas abaixo */
+    padding: 0;
+}
+/*-----------------------------------------------------Botões-----------------------------------------------------*/
+.botao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*gap: 2px;/**/
+    text-align: center; /* Centraliza o texto */
+    cursor: pointer;
+}
+.targeta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Fundo escuro levemente transparente */
+    background: rgba(255, 255, 255, 0.07);
+    width: 60px; /* Um pouco maior para caber ícones melhores */
+    height: 60px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.botao:hover .targeta {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px); /* Efeito de levitação */
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+span {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #b0b0b0; /* Cinza claro para não cansar a vista */
+    text-transform: capitalize;
+    max-width: 70px;
+    line-height: 1.2;
+}
+.icone { 
+    display: flex; /**/
+    align-items: center; /**/
+    justify-content: center; /**/
+    border-radius: 50%; /**/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /**/
+    transition: all 0.3s ease-in-out; /**/
+    font-size: 60; /*tamanho do icone*/
+    text-decoration: none; /* tira o _ do icone*/
+    /*position: absolute; /**/
+    /*left: -5px; /**/
+    /*color: antiquewhite;/**/
+}
+.icone-law { 
+    display: flex; /**/
+    align-items: center; /**/
+    justify-content: center; /**/
+    border-radius: 50%; /**/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /**/
+    transition: all 0.3s ease-in-out; /**/
+    font-size: 60px; /*tamanho do icone*/
+    text-decoration: none; /* tira o _ do icone*/
+    color: rgba(243, 7, 7, 0.7);/**/
+}
+.icone-branco{
+    display: flex; /**/
+    align-items: center; /**/
+    justify-content: center; /**/
+    border-radius: 50%; /**/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /**/
+    transition: all 0.3s ease-in-out; /**/
+    font-size: 30px; /*tamanho do icone*/
+    text-decoration: none; /* tira o _ do icone*/
+    color: rgba(254, 254, 254, 0.5);/**/
+}
+.icone-pdf{
+    display: flex; /**/
+    align-items: center; /**/
+    justify-content: center; /**/
+    border-radius: 50%; /**/
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /**/
+    transition: all 0.3s ease-in-out; /**/
+    font-size: 30px; /*tamanho do icone*/
+    text-decoration: none; /* tira o _ do icone*/
+    color: rgb(126, 0, 0, 0.7);/**/
+}
+.icone-local{
+    width: 50px; /**/
+    height: 50px; /**/
+}
+span{
+    text-align: center;
+}
+footer{
+        /*margin-bottom: 20px;    /**/
+}
+span{
+    color: rgb(208, 200, 224); /*Cor da letra dos icones*/
+    /*color: rgb(8, 0, 0); /**/
+}
+
+/*-----------------------------------------------------Relógio e Calendário-----------------------------------------------------*/
+#calendario {
+    width: 280px;
+    background: transparent;
+}
+
+.mes {
+    background-color: transparent !important; /* Remove o fundo sólido */
+    color: white;
+    font-size: 18px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.semana {
+    background-color: transparent !important;
+    color: #888;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.dias span.hoje {
+    background-color: #d32f2f; /* Vermelho jurídico */
+    border-radius: 8px; /* Quadrado arredondado em vez de círculo total */
+    font-weight: bold;
+}
+.dias span.hoje {
+    background-color: #e74c3c; /* Vermelho vivo para o dia atual */
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+.dias {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+#relogio {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid rgb(252, 252, 252);
+    position: relative; /* Alterado para relative */
+    z-index: 9999;
+}
+#ponteiro-hora, #ponteiro-minuto, #ponteiro-segundo {
+    position: absolute;
+    transform-origin: bottom center;
+}
+#ponteiro-hora {
+    width: 6px;
+    height: 50px;
+    background-color: rgb(253, 253, 253);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+#ponteiro-minuto {
+    width: 4px;
+    height: 70px;
+    background-color: rgb(225, 26, 26);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+#ponteiro-segundo {
+    width: 2px;
+    height: 90px;
+    background-color: rgb(121, 113, 218);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+/*-----------------------------------------------------Estilo do pop-up-----------------------------------------------------*/
+.popup {  
+    display: none; /**/
+    text-align: center; /* Centraliza o texto */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+/* Overlay escuro atrás do pop-up */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+}

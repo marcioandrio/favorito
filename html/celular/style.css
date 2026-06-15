@@ -1,3 +1,31 @@
+@media (max-width: 768px) {
+    /* Estilos para telas menores (celulares) */
+    body {
+      font-size: 16px;
+    }
+    .conteiner{
+      width: 100%;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    /* Estilos para telas maiores (tablets e desktops) */
+    body {
+      font-size: 18px;
+    }
+    .conteiner{
+      width: 80%;
+    }
+  }
+
+
+
+
+
+
+
+
+
 body {
     font-size: 100%;
     background: url('img/fundo.jpeg') no-repeat center fixed;
