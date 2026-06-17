@@ -1,0 +1,432 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --accent:       #c9a84c;
+    --accent-dim:   rgba(201, 168, 76, 0.25);
+    --glass-bg:     rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.10);
+    --text-primary: #e8e8e8;
+    --text-muted:   #8a8a9a;
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+    body {
+        background-color: #0d0d1a;
+        overflow-x: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+    .site {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+    }
+    section {
+        max-width: 100%;
+    }
+    .caixa-icone {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+    .caixa-relogio {
+        flex-direction: column;
+        gap: 6px;
+        padding: 18px;
+    }
+    .targeta {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+    }
+    .botao {
+        width: 70px;
+    }
+    span {
+        font-size: 10px;
+        max-width: 60px;
+    }
+    h1 {
+        font-size: 10px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
+    #relogio-digital {
+        font-size: 32px;
+        letter-spacing: 4px;
+    }
+    #calendario {
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+}
+
+/* ── Desktop ──────────────────────────────────────────── */
+@media (min-width: 769px) {
+    body {
+        font-family: 'Inter', sans-serif;
+        background: url('img/fundodesktop.webp') no-repeat center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+    .site {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 36px 24px;
+        width: 100%;
+    }
+}
+
+/* ── Sections ─────────────────────────────────────────── */
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 920px;
+}
+
+h1 {
+    width: 100%;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+}
+
+/* ── Icon grid ────────────────────────────────────────── */
+.caixa-icone {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 14px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    width: 100%;
+    backdrop-filter: blur(12px);
+}
+
+.caixa-relogio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 28px;
+    border-radius: 14px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    width: 100%;
+    backdrop-filter: blur(12px);
+}
+
+/* ── Buttons ──────────────────────────────────────────── */
+.botao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.targeta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.07);
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.25s ease;
+}
+
+.botao:hover .targeta {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-4px);
+    border-color: var(--accent-dim);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+span {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 72px;
+    line-height: 1.3;
+}
+
+/* ── Icon link variants ───────────────────────────────── */
+.icone,
+.icone-law,
+.icone-branco,
+.icone-pdf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.icone-law   { color: rgba(220, 80,  80,  0.85); }
+.icone-branco{ color: rgba(255, 255, 255, 0.60); }
+.icone-pdf   { color: rgba(200, 50,  50,  0.75); }
+
+/* ── Clock ────────────────────────────────────────────── */
+#relogio-digital {
+    font-size: 40px;
+    font-family: 'Courier New', monospace;
+    color: var(--accent);
+    letter-spacing: 5px;
+    text-shadow:
+        0 0 8px  rgba(201, 168, 76, 0.7),
+        0 0 24px rgba(201, 168, 76, 0.3);
+}
+
+#calendario {
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ── Popup ────────────────────────────────────────────── */
+.popup {
+    display: none;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1a2e;
+    color: var(--text-primary);
+    padding: 28px 36px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+}
+
+.popup h2 {
+    color: var(--accent);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.popup button {
+    margin-top: 20px;
+    padding: 9px 28px;
+    background: var(--accent);
+    color: #0d0d1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.popup button:hover { opacity: 0.85; }
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.60);
+    z-index: 999;
+    backdrop-filter: blur(4px);
+}
+
+#advocaciabr { scroll-margin-top: 100px; }
+
+footer { margin-bottom: 20px; }
+
+/* ── Nav search ───────────────────────────────────────── */
+.nav-pesquisa {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.nav-pesquisa input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: #e8e8e8;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    padding: 5px 10px;
+    width: 160px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.nav-pesquisa input::placeholder { color: rgba(255,255,255,0.4); }
+
+.nav-pesquisa input:focus {
+    background: rgba(255,255,255,0.13);
+    border-color: var(--accent);
+    width: 200px;
+}
+
+.nav-limpar {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+.nav-limpar:hover { color: var(--accent); }
+
+@media (max-width: 768px) {
+    .nav-pesquisa {
+        margin-left: 0;
+        width: 100%;
+        padding: 8px 16px 4px;
+    }
+    .nav-pesquisa input {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    .nav-pesquisa input:focus { width: 100%; }
+}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav-topo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    background: rgba(10, 10, 20, 0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 0 16px;
+    height: 42px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.nav-hamburguer {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 8px;
+}
+
+/* desktop: esconde hambúrguer, mostra links direto */
+@media (min-width: 769px) {
+    .nav-hamburguer { display: none; }
+    .nav-links { display: flex; }
+    .site { padding-top: 60px; }
+}
+
+/* mobile: hambúrguer + dropdown */
+@media (max-width: 768px) {
+    .nav-hamburguer { display: block; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 42px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: rgba(10, 10, 20, 0.97);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 8px 0;
+        gap: 0;
+    }
+    .nav-links.aberto { display: flex; }
+    .nav-links a {
+        padding: 12px 20px;
+        border-radius: 0;
+        font-size: 13px;
+    }
+    .site { padding-top: 60px; }
+}
+
+html { scroll-behavior: smooth; }
+
+/* ── Mobile overrides (após regras base) ─────────────── */
+@media (max-width: 768px) {
+    .targeta {
+        width: 52px;
+        height: 52px;
+    }
+    .botao {
+        width: 70px;
+    }
+    .caixa-icone {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+    }
+}
