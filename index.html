@@ -1,973 +1,1055 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link rel="icon" href="imagem/icone/ma.png">
-  <style>
-    :root {
-      --bg: #0d0f14;
-      --surface: #151820;
-      --surface2: #1c2030;
-      --border: #252a3a;
-      --accent: #c4a35a;
-      --accent2: #8b6f3a;
-      --text: #e8e4dc;
-      --text2: #9a9585;
-      --red: #c0392b;
-      --green: #27ae60;
-      --yellow: #f39c12;
-      --radius: 10px;
-      --header-h: 38px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Georgia', serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      user-select: none;
-    }
-
-    /* ── TOP BAR ── */
-    #topbar {
-      height: 36px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-    #topbar .logo {
-      font-size: 13px;
-      font-weight: bold;
-      color: var(--accent);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    #topbar .date-display {
-      font-size: 11px;
-      color: var(--text2);
-      margin-left: auto;
-    }
-    #topbar .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-    }
-
-    /* ── GRID WRAPPER ── */
-    #grid-wrapper {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    /* ── GRID ── */
-    #grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr 160px;
-      gap: 16px;
-      width: 99%;
-      min-height: 99%;
-      max-width: 1400px;
-    }
-
-    /* ── PANEL ── */
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .panel-header {
-      height: var(--header-h);
-      display: flex;
-      align-items: center;
-      padding: 0 14px;
-      gap: 8px;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .panel-header .icon { font-size: 14px; }
-    .panel-header .title {
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .panel-body {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* ── IFRAME panels ── */
-    .panel-body iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: var(--surface);
-      filter: brightness(0.95);
-    }
-    .no-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      color: var(--text2);
-      font-size: 13px;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .no-content .nc-icon { font-size: 32px; opacity: 0.3; }
-
-    /* ── TAREFAS ── */
-    #tarefas-panel .panel-body {
-      display: flex;
-      flex-direction: column;
-    }
-    #tarefas-toolbar {
-      padding: 8px 10px;
-      display: flex;
-      gap: 6px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .btn {
-      padding: 5px 12px;
-      border: none;
-      border-radius: 5px;
-      font-size: 11px;
-      font-family: inherit;
-      cursor: pointer;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      transition: opacity .15s;
-    }
-    .btn:hover { opacity: 0.8; }
-    .btn-nova { background: var(--accent); color: #0d0f14; }
-    .btn-concluir { background: var(--green); color: #fff; }
-
-    #tarefas-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 6px 0;
-    }
-    #tarefas-list::-webkit-scrollbar { width: 4px; }
-    #tarefas-list::-webkit-scrollbar-track { background: transparent; }
-    #tarefas-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    .tarefa-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 12px;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: background .12s, border-color .12s;
-      font-size: 12px;
-    }
-    .tarefa-item:hover { background: var(--surface2); }
-    .tarefa-item.selected {
-      background: rgba(196,163,90,.1);
-      border-left-color: var(--accent);
-    }
-    .tarefa-item .tarefa-texto {
-      flex: 1;
-      color: var(--text);
-      line-height: 1.4;
-    }
-    .tarefa-item .prioridade { font-size: 14px; flex-shrink: 0; }
-    .tarefa-item .btn-editar {
-      display: none;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text2);
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 10px;
-      cursor: pointer;
-      font-family: inherit;
-      flex-shrink: 0;
-    }
-    .tarefa-item:hover .btn-editar { display: block; }
-    .tarefa-item .btn-editar:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* ── FILMES ── */
-    #filmes-panel .panel-body {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
-    /* vista carrossel */
-    #filmes-carrossel {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .fc-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(196,163,90,.15);
-      border: 1px solid var(--accent2);
-      color: var(--accent);
-      width: 36px;
-      height: 60px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      transition: background .15s;
-      flex-shrink: 0;
-    }
-    .fc-btn:hover { background: rgba(196,163,90,.35); }
-    #fc-prev { left: 8px; }
-    #fc-next { right: 8px; }
-    #fc-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      padding: 16px 60px;
-      transition: transform .1s;
-    }
-    #fc-card:hover { transform: scale(1.03); }
-    #fc-emoji { font-size: 52px; line-height: 1; }
-    #fc-titulo {
-      font-size: 15px;
-      font-weight: bold;
-      color: var(--accent);
-      text-align: center;
-      max-width: 200px;
-      line-height: 1.3;
-    }
-    #fc-hint {
-      font-size: 10px;
-      color: var(--text2);
-      letter-spacing: 0.5px;
-    }
-    #fc-dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      padding: 8px;
-      flex-shrink: 0;
-    }
-    .fc-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--border);
-      cursor: pointer;
-      transition: background .15s, transform .15s;
-    }
-    .fc-dot.active { background: var(--accent); transform: scale(1.3); }
-    /* vista player */
-    #filmes-player {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    #filmes-player-topbar {
-      padding: 5px 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      background: var(--surface2);
-    }
-    #btn-voltar-filmes {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text2);
-      border-radius: 4px;
-      padding: 3px 9px;
-      font-size: 11px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    #btn-voltar-filmes:hover { border-color: var(--accent); color: var(--accent); }
-    #filmes-player-titulo { font-size: 11px; color: var(--text2); }
-    #filmes-iframe {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: #000;
-    }
-
-    /* ── MODAL NOVA TAREFA ── */
-    #modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    #modal-overlay.show { display: flex; }
-    #modal-concluidas, #modal-confirmar, #modal-editar {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    #modal-confirmar.show, #modal-editar.show, #modal-concluidas.show { display: flex; }
-    #modal {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      width: 340px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    #modal h3 {
-      font-size: 13px;
-      color: var(--accent);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    #modal input, #modal select {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      padding: 8px 10px;
-      width: 100%;
-      outline: none;
-    }
-    #modal input:focus, #modal select:focus {
-      border-color: var(--accent);
-    }
-    #modal .modal-btns {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-    .btn-cancel {
-      background: var(--border);
-      color: var(--text2);
-    }
-  </style>
+    <!--versão 5.0-->
+    <link rel="icon" href="img/icone/ma.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- para corrigir a tela do iphone-->
+    <title>Favoritos Marcio Andrio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <!-- link 2 com os icones -->
 </head>
 <body>
+    <header class="cabecalho">
+        <script src="js/calendario.js"></script>
+        <script src="js/relogio.js"></script>
+    </header>
 
-<div id="topbar">
-  <span class="logo">MA · Advocacia</span>
-  <button onclick="abrirConcluidas()" style="
-    margin-left: auto;
-    padding: 4px 12px;
-    background: rgba(39,174,96,.12);
-    border: 1px solid #27ae60;
-    border-radius: 5px;
-    color: #27ae60;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background .15s;
-  " onmouseover="this.style.background='rgba(39,174,96,.28)'" onmouseout="this.style.background='rgba(39,174,96,.12)'">✅ Concluídas</button>
-  <a href="https://marcioandrio.github.io/favorito/" target="_blank" style="
-    margin-left: 8px;
-    padding: 4px 12px;
-    background: rgba(196,163,90,.15);
-    border: 1px solid var(--accent2);
-    border-radius: 5px;
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    text-decoration: none;
-    transition: background .15s;
-  " onmouseover="this.style.background='rgba(196,163,90,.3)'" onmouseout="this.style.background='rgba(196,163,90,.15)'">⭐ Favoritos</a>
-  <span class="date-display" id="date-display"></span>
-</div>
-
-<div id="grid-wrapper"><div id="grid">
-
-  <!-- NOTÍCIAS -->
-  <div class="panel" id="noticias-panel">
-    <div class="panel-header">
-      <span class="icon">📰</span>
-      <span class="title">Notícias</span>
-      <span id="noticias-data" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
-    </div>
-    <div class="panel-body" id="noticias-body"></div>
-  </div>
-
-  <!-- TAREFAS -->
-  <div class="panel" id="tarefas-panel">
-    <div class="panel-header">
-      <span class="icon">✅</span>
-      <span class="title">Tarefas</span>
-      <span id="tarefas-count" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
-    </div>
-    <div class="panel-body">
-      <div id="tarefas-toolbar">
-        <button class="btn btn-nova" onclick="abrirModalNova()">+ Nova Tarefa</button>
-        <button class="btn btn-concluir" onclick="concluirSelecionada()">✓ Concluir</button>
-      </div>
-      <div id="tarefas-list"></div>
-    </div>
-  </div>
-
-  <!-- FILMES -->
-  <div class="panel" id="filmes-panel">
-    <div class="panel-header">
-      <span class="icon">🎬</span>
-      <span class="title">Filmes</span>
-      <span id="filmes-contador" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
-    </div>
-    <div class="panel-body">
-
-      <!-- CARROSSEL -->
-      <div id="filmes-carrossel">
-        <button class="fc-btn" id="fc-prev" onclick="fcPrev()">‹</button>
-        <div id="fc-card" onclick="tocarFilme()">
-          <div id="fc-emoji"></div>
-          <div id="fc-titulo"></div>
-          <div id="fc-hint">clique para ver</div>
+    <nav class="nav-topo" id="navTopo">
+        <button class="nav-hamburguer" id="navToggle" onclick="toggleNav()">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="https://marcioandrio.github.io/home/" target="_blank">🏠 Home</a>
+            <a href="#sec-br">BR</a>
+            <a href="#sec-eu">EU</a>
+            <a href="#sec-relogio">Relógio</a>
+            <a href="#sec-valores">Valores</a>
+            <a href="#sec-lista">Lista</a>
+            <a href="#sec-tutorial">Tutorial</a>
+            <a href="#sec-europa">Europa</a>
+            <a href="#sec-aima">AIMA</a>
+            <a href="#sec-checklist">Check List</a>
+            <a href="#sec-ferramentas">Ferramentas</a>
+            <a href="#sec-ia">IA</a>
+            <a href="#sec-arquivos">Arquivos</a>
         </div>
-        <button class="fc-btn" id="fc-next" onclick="fcNext()">›</button>
-      </div>
-      <div id="fc-dots"></div>
-
-      <!-- PLAYER -->
-      <div id="filmes-player">
-        <div id="filmes-player-topbar">
-          <button id="btn-voltar-filmes" onclick="voltarCarrossel()">‹ Voltar</button>
-          <span id="filmes-player-titulo"></span>
+        <div class="nav-pesquisa">
+            <input type="text" id="campoPesquisa" placeholder="🔍 Pesquisar..." oninput="pesquisarFavoritos()" autocomplete="off">
+            <button class="nav-limpar" id="btnLimpar" onclick="limparPesquisa()" title="Limpar">✕</button>
         </div>
-        <iframe id="filmes-iframe" allowfullscreen></iframe>
-      </div>
+    </nav>
 
+    <main class="site">
+
+        <section>
+
+<!----------------------------------------------------------Advocacia BR---------------------------------------------------------->        
+    <h1 id="sec-br">Advocacia BR</h1>
+    <div class="caixa-icone">
+        
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://consultasaj.tjam.jus.br/sajcas/login?service=https%3A%2F%2Fconsultasaj.tjam.jus.br%2Fesaj%2Fj_spring_cas_security_check">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Esaj-AM</span>
+            </div>
+
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://projudi.tjam.jus.br/projudi/">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Projudi-AM</span>
+            </div>        
+    
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://seeu.pje.jus.br/seeu/">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>SEEU</span>
+            </div>        
+
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://projudi.tjrr.jus.br/projudi/">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Projui-RR</span>
+            </div>        
+            
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://projudi.tjpr.jus.br/projudi/">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Projui-PR</span>
+            </div>        
+
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://projudi.tjgo.jus.br/">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Projui-GO</span>
+            </div>  
+                 
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://www.tjpa.jus.br/PortalExterno/institucional/Portal-PJE/942-Apresentacao.xhtml">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>PJe-Pará</span>
+            </div>   
+
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://esaj.tjsp.jus.br/sajcas/login?service=https%3A%2F%2Fesaj.tjsp.jus.br%2Fesaj%2Fj_spring_cas_security_check">
+                        <img width="48" height="48"
+                        src="img/icone/lw.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Esaj-SP</span>
+            </div>    
+
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://consultasaj.tjam.jus.br/cjsg/consultaCompleta.do">
+                        <img width="48" height="48"
+                        src="img/icone/tjam.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Juris.<br>TJAM</span>
+            </div>        
+    
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://scon.stj.jus.br/SCON/">
+                        <img width="48" height="48"
+                        src="img/icone/stjj.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Juris.<br>STJ</span>
+            </div>        
+    
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://jurisprudencia.stf.jus.br/">
+                        <img width="48" height="48"
+                        src="img/icone/stf.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Juris.<br>STF</span>
+            </div>        
+                
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://astrea.net.br/#/main/workspace">
+                        <img width="78" height="48"
+                        src="img/icone/astrea.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Astrea</span>
+            </div>        
     </div>
-  </div>
-
-  <!-- EMAIL -->
-  <div class="panel" id="email-panel">
-    <div class="panel-header">
-      <span class="icon">📬</span>
-      <span class="title">E-mails Importantes</span>
-      <span id="email-data" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
+<!----------------------------------------------------------Advocacia EU---------------------------------------------------------->        
+    <h1 id="sec-eu">Advocacia EU</h1>
+    <div class="caixa-icone">
+        
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://portal.oa.pt/">
+                        <img width="68" height="68"
+                        src="img/icone/oap.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Ordem<br>PT</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://oa.pt/atos/">
+                        <img width="68" height="68"
+                        src="img/icone/oap.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Verificar<br>Ordem</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-law" href="https://citius.tribunaisnet.mj.pt/habilus/myhabilus/login.aspx?ReturnUrl=%2fhabilus%2f">
+                        <img width="48" height="48"
+                        src="img/icone/court.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Citius</span>
+            </div>        
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-branco" href="https://www.citius.mj.pt/portal/consultas/ConsultasDistribuicaoTaf.aspx">
+                        <img width="48" height="48"
+                        src="img/icone/court.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Pesquisar<br>Processos</span>
+            </div>        
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="html/imigracao/imigracao.html">
+                        <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Lei 23/2007<br>Imigração</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="https://meu.registo.justica.gov.pt/Pedidos/Consultar-estado-do-processo-de-nacionalidade?pk_vid=091e3bc4a49999711772283588561ade">
+                        <img width="48" height="48" src="img/icone/irn.png" alt="add-bookmark"/>
+                    </a>             
+                </div>
+                <span>Nacionalidade</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="https://www.puc-spoc.pt/direitos-schengen">
+                        <img width="66" height="66"
+                        src="img/icone/sis2.png" alt="bookmark"/>
+                    </a>             
+                </div>
+                <span>SIS</span>
+            </div>
     </div>
-    <div class="panel-body" id="email-body"></div>
-  </div>
-
-  <!-- CALENDÁRIO -->
-  <div class="panel" id="calendario-panel" style="grid-column: 1 / -1;">
-    <div class="panel-header">
-      <span class="icon">📅</span>
-      <span class="title">Calendário — Hoje</span>
-      <span id="calendario-data" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
+<!----------------------------------------------------------Relógio---------------------------------------------------------->        
+        <h1 id="sec-relogio">Relógio</h1>
+        <div class="caixa-relogio">
+                <div id="relogio-digital"></div>
+                <div id="calendario"></div>
+        </div>    
+<!----------------------------------------------------------Valores Praticados---------------------------------------------------------->        
+    <h1 id="sec-valores">Valores Praticados</h1>
+    <div class="caixa-icone">
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/tabela honorario br.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Honorário<br>BR</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/tabela honorario pt.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Honorário<br>PT</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/valores de servico.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Valores<br>Serviços</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/flyer pt.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Flyer POR</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/flyer eng.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Flyer ENG</span>
+        </div>
     </div>
-    <div class="panel-body" id="calendario-body" style="display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;align-items:stretch;gap:8px;padding:8px;"></div>
-  </div>
-
-</div></div>
-
-<!-- MODAL CONFIRMAÇÃO CONCLUIR -->
-<div id="modal-confirmar">
-  <div id="modal">
-    <h3>Concluir Tarefa</h3>
-    <p id="modal-confirmar-texto" style="font-size:13px;color:var(--text);line-height:1.5;"></p>
-    <div class="modal-btns">
-      <button class="btn btn-cancel" onclick="fecharConfirmar()">Cancelar</button>
-      <button class="btn btn-concluir" onclick="confirmarConclusao()">✓ Confirmar</button>
+<!----------------------------------------------------------Lista---------------------------------------------------------->            
+    <h1 id="sec-lista">Lista</h1>
+    <div class="caixa-icone"> <!---div da caixa--->        
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/lista de documentos/lista valores.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Valores<br>Serviços</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/lista de documentos/lista declaracao alojamento.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Declaração<br>Alojamento</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/lista de documentos/lista renovacao.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Renovação<br>Título</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/lista de documentos/lista reagrupamento.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Reagrupamento<br>Familiar</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/lista de documentos/lista estudos.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>A.R.<br>Estudos</span>
+        </div>
+    </div> <!---End div da caixa--->        
+</section>
+<!----------------------------------------------------------Tutorial---------------------------------------------------------->        
+<section>
+    <h1 id="sec-tutorial">Tutorial</h1>
+    <div class="caixa-icone">
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/linha do tempo - cpc.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Linha<br>CPC</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/linha do tempo - cpp.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Linha<br>CPP</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/linha do tempo - drogas.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Linha<br>Drogas</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/citius.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Memento<br>Citius</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/cubo magico.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Cubo<br>Magico</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/esquematizado.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Livro<br>Penal</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/livro de reclamacao.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Livro<br>Reclamação</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone" href="html/merito/merito.html">
+                        <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Mérito</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/citius/citius.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Citius</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone" href="html/recibo verde/recibo verde.html">
+                        <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Memento<br>Recibo Verde</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone" href="html/fundamentos penal/fundamentos penal.html">
+                        <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Fundamentos<br>Penal</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone" href="html/leis/leis planalto.html">
+                    <img width="48" height="48" src="https://img.icons8.com/3d-fluency/94/bookmark.png" alt="bookmark"/>
+                </a>             
+            </div>
+            <span>Leis<br>Planalto</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone" href="html/leis/leis pgde.html">
+                    <img width="48" height="48" src="https://img.icons8.com/3d-fluency/94/bookmark.png" alt="bookmark"/>
+                </a>             
+            </div>
+            <span>Leis<br>PGDE</span>
+        </div>
     </div>
-  </div>
-</div>
+<!----------------------------------------------------------Europa---------------------------------------------------------->        
+        <h1 id="sec-europa">Europa</h1>
+        <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.portaldasmatriculas.edu.gov.pt/Home">
+                        <img width="48" height="48" src="https://img.icons8.com/stickers/100/tuition.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Portal das<br>Matrículas</span>
+            </div>
 
-<!-- MODAL EDITAR TAREFA -->
-<div id="modal-editar">
-  <div id="modal">
-    <h3>Editar Tarefa</h3>
-    <input type="text" id="modal-editar-texto" placeholder="Descrição da tarefa..." />
-    <select id="modal-editar-prioridade">
-      <option value="🔴 Alta">🔴 Alta</option>
-      <option value="🟡 Média">🟡 Média</option>
-      <option value="🟢 Baixa">🟢 Baixa</option>
-    </select>
-    <div class="modal-btns">
-      <button class="btn btn-cancel" onclick="fecharEditar()">Cancelar</button>
-      <button class="btn btn-nova" onclick="salvarEdicao()">Guardar</button>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin#">
+                        <img width="48" height="48" src="img/icone/ss.png" alt="banknotes"/>
+                    </a>             
+                </div>
+                <span>Segurança<br>Social</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.seg-social.pt/ptss/ascd/pesquisa-entidade?dswid=2985">
+                        <img width="48" height="48"
+                        src="img/icone/ss.png"/>
+                    </a>             
+                </div>
+                <span>Declaração<br>Segurança Social</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.acesso.gov.pt/v2/loginForm?partID=PFAP&path=/geral/dashboard">
+                        <img width="48" height="48"
+                        src="img/icone/fn.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Finanças</span>
+            </div>            
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-branco" href="https://irs.portaldasfinancas.gov.pt/recibos/portal/emitir/emitirfaturaV2">
+                        <img width="48" height="48"
+                        src="img/icone/fn.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Recibos<br>Verdes</span>
+            </div>        
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">
+                        <img width="48" height="48"
+                        src="img/icone/fn.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Emissão<br>Certidão</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://sitfiscal.portaldasfinancas.gov.pt/geral/search?query=obter+comprovativo+irs&appName=pfapp">
+                        <img width="48" height="48"
+                        src="img/icone/fn.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Compr. IR<br>Finanças</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">
+                        <img width="48" height="48"
+                        src="img/icone/fn.png" alt="tuition"/>
+                    </a>             
+                </div>
+                <span>Consultar Contratos<br>Finanças</span>
+            </div>
+       </div>
+<!----------------------------------------------------------AIMA---------------------------------------------------------->        
+        <h1 id="sec-aima">Aima</h1>
+        <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://services.aima.gov.pt/SAPA/change_mail.php">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Troca<br>E-mail M.I.</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://services.aima.gov.pt/CPLP/change_mail.php">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Troca<br>E-mail CPLP</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://aima.gov.pt/pt/impressos-e-minutas">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Minutas</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://servicos.aima.gov.pt/login?language=pt">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Log In</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://services.aima.gov.pt/">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Renovação<br>CPLP</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://portal-renovacoes.aima.gov.pt/ords/r/aima/aima-pr/login?session=128724723528968">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Renovação<br>Portal</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://contactenos.aima.gov.pt/contact-form">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Formulário<br>Contacto</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://services.aima.gov.pt/SAPA/login.php?error=6">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Log in<br>Serviços</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://contactenos.aima.gov.pt/contact-form">
+                        <img width="48" height="48"
+                        src="img/icone/aima.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Reagrupamento</span>
+            </div>
+       </div>
+<!----------------------------------------------------------Check List---------------------------------------------------------->        
+    <h1 id="sec-checklist">Check List</h1>
+    <div class="caixa-icone">
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/lista de documentos para o visto.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Visto</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/documentos para acoes judiciais.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Ações Judiciais</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/lista equivalencia.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Equivalência</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/list documents alojamento.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>Declaração de Alojamento</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/list documents estudos.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>A.R. Estudos</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="pdf/list documents reagrupamento.pdf" target="_blank">
+                    <img width="48" height="48"
+                    src="img/icone/pdf2.png" alt="pdf-2"/>
+                </a>             
+            </div>
+            <span>A.R. Reagrupamento</span>
+        </div>
+    </div>    
+</section>
+
+<!----------------------------------------------------------Ferramentas---------------------------------------------------------->        
+<section>
+    <h1 id="sec-ferramentas">Ferramentas</h1>
+    <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://delegaciavirtual.sinesp.gov.br/portal/">
+                        <img width="48" height="48" src="img/icone/pc.png" alt="police-skin-type-3"/>
+                    </a>             
+                </div>
+                <span>Delegacia<br>Virtual</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://servicos.pf.gov.br/epol-sinic-publico/">
+                        <img width="48" height="48"
+                        src="img/icone/pf.png" alt="police-skin-type-3"/>
+                    </a>             
+                </div>
+                <span>Certidão<br>Criminal</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.photopea.com/">
+                        <img width="48" height="48" src="https://img.icons8.com/color/48/photopea.png" alt="photopea"/>
+                    </a>             
+                </div>
+                <span>PhotoPea</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://meet.google.com/">
+                        <img width="48" height="48" src="https://img.icons8.com/fluency/48/google-meet.png" alt="google-meet"/>
+                    </a>             
+                </div>
+                <span>Google<br>Meet</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://my.pcloud.com/#/login">
+                        <img width="48" height="48" src="https://img.icons8.com/color/48/pcloud.png" alt="pcloud"/>
+                    </a>             
+                </div>
+                <span>Pcloud</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://webmail.ma-advocacia.com/cpsess6575314675/3rdparty/roundcube/?_task=mail&_mbox=INBOX">
+                        <img width="48" height="38"
+                        src="img/icone/ma.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>@ma-advocacia.com</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://github.com/">
+                        <img width="50" height="50" src="https://img.icons8.com/3d-fluency/94/github.png" alt="github"/>
+                    </a>             
+                </div>
+                <span>GitHub</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.deepl.com/en/translator">
+                        <img width="48" height="48" src="https://img.icons8.com/3d-fluency/94/language.png" alt="language"/>
+                    </a>             
+                </div>
+                <span>Tradutor</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://languagetool.org/pt-BR">
+                        <img width="48" height="48"
+                        src="img/icone/lt.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>Language Tool</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?request_locale=es">
+                        <img width="48" height="48" src="img/icone/ctt.png" alt="external-search-location-wanicon-flat-wanicon"/>
+                    </a>             
+                </div>
+                <span>Rastreio CTT</span>
+            </div>
     </div>
-  </div>
-</div>
-
-<!-- MODAL CONCLUÍDAS -->
-<div id="modal-concluidas">
-  <div id="modal" style="width:420px;max-height:70vh;overflow:hidden;display:flex;flex-direction:column;">
-    <h3>Tarefas Concluídas</h3>
-    <div id="modal-concluidas-lista" style="flex:1;overflow-y:auto;margin-top:8px;display:flex;flex-direction:column;gap:4px;"></div>
-    <div class="modal-btns" style="margin-top:14px;">
-      <button class="btn btn-cancel" onclick="fecharConcluidas()">Fechar</button>
+<!----------------------------------------------------------Artificial---------------------------------------------------------->        
+    <h1 id="sec-ia">Artificial</h1>
+    <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://chatgpt.com/">
+                        <img width="50" height="50" src="https://img.icons8.com/nolan/64/chatgpt.png" alt="chatgpt"/>
+                    </a>             
+                </div>
+                <span>Lívia</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://gemini.google.com">
+                        <img width="48" height="48"
+                        src="img/icone/gemini.png" alt="scales"/>
+                    </a>             
+                </div>
+                <span>Gemini</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://grok.com/">
+                        <img width="50" height="50" src="img/icone/grok.png" alt="grok"/>
+                    </a>             
+                </div>
+                <span>Grok</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://manus.im/app">
+                        <img width="50" height="50" src="img/icone/manus.png" alt="asian-character"/>
+                    </a>             
+                </div>
+                <span>Manus</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.perplexity.ai/">
+                        <img width="50" height="50" src="https://img.icons8.com/fluency/48/perplexity-ai.png" alt="perplexity-ai"/>
+                    </a>             
+                </div>
+                <span>Perplexity</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://notebooklm.google.com/?icid=home_maincta">
+                        <img width="48" height="48" src="img/icone/notebooklm.png" alt="collaborator-female"/>
+                    </a>             
+                </div>
+                <span>NoteBook LM</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.advia.pt/login">
+                        <img width="68" height="38" src="img/icone/advia.png" alt="collaborator-female"/>
+                    </a>             
+                </div>
+                <span>AdvIa Advogados</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://ia.jusbrasil.com.br/conversa">
+                        <img width="68" height="38" src="img/icone/jusia.png"
+                        alt="collaborator-female"/>
+                    </a>             
+                </div>
+                <span>Jus IA</span>
+            </div>
     </div>
-  </div>
-</div>
+<!----------------------------------------------------------Arquivos---------------------------------------------------------->        
+    <h1 id="sec-arquivos">Arquivos</h1>
+    <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="https://www.youtube.com/">
+                        <img width="48" height="48" src="https://img.icons8.com/fluency/48/youtube-play.png" alt="youtube-play"/>
+                    </a>             
+                </div>
+                <span>YouTube</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="https://youtu.be/eK3rwW70Iog">
+                        <img width="48" height="48" src="https://img.icons8.com/fluency/48/youtube-play.png" alt="youtube-play"/>
+                    </a>             
+                </div>
+                <span>Assinatura<br>GOV</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-pdf" href="html/buscar jurisprudencia/buscar jurisprudencia.html">
+                        <img width="48" height="48" src="https://img.icons8.com/fluency/48/youtube-play.png" alt="youtube-play"/>
+                    </a>             
+                </div>
+                <span>Buscar<br>Juris.</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://marcioandrio.github.io/escritorio/">
+                        <img width="48" height="48" src="https://img.icons8.com/3d-fluency/94/globe.png" alt="globe"/>
+                    </a>             
+                </div>
+                <span>Site<br>Advocacia</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://www.calendarr.com/portugal/contador-de-dias/">
+                        <img width="48" height="48"
+                        src="img/icone/calendar.png" alt="calendar--v2"/>
+                    </a>             
+                </div>
+                <span>Contador de Dias</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-branco" id="linkSiga">
+                        <img width="48" height="48"
+                        src="img/icone/siga.png" alt="money-box"/>
+                    </a>             
+                </div>
+                <span>Siga</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-branco" id="inovar">
+                        <img width="48" height="48"
+                        src="img/icone/inovar.png" alt="report-card"/>
+                    </a>             
+                </div>
+                <span>Inovar +</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone-branco" id="linkClassroom">
+                        <img width="48" height="48"
+                        src="img/icone/classroom.png" alt="pig"/>
+                    </a>             
+                </div>
+                <span>ClassRoom</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                    <a href="#" class="icone" id="btn-alexa-victor">
+                        <img width="48" height="48" 
+                            src="img/icone/victor.png" 
+                            alt="calendar--v2"/>
+                    </a>             
+            </div>
+            <span>Victor Andrio<br>Alexa</span>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="https://marcioandriobr.github.io/mamovies/">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>Filmes</span>
+            </div>
+    </div>       
+</section>
+<!-- Pop-up -->
+        <div class="popup" id="popup">
+            <h2>Atenção</h2>
+                <h2></h2>
+                <p><b>Inovar</b>
+                <br>47507
+                <br>GF841232
+                <h2></h2>                
+                <br><b>Siga</b>
+                <br>ALM.ED3329807
+                <br>Marcio2024@
+                <h2></h2>    
+                <br><b>ClassRoom</b>
+                <br>47507@aeen.pt
+                <br>324941110
+            </p>
+            <button onclick="continuar()">Continuar</button>
+        </div>
+</main>
+<footer>
+        
+</footer>
+    <script src="js/popup.js"></script>
+    <script>
+    function pesquisarFavoritos() {
+        const filtro = document.getElementById('campoPesquisa').value.toLowerCase().trim();
+        const btnLimpar = document.getElementById('btnLimpar');
+        btnLimpar.style.display = filtro ? 'flex' : 'none';
 
-<!-- MODAL NOVA TAREFA -->
-<div id="modal-overlay">
-  <div id="modal">
-    <h3>Nova Tarefa</h3>
-    <input type="text" id="modal-texto" placeholder="Descrição da tarefa..." />
-    <select id="modal-prioridade">
-      <option value="🔴 Alta">🔴 Alta</option>
-      <option value="🟡 Média" selected>🟡 Média</option>
-      <option value="🟢 Baixa">🟢 Baixa</option>
-    </select>
-    <div class="modal-btns">
-      <button class="btn btn-cancel" onclick="fecharModal()">Cancelar</button>
-      <button class="btn btn-nova" onclick="salvarNovaTarefa()">Adicionar</button>
-    </div>
-  </div>
-</div>
+        document.querySelectorAll('.botao').forEach(function(botao) {
+            const texto = botao.querySelector('span') ? botao.querySelector('span').innerText.toLowerCase() : '';
+            botao.style.display = (!filtro || texto.includes(filtro)) ? 'flex' : 'none';
+        });
 
+        document.querySelectorAll('section').forEach(function(sec) {
+            const visiveis = sec.querySelectorAll('.botao[style*="flex"], .botao:not([style])');
+            const algumVisivel = Array.from(sec.querySelectorAll('.botao')).some(b => b.style.display !== 'none');
+            sec.style.display = (!filtro || algumVisivel) ? 'flex' : 'none';
+        });
+    }
 
+    function limparPesquisa() {
+        document.getElementById('campoPesquisa').value = '';
+        pesquisarFavoritos();
+    }
+
+    function toggleNav() {
+        const links = document.getElementById('navLinks');
+        links.classList.toggle('aberto');
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.remove('aberto');
+        });
+    });
+    </script>
+<!----------------------------------------------------------Alexa---------------------------------------------------------->        
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────
-const hoje = new Date();
-const ano = hoje.getFullYear();
-const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-const dia = String(hoje.getDate()).padStart(2, '0');
-const dataStr = `${ano}.${mes}.${dia}`;
-const dataLabel = hoje.toLocaleDateString('pt-PT', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-
-document.getElementById('date-display').textContent = dataLabel;
-
-
-// ── NOTÍCIAS ──────────────────────────────────────────────────────────
-async function carregarNoticias() {
-  const body = document.getElementById('noticias-body');
-  document.getElementById('noticias-data').textContent = dataStr;
-  try {
-    const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-    const data = await r.json();
-    const n = data.record.noticias;
-    if (!n || !n.itens || !n.itens.length) {
-      mostrarSemConteudo(body, '📰', 'Sem notícias para hoje');
-      return;
-    }
-    body.innerHTML = `<div style="padding:14px;overflow-y:auto;height:100%;font-family:Georgia,serif;font-size:13px;color:var(--text);line-height:1.7;">
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">${n.data || dataStr}</div>
-      ${n.itens.map(item => `
-        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);">
-          <div style="font-weight:bold;color:var(--accent);margin-bottom:4px;">${item.titulo}</div>
-          <div style="color:var(--text);font-size:12px;">${item.texto}</div>
-          ${item.fonte ? `<div style="font-size:10px;color:var(--text2);margin-top:4px;">— ${item.fonte}</div>` : ''}
-        </div>`).join('')}
-    </div>`;
-  } catch {
-    mostrarSemConteudo(body, '📰', 'Erro ao carregar notícias');
-  }
+    document.getElementById('btn-alexa-victor').addEventListener('click', function(e) {
+        e.preventDefault();   // ← Isso impede de abrir a página
+        const url = "https://api-v2.voicemonkey.io/announcement?token=222b035b951fc5148d84ce78f21e7cd4_4a280a33869636e1799928574e055c34&device=victor-andrio";
+        fetch(url, {
+            method: 'GET',
+            mode: 'no-cors'   // necessário para APIs externas como VoiceMonkey
+        })
+        .then(() => {
+            // Feedback visual (pode mudar depois)
+            alert("✅ Comando enviado para a Alexa!");
+        })
+        .catch(() => {
+            alert("❌ Erro ao enviar o comando.");
+        });
+    });
+/*----------------------------------------------------------Relógio----------------------------------------------------------*/
+function atualizarRelogioDigital() {
+    const agora = new Date();
+    let horas = agora.getHours().toString().padStart(2, '0');
+    let minutos = agora.getMinutes().toString().padStart(2, '0');
+    let segundos = agora.getSeconds().toString().padStart(2, '0');
+    const relogioDigital = document.getElementById("relogio-digital");
+    relogioDigital.innerText = `${horas}:${minutos}:${segundos}`;
 }
-
-// ── EMAIL ─────────────────────────────────────────────────────────────
-async function carregarEmail() {
-  const body = document.getElementById('email-body');
-  document.getElementById('email-data').textContent = dataStr;
-  try {
-    const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-    const data = await r.json();
-    const e = data.record.email;
-    if (!e || !e.itens || !e.itens.length) {
-      mostrarSemConteudo(body, '📬', 'Sem emails importantes hoje');
-      return;
-    }
-    body.innerHTML = `<div style="padding:14px;overflow-y:auto;height:100%;font-family:Georgia,serif;font-size:13px;color:var(--text);line-height:1.7;">
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">${e.data || dataStr}</div>
-      ${e.itens.map(item => `
-        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);">
-          <div style="font-weight:bold;color:var(--accent);margin-bottom:2px;">${item.de || ''} ${item.assunto ? `— <span style="color:var(--text)">${item.assunto}</span>` : ''}</div>
-          <div style="color:var(--text);font-size:12px;">${item.resumo}</div>
-        </div>`).join('')}
-    </div>`;
-  } catch {
-    mostrarSemConteudo(body, '📬', 'Erro ao carregar emails');
-  }
+setInterval(atualizarRelogioDigital, 1000);
+atualizarRelogioDigital();
+/*----------------------------------------------------------Data----------------------------------------------------------*/
+function atualizarCalendario() {
+    const agora = new Date();
+    const diasSemana = ["domingo", "segunda", "terça", "quarta", "quinata", "sexta", "sábado"];
+    const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", 
+                   "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+    const diaSemana = diasSemana[agora.getDay()];
+    const dia = agora.getDate();
+    const mes = meses[agora.getMonth()];
+    const ano = agora.getFullYear();
+    const calendario = document.getElementById("calendario");
+    calendario.innerText = `${diaSemana} ${dia} ${mes} ${ano}`;
 }
-
-function mostrarSemConteudo(container, icon, msg) {
-  container.innerHTML = `<div class="no-content"><div class="nc-icon">${icon}</div><span>${msg}</span></div>`;
-}
-
-// ── SOM ───────────────────────────────────────────────────────────────
-const _som = new Audio('sound/luna.tarefa.concluida.mp3');
-function tocarSom() { _som.currentTime = 0; _som.play().catch(() => {}); }
-
-// ── TAREFAS (JSONBin.io) ──────────────────────────────────────────────
-const JB_BIN = '6a32f2e3f5f4af5e2903f81c';
-const JB_KEY = '$2a$10$NktkUyYCYMW7zQ3kcKosh.ZPUZnFK0aF/1ZQJYWheaGRzGbtZJSvi';
-const JB_URL = `https://api.jsonbin.io/v3/b/${JB_BIN}`;
-const JB_HDR = { 'Content-Type': 'application/json', 'X-Master-Key': JB_KEY };
-
-let tarefas = [];
-let selecionada = null;
-
-async function carregarTarefas() {
-  try {
-    const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-    const data = await r.json();
-    tarefas = data.record.tarefas || [];
-    renderTarefas();
-  } catch {
-    document.getElementById('tarefas-list').innerHTML =
-      '<div class="no-content"><div class="nc-icon">⚠️</div><span>Erro ao carregar tarefas</span></div>';
-  }
-}
-
-async function salvarTarefas() {
-  const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-  const data = await r.json();
-  const rec = data.record;
-  await fetch(JB_URL, {
-    method: 'PUT',
-    headers: JB_HDR,
-    body: JSON.stringify({ ...rec, tarefas })
-  });
-}
-
-function renderTarefas() {
-  const list = document.getElementById('tarefas-list');
-  document.getElementById('tarefas-count').textContent = `${tarefas.length} pendente${tarefas.length !== 1 ? 's' : ''}`;
-
-  if (!tarefas.length) {
-    list.innerHTML = '<div class="no-content" style="margin-top:40px"><div class="nc-icon">✅</div><span>Nenhuma tarefa pendente</span></div>';
-    selecionada = null;
-    return;
-  }
-
-  list.innerHTML = tarefas.map((t, i) => {
-    const partes = t.split('|');
-    const texto = partes[0].trim();
-    const prio = partes[1] ? partes[1].trim() : '🟡 Média';
-    const emoji = prio.split(' ')[0] || '🟡';
-    const sel = selecionada === i ? 'selected' : '';
-    return `<div class="tarefa-item ${sel}" onclick="selecionarTarefa(${i})">
-      <span class="prioridade">${emoji}</span>
-      <span class="tarefa-texto">${texto}</span>
-      <button class="btn-editar" onclick="abrirEditar(event,${i})">✏️ Editar</button>
-    </div>`;
-  }).join('');
-}
-
-function selecionarTarefa(i) {
-  selecionada = selecionada === i ? null : i;
-  renderTarefas();
-}
-
-// ── CONFIRMAR CONCLUSÃO ───────────────────────────────────────────────
-function concluirSelecionada() {
-  if (selecionada === null) { alert('Selecione uma tarefa primeiro.'); return; }
-  const texto = tarefas[selecionada].split('|')[0].trim();
-  document.getElementById('modal-confirmar-texto').textContent = `"${texto}"`;
-  document.getElementById('modal-confirmar').classList.add('show');
-}
-
-function fecharConfirmar() {
-  document.getElementById('modal-confirmar').classList.remove('show');
-}
-
-async function confirmarConclusao() {
-  fecharConfirmar();
-  const hoje = new Date();
-  const d = `${hoje.getFullYear()}.${String(hoje.getMonth()+1).padStart(2,'0')}.${String(hoje.getDate()).padStart(2,'0')}`;
-  const texto = tarefas[selecionada].split('|')[0].trim();
-  tarefas.splice(selecionada, 1);
-  selecionada = null;
-  renderTarefas();
-  const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-  const rec = (await r.json()).record;
-  const concluidas = rec.concluidas || [];
-  concluidas.push(`${d}. ${texto}`);
-  await fetch(JB_URL, {
-    method: 'PUT',
-    headers: JB_HDR,
-    body: JSON.stringify({ ...rec, tarefas, concluidas })
-  });
-  tocarSom();
-}
-
-// ── EDITAR TAREFA ─────────────────────────────────────────────────────
-let editarIdx = null;
-
-function abrirEditar(event, i) {
-  event.stopPropagation();
-  editarIdx = i;
-  const partes = tarefas[i].split('|');
-  document.getElementById('modal-editar-texto').value = partes[0].trim();
-  document.getElementById('modal-editar-prioridade').value = partes[1] ? partes[1].trim() : '🟡 Média';
-  document.getElementById('modal-editar').classList.add('show');
-  setTimeout(() => document.getElementById('modal-editar-texto').focus(), 50);
-}
-
-function fecharEditar() {
-  document.getElementById('modal-editar').classList.remove('show');
-  editarIdx = null;
-}
-
-async function salvarEdicao() {
-  const texto = document.getElementById('modal-editar-texto').value.trim();
-  const prioridade = document.getElementById('modal-editar-prioridade').value;
-  if (!texto || editarIdx === null) return;
-  tarefas[editarIdx] = `${texto} | ${prioridade}`;
-  fecharEditar();
-  renderTarefas();
-  await salvarTarefas();
-}
-
-// ── CONCLUÍDAS ────────────────────────────────────────────────────────
-async function abrirConcluidas() {
-  const lista = document.getElementById('modal-concluidas-lista');
-  lista.innerHTML = '<span style="color:var(--text2);font-size:12px;">A carregar...</span>';
-  document.getElementById('modal-concluidas').classList.add('show');
-  try {
-    const r = await fetch(JB_URL + '/latest', { headers: JB_HDR });
-    const data = await r.json();
-    const concluidas = data.record.concluidas || [];
-    if (!concluidas.length) {
-      lista.innerHTML = '<span style="color:var(--text2);font-size:12px;">Nenhuma tarefa concluída ainda.</span>';
-      return;
-    }
-    lista.innerHTML = [...concluidas].reverse().map(c => `
-      <div style="padding:6px 10px;background:var(--surface);border-radius:5px;font-size:12px;color:var(--text);border-left:3px solid var(--green);">
-        ✅ ${c}
-      </div>`).join('');
-  } catch {
-    lista.innerHTML = '<span style="color:var(--text2);font-size:12px;">Erro ao carregar.</span>';
-  }
-}
-
-function fecharConcluidas() {
-  document.getElementById('modal-concluidas').classList.remove('show');
-}
-
-document.getElementById('modal-concluidas').addEventListener('click', e => {
-  if (e.target === e.currentTarget) fecharConcluidas();
-});
-
-document.getElementById('modal-editar').addEventListener('click', e => {
-  if (e.target === e.currentTarget) fecharEditar();
-});
-document.getElementById('modal-confirmar').addEventListener('click', e => {
-  if (e.target === e.currentTarget) fecharConfirmar();
-});
-document.getElementById('modal-editar-texto').addEventListener('keydown', e => {
-  if (e.key === 'Enter') salvarEdicao();
-  if (e.key === 'Escape') fecharEditar();
-});
-
-// ── MODAL ─────────────────────────────────────────────────────────────
-function abrirModalNova() {
-  document.getElementById('modal-texto').value = '';
-  document.getElementById('modal-prioridade').value = '🟡 Média';
-  document.getElementById('modal-overlay').classList.add('show');
-  setTimeout(() => document.getElementById('modal-texto').focus(), 50);
-}
-
-function fecharModal() {
-  document.getElementById('modal-overlay').classList.remove('show');
-}
-
-document.getElementById('modal-texto').addEventListener('keydown', e => {
-  if (e.key === 'Enter') salvarNovaTarefa();
-  if (e.key === 'Escape') fecharModal();
-});
-
-document.getElementById('modal-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) fecharModal();
-});
-
-async function salvarNovaTarefa() {
-  const texto = document.getElementById('modal-texto').value.trim();
-  const prioridade = document.getElementById('modal-prioridade').value;
-  if (!texto) return;
-  tarefas.push(`${texto} | ${prioridade}`);
-  fecharModal();
-  renderTarefas();
-  await salvarTarefas();
-}
-
-// ── FILMES ────────────────────────────────────────────────────────────
-const filmesData = [
-  { titulo: "Advogado do Diabo",  emoji: "⚖️", url: "https://drive.google.com/file/d/1Vra93EJ7yKswTfsBynVryOSTjuQcL0eo/preview" },
-  { titulo: "Armas Sobre a Mesa", emoji: "🔫", url: "https://drive.google.com/file/d/1p2n4U1ycMOEznp5kLTJ3SMRfJGdW53pp/preview" },
-  { titulo: "BOP",                emoji: "🏊", url: "https://drive.google.com/file/d/17awr6fRZAMdmS52gIitzLzS61pvEMa5C/preview" },
-  { titulo: "Human Contract",     emoji: "🤝", url: "https://streamtape.com/v/RjJ4m6G9XMfxRJ/Human_Contract.avi" },
-  { titulo: "O Sol é para Todos", emoji: "☀️", url: "https://drive.google.com/file/d/1onqToMR_zTHdzgIUnWGPYAiigirDG8di/preview" },
-  { titulo: "Um Contra Tempo",    emoji: "⏳", url: "https://drive.google.com/file/d/1U5E4yYiTUIFh6Wm8xj2ZVf4d-nYmbHnU/preview" },
-  { titulo: "Um Crime de Mestre", emoji: "🎭", url: "https://drive.google.com/file/d/1q37cqFLFCfzGUNpjxFYA7fGQ_8bST7Kg/preview" },
-];
-
-let fcIdx = 0;
-
-function fcRender() {
-  const f = filmesData[fcIdx];
-  document.getElementById('fc-emoji').textContent = f.emoji;
-  document.getElementById('fc-titulo').textContent = f.titulo;
-  document.getElementById('filmes-contador').textContent = `${fcIdx + 1} / ${filmesData.length}`;
-  const dots = document.getElementById('fc-dots');
-  dots.innerHTML = filmesData.map((_, i) =>
-    `<div class="fc-dot ${i === fcIdx ? 'active' : ''}" onclick="fcIr(${i})"></div>`
-  ).join('');
-}
-
-function fcNext() { fcIdx = (fcIdx + 1) % filmesData.length; fcRender(); }
-function fcPrev() { fcIdx = (fcIdx - 1 + filmesData.length) % filmesData.length; fcRender(); }
-function fcIr(i)  { fcIdx = i; fcRender(); }
-
-function tocarFilme() {
-  const f = filmesData[fcIdx];
-  document.getElementById('filmes-carrossel').style.display = 'none';
-  document.getElementById('fc-dots').style.display = 'none';
-  const player = document.getElementById('filmes-player');
-  player.style.display = 'flex';
-  document.getElementById('filmes-player-titulo').textContent = f.emoji + '  ' + f.titulo;
-  document.getElementById('filmes-iframe').src = f.url;
-}
-
-function voltarCarrossel() {
-  document.getElementById('filmes-iframe').src = '';
-  document.getElementById('filmes-player').style.display = 'none';
-  document.getElementById('filmes-carrossel').style.display = 'flex';
-  document.getElementById('fc-dots').style.display = 'flex';
-}
-
-// ── CALENDÁRIO ────────────────────────────────────────────────────────
-const ICAL_URLS = [
-  { url: 'https://p186-caldav.icloud.com/published/2/ODA2NDI3OTg4NzgwNjQyN1KKS7_g3jbSK5veu0v_cWCDLHISOz43w1EuQ0pp-Opa',                                                                             cor: '#e74c3c', nome: 'Brasil'  },
-  { url: 'https://p186-caldav.icloud.com/published/2/ODA2NDI3OTg4NzgwNjQyN1KKS7_g3jbSK5veu0v_cWB2Rbfb4PnMQsKI3-EUPFHVJkm1JYSYTu5Y_ikqfhaq6y0nAPHqH8yZUlFOH2XwRC8', cor: '#e67e22', nome: 'Europa'  },
-  { url: 'https://p29-caldav.icloud.com/published/2/ODA2NDI3OTg4NzgwNjQyN1KKS7_g3jbSK5veu0v_cWCivdkaRgqILcQO0HoxojhQ',                                                                              cor: '#2980b9', nome: 'Pessoal' },
-];
-const CORS  = 'https://corsproxy.io/?url=';
-
-function parseDateICS(str) {
-  if (!str) return null;
-  const s = str.replace(/[TZ]/g, '').replace(/[^0-9]/g, '');
-  if (s.length < 8) return null;
-  const y = s.slice(0,4), m = s.slice(4,6), d = s.slice(6,8);
-  const h = s.slice(8,10)||'00', mi = s.slice(10,12)||'00';
-  return new Date(`${y}-${m}-${d}T${h}:${mi}:00`);
-}
-
-function formatHora(date) {
-  if (!date) return '';
-  return date.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
-}
-
-async function carregarCalendario() {
-  const body = document.getElementById('calendario-body');
-  document.getElementById('calendario-data').textContent = dataStr;
-  body.innerHTML = '<span style="color:var(--text2);font-size:12px;padding:8px;">A carregar calendário...</span>';
-
-  try {
-    const respostas = await Promise.allSettled(
-      ICAL_URLS.map(c => fetch(CORS + encodeURIComponent(c.url)).then(r => r.text()).then(txt => ({ txt, cor: c.cor, nome: c.nome })))
-    );
-
-    const eventos = [];
-    for (const res of respostas) {
-      if (res.status !== 'fulfilled') continue;
-      const { txt, cor, nome } = res.value;
-      const blocos = txt.split('BEGIN:VEVENT');
-      blocos.shift();
-      for (const bloco of blocos) {
-        const get = (key) => {
-          const m = bloco.match(new RegExp(key + '[^:]*:([^\\r\\n]+)'));
-          return m ? m[1].trim() : '';
-        };
-        const summary  = get('SUMMARY');
-        const dtstart  = get('DTSTART');
-        const dtend    = get('DTEND');
-        const location = get('LOCATION');
-        const start = parseDateICS(dtstart);
-        const end   = parseDateICS(dtend);
-        if (!start) continue;
-
-        const hojeStr = `${ano}${mes}${dia}`;
-        const dStr = dtstart.replace(/[^0-9]/g,'').slice(0,8);
-        if (dStr !== hojeStr) continue;
-
-        const isDiaInteiro = !dtstart.includes('T');
-        eventos.push({ summary, start, end, location, isDiaInteiro, cor, nome });
-      }
-    }
-
-    eventos.sort((a,b) => a.start - b.start);
-
-    if (!eventos.length) {
-      body.innerHTML = '<div class="no-content"><div class="nc-icon">📅</div><span>Sem eventos para hoje</span></div>';
-      return;
-    }
-
-    body.innerHTML = eventos.map(ev => {
-      const hora = ev.isDiaInteiro ? 'Dia todo' : `${formatHora(ev.start)}${ev.end ? ' – ' + formatHora(ev.end) : ''}`;
-      const loc  = ev.location ? `<div style="font-size:10px;color:var(--text2);margin-top:3px;">📍 ${ev.location}</div>` : '';
-      return `<div style="
-        background:var(--surface2);
-        border:1px solid var(--border);
-        border-left:4px solid ${ev.cor};
-        border-radius:6px;
-        padding:8px 12px;
-        min-width:160px;
-        max-width:220px;
-        flex-shrink:0;
-        display:flex;
-        flex-direction:column;
-        gap:2px;
-      ">
-        <div style="font-size:9px;color:${ev.cor};font-weight:bold;letter-spacing:0.5px;text-transform:uppercase;">${ev.nome}</div>
-        <div style="font-size:10px;color:var(--text2);">${hora}</div>
-        <div style="font-size:12px;color:var(--text);line-height:1.4;">${ev.summary}</div>
-        ${loc}
-      </div>`;
-    }).join('');
-
-  } catch(e) {
-    body.innerHTML = '<div class="no-content"><div class="nc-icon">⚠️</div><span>Erro ao carregar calendário</span></div>';
-  }
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────
-carregarTarefas();
-carregarNoticias();
-carregarEmail();
-fcRender();
-carregarCalendario();
+setInterval(atualizarCalendario, 1000);
+atualizarCalendario();
 </script>
 </body>
 </html>
