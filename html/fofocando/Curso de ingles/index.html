@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FofoCando</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+<!-- Pop-up -->
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <h2>Olá!</h2>
+                <p>Este é um pop-up de boas-vindas.</p>
+                <button onclick="fecharPopup()">Fechar</button>
+            </div>
+        </div>
+<!--site-->
+        <div class="site">
+        <div class="fofoca-tag">🔥 FOFOCA QUENTE 🔥</div>
+        <section>
+            <h2>
+                Em busca do bilinguismo: Um novo desafio<br>
+                📅 26 de março de 2025 | 🕒 Redação CMM Portugal
+            </h2>
+
+            <div class="organizar">
+                <div class="texto">
+                    <p>
+                        No mundo globalizado de hoje, a comunicação é a chave para novas oportunidades. Pensando nisso, uma advogada em Portugal decidiu iniciar sua jornada no aprendizado da língua inglesa. Seu objetivo? Tornar-se bilíngue e ampliar suas possibilidades profissionais e pessoais.
+                        Com dedicação e entusiasmo, já deu o primeiro passo e aprendeu a dizer "<b>Be happy</b>"—um lembrete simples, mas poderoso, de que aprender um novo idioma também é um caminho para o crescimento e a felicidade.
+                        Esta é apenas a primeira conquista de muitas que virão. O desafio continua, e cada nova palavra aprendida representa um passo rumo à fluência.
+                        Acompanhe essa jornada e inspire-se!
+                    </p>
+                    <a href="#" class="link-noticia">Leia mais sobre o caso</a>
+                </div>
+                    <img src="foto.jpeg" alt="Imagem">
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <script>
+        // Mostra o pop-up ao carregar a página
+        window.onload = function() {
+            document.getElementById("popup").style.display = "flex";
+        };
+
+        // Função para fechar o pop-up
+        function fecharPopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

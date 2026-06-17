@@ -1,0 +1,141 @@
+/* Estilo para a classe .organizacao */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+
+    background: url('img/fundo1.jpeg') no-repeat center fixed;
+    background-size: cover;
+    opacity: 1;
+    /**/
+}
+.organizacao {
+    display: flex; /* Usando o modelo de layout Flexbox */
+    flex-direction: column; /* Organiza os itens na vertical */
+    justify-content: center; /* Centraliza os itens verticalmente dentro do contêiner */
+    align-items: flex-start; /* Alinha os itens à esquerda, ajuste conforme necessário */
+    gap: 0px; /* Diminui o espaçamento entre os itens (botões ou elementos dentro do contêiner) */
+    width: center; /* Ajusta a largura da tabela conforme o conteúdo */
+    margin: 10 center; /* Centraliza a tabela horizontalmente */
+    margin-left: 3cm;
+    margin-right: 3cm;
+    text-align: justify;
+}
+
+b{
+    font-size: 28px;
+}
+.artigo {
+    display: flex; /* Torna o elemento flexível */
+    font-size: 30px; /* Define o tamanho da fonte */
+    color: red; /* Define a cor do texto */
+    text-align: center; /* Centraliza o texto */
+    display: block; /* Garante que a largura seja respeitada */
+    margin-bottom: 10px; /* Adiciona 10px de espaço abaixo do texto */
+    
+    /*align-items: center; /* Centraliza verticalmente */
+    /*justify-content: center; /* Centraliza horizontalmente */
+    /*text-align: center; /* Garante que o texto dentro do elemento também fique centralizado */
+    width: 100%; /* Garante que ocupe toda a largura */
+}
+.texto{
+    display: flex; /* Usando o modelo de layout Flexbox */
+    flex-direction: column; /* Organiza os itens na vertical */
+    /*justify-content: center; /* Centraliza os itens verticalmente dentro do contêiner */
+    /*align-items: flex-start; /* Alinha os itens à esquerda, ajuste conforme necessário */
+    gap: 5px; /* Diminui o espaçamento entre os itens (botões ou elementos dentro do contêiner) */
+    /*width: center; /* Ajusta a largura da tabela conforme o conteúdo */
+    /*margin: 10 center; /* Centraliza a tabela horizontalmente */
+    margin-left: 3cm;
+    margin-right: 3cm;
+    text-align: justify;
+    font-size: 24px;
+
+}
+.comentario {
+    font-size: 30px; /* Define o tamanho da fonte */
+    color: rgb(5, 5, 5); /* Define a cor do texto */
+    font-weight: bold; /* Deixa o texto em negrito */
+    text-align: center; /* Centraliza o texto */
+
+}
+.marcatexto {
+    background-color: yellow; /* Cor de fundo amarela, como um marca-texto */
+    color: black; /* Cor do texto */
+}
+.marcatexto2 {
+    background-color: rgba(232, 60, 189, 0.50); /* Cor de fundo amarela, como um marca-texto */
+    color: black; /* Cor do texto */
+}
+h1{
+    font-size: 50px;
+    display: flex;
+    padding: 100px;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Alinhar o texto dentro do elemento */
+}
+.cabecalho {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    background-color: transparent; /* Começa transparente */
+    z-index: 1000;
+    padding: 10px 20px;
+    box-shadow: none; /* Sem sombra no início */
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.cabecalho-imagem { /*tamamanho da imagem estava em 72*/
+    height: 72px; /*tamanho normal 72*/
+    align-items: center;
+    /*filter: invert(1); /* inverter a cor */
+  }
+.cabecalho-menu {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    gap: 22px;
+  } 
+.cabecalho-link {
+    display: inline; /* Remove o display de botão */
+    padding: 0; /* Remove espaçamentos internos */
+    text-decoration: none; /* Remove sublinhado */
+    color: #040404; /* Mantém a cor do texto */
+    font-size: 24px; /* Mantém o tamanho da fonte */
+    font-weight: 400; /* Mantém a espessura */
+    background: none; /* Remove fundo */
+    border: none; /* Remove borda */
+    box-shadow: none; /* Remove sombra */
+    transition: color 0.3s ease-in-out; /* Mantém apenas um efeito de transição suave */
+    text-transform: capitalize;  
+}
+.cabecalho-link:hover {
+    background: none !important; /* Remove fundo no hover */
+    border: none !important; /* Remove borda no hover */
+    box-shadow: none !important; /* Remove sombra no hover */
+    outline: none !important; /* Remove contorno (se houver) */
+    color: rgb(244, 246, 245); /* Efeito hover simples */
+}
+.cabecalho.solid {
+    background-color: rgba(209,233,202,255); /* Cor sólida ao rolar */
+    /*background-color: rgba(10, 10, 10); /* Cor sólida ao rolar */
+    box-shadow: 0px 4px 6px rgba(10, 10, 10, 0.3); /* Adiciona sombra */
+  }
+#home {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}
+#trabalho {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}
+#manifestacao {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}
+#estudo {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}
+#reagrupamento {
+    scroll-margin-top: 100px; /* Ajuste conforme a altura do cabeçalho */
+}

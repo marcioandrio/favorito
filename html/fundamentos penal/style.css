@@ -1,0 +1,133 @@
+body1 {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+
+    background-image: url("fundo1.jpeg");
+    background-size: cover; /* Garante que a imagem cubra toda a área do body */
+    background-repeat: no-repeat; /* Evita que a imagem se repita */
+    background-position: center center; /* Centraliza a imagem horizontal e verticalmente */
+    background-attachment: fixed; /* Mantém a imagem fixa enquanto a página rola */
+    
+    /*background: radial-gradient(circle, #2b617c, #a49f97); /*degrade radial*/
+
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: linear-gradient(to right, 
+        #2b617c, /* Azul inicial */
+        rgba(43, 97, 124, 0.5) 2cm, /* Azul com transparência */
+        transparent 3cm, 
+        transparent calc(100% - 3cm), 
+        rgba(43, 97, 124, 0.5) calc(100% - 2cm), /* Azul com transparência */
+        #2b617c calc(100% - 1cm)), /* Azul final */
+        radial-gradient(circle, #2b617c, #a49f97);
+    background-size: 100% 100%, auto;
+    background-repeat: no-repeat;
+    background-position: center, center center;
+}
+
+h1 { /*Título*/
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    align-items: center;
+    /*height: 100vh; /* Garantir que ocupe toda a altura da página */
+    text-align: center; /* Alinhar o texto dentro do elemento */
+}
+h2{
+    text-align: left;  
+    padding-left: 3cm; /* Adiciona um espaço de 6 cm à esquerda */
+}
+li{
+    font-size: 25px;
+    text-align: left;  
+    padding-left: 5cm; /* Adiciona um espaço de 6 cm à esquerda */
+    padding-right: 3cm; /* Adiciona um espaço de 3 cm à direita */
+}
+p { /*Parágrafo*/
+    font-size: 25px;
+    text-align: justify;
+    padding-left: 3cm; /* Adiciona um espaço de 6 cm à esquerda */
+    padding-right: 3cm; /* Adiciona um espaço de 3 cm à direita */
+    line-height: 1; /* Adiciona um espaçamento de 1.5 entre as linhas */
+    padding-bottom: 1.5;
+}
+.tabela{ 
+    font-size: 20px;
+    /*display: flex; /**/
+    padding-left: 15cm; /* Adiciona um espaço de 10 cm à esquerda */
+    padding-right: 15cm; /* Adiciona um espaço de 3 cm à direita */
+    text-align: center; /* Justifica o texto */
+}
+.tabela table { /*Tira a linha dupla*/
+    width: 100%; /* Faz a tabela ocupar toda a largura disponível dentro da div */
+    border-collapse: collapse; /* Junta as bordas para um design mais limpo */
+    text-align: center; /* Centraliza o texto horizontalmente */
+}
+.tabela td { /*acrescentou espaços*/
+    text-align: center; /* Centraliza o texto dentro de cada célula */
+    vertical-align: middle; /* Centraliza o texto verticalmente */   
+    padding: 10px; /* Adiciona um espaçamento interno para melhorar a aparência */
+}
+
+.texto-yellow {
+    background-color: yellow; /* Cor de fundo amarela, como um marca-texto */
+    color: black; /* Cor do texto */
+}
+.texto-purple {
+    background-color: rgba(232, 60, 189, 0.50); /* Cor de fundo amarela, como um marca-texto */
+    color: black; /* Cor do texto */
+}
+.texto-green {
+    background-color: rgba(60, 232, 97, 0.5);
+    color: black; /* Cor do texto */
+}
+.texto-orange {
+    background-color: rgba(232, 120, 60, 0.5);
+    color: black; /* Cor do texto */
+
+}
+.texto-blue {
+    background-color: rgba(60, 94, 232, 0.5);
+    color: black; /* Cor do texto */
+
+}
+a{
+    color: black;
+}
+
+/* ── Header / Back button ─────────────────────────────── */
+header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(10, 10, 30, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.btn-voltar {
+    text-decoration: none;
+    color: #e8e8e8;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-family: Arial, sans-serif;
+}
+
+.btn-voltar:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+body {
+    padding-top: 60px;
+}
