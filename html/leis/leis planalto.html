@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leis Planalto</title>
+    <link rel="icon" href="../../img/icone/ma.png">
+    <link rel="stylesheet" href="style-leis.css">
+</head>
+<body>
+
+<header>
+    <a class="btn-voltar" href="../../index.html">← Voltar</a>
+    <h1 style="position:static;margin:0;font-size:18px;">Leis Planalto 🇧🇷</h1>
+</header>
+
+<div class="container">
+    <h1>Leis Planalto</h1>
+
+    <div class="campo-pesquisa">
+        <input type="text" id="pesquisa" onkeyup="pesquisar()" placeholder="Pesquisar lei...">
+    </div>
+
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm')">Constituição Federal de 1988 — CF</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto-lei/del2848.htm')">Lei 2.848 de 1940 — CPB</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto-lei/del3688.htm')">Lei 3.688 de 1941 — Contravenções Penais</button>
+    <button class="lei lei-br" onclick="window.open('http://www.planalto.gov.br/ccivil_03/decreto-lei/del3689.htm')">Lei 3.689 de 1941 — CPP</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')">Lei 5.452 de 1943 — CLT</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto/1950-1969/D42018impressao.htm')">Decreto 42.018 de 1957 — RISG</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l5478.htm')">Lei 5.478 de 1968 — Alimentos</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto-lei/del1001.htm')">Decreto Lei 1.001 de 1969 — Código Penal Militar</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l6015compilada.htm')">Lei 6.015 de 1973 — Registros Públicos</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l6880.htm')">Lei 6.880 de 1980 — Estatuto Militar</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l7210.htm')">Lei 7.210 de 1984 — LEP</button>
+    <button class="lei lei-br" onclick="window.open('http://www.planalto.gov.br/ccivil_03/leis/l6830.htm')">Lei 6.830 de 1980 — Dívida Ativa</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l8069.htm')">Lei 8.069 de 1990 — ECA</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm')">Lei 8.078 de 1990 — CDC</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l8906.htm')">Lei 8.906 de 1994 — Estatuto dos Advogados</button>
+    <button class="lei lei-br" onclick="window.open('http://www.planalto.gov.br/ccivil_03/leis/l9099.htm')">Lei 9.099 de 1995 — JEC</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l9296.htm')">Lei 9.296 de 1996 — Gravação de Conversa</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm')">Lei 9.503 de 1997 — CTB</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/decreto/2002/d4346.htm')">Decreto 4.346 de 2002 — RDE</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm')">Lei 10.406 de 2002 — CC</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11419.htm')">Lei 11.419 de 2006 — Assinatura Eletrônica</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11340.htm')">Lei 11.340 de 2006 — Maria da Penha</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11343.htm')">Lei 11.343 de 2006 — Drogas</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12318.htm')">Lei 12.318 de 2010 — Alienação Parental</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105.htm')">Lei 13.105 de 2015 — CPC</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14181.htm')">Lei 14.181 de 2021 — Superendividamento</button>
+    <button class="lei lei-br" onclick="window.open('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14344.htm')">Lei 14.344 de 2022 — Henry Borel</button>
+</div>
+
+<script>
+function pesquisar() {
+    const filtro = document.getElementById("pesquisa").value.toLowerCase();
+    document.querySelectorAll(".lei").forEach(function(lei) {
+        lei.style.display = lei.innerText.toLowerCase().includes(filtro) ? "block" : "none";
+    });
+}
+</script>
+
+</body>
+</html>

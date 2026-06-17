@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leis PGDE</title>
+    <link rel="icon" href="../../img/icone/ma.png">
+    <link rel="stylesheet" href="style-leis.css">
+</head>
+<body>
+
+<header>
+    <a class="btn-voltar" href="../../index.html">← Voltar</a>
+    <h1 style="position:static;margin:0;font-size:18px;">Leis PGDE 🇵🇹</h1>
+</header>
+
+<div class="container">
+    <h1>Leis PGDE</h1>
+
+    <div class="campo-pesquisa">
+        <input type="text" id="pesquisa" onkeyup="pesquisar()" placeholder="Pesquisar lei...">
+    </div>
+
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/legislacao-consolidada/decreto-aprovacao-constituicao/1976-34520775')">CRP | DR 86/1976 — Constituição da República Portuguesa</button>
+    <button class="lei lei-pt" onclick="window.open('https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=614&tabela=leis')">Lei 37/1981 — Nacionalidade</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/legislacao-consolidada/decreto-lei/1987-34570075')">Lei 78/1987 — Código de Processo Penal</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/detalhe/decreto-lei/267-1992-599729')">Lei 267/1992 — Procurações</button>
+    <button class="lei lei-pt" onclick="window.open('https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=109&tabela=leis')">Lei 48/1995 — Código Penal</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/detalhe/decreto-lei/290-d-1999-445741')">Lei 290-D/1999 — Assinatura Eletrónica</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/detalhe/decreto-lei/28-2000-410916')">Lei 28/2000 — Conferência de Fotocópias nas Juntas de Freguesia</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2002-34464475')">Lei 15/2002 — CPTA</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/legislacao-consolidada/decreto-lei/2006-34553775-72988336')">Lei 76-A/2006 — Competência para Reconhecimentos de Assinaturas</button>
+    <button class="lei lei-pt" onclick="window.open('https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=920&tabela=leis')">Lei 23/2007 — Entrada/Saída Estrangeiros</button>
+    <button class="lei lei-pt" onclick="window.open('https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=1584&tabela=leis&so_miolo=')">Lei 27/2008 — Asilo</button>
+    <button class="lei lei-pt" onclick="window.open('https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2009-34546475')">Lei 7/2009 — Código do Trabalho</button>
+    <button class="lei lei-pt" onclick="window.open('https://www.pgdlisboa.pt/leis/lei_mostra_articulado.php?nid=2440&tabela=leis&ficha=1&pagina=1&so_miolo=')">Lei 145/2015 — Estatuto dos Advogados</button>
+    <button class="lei lei-pt" onclick="window.open('https://eur-lex.europa.eu/legal-content/PT/TXT/PDF/?uri=CELEX:32018R1860')">Regulamento (UE) 2018/1860 — SIS</button>
+</div>
+
+<script>
+function pesquisar() {
+    const filtro = document.getElementById("pesquisa").value.toLowerCase();
+    document.querySelectorAll(".lei").forEach(function(lei) {
+        lei.style.display = lei.innerText.toLowerCase().includes(filtro) ? "block" : "none";
+    });
+}
+</script>
+
+</body>
+</html>
