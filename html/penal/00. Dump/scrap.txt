@@ -1,0 +1,133 @@
+
+
+
+        <section class="secao" id="honra">
+            <h2>Crimes Contra a Honra</h2>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Crime</th>
+                        <th>Descrição</th>
+                    </tr>
+
+                    <tr>
+                        <td>Calúnia</td>
+                        <td>Imputar falsamente fato definido como crime.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Difamação</td>
+                        <td>Imputar fato ofensivo à reputação.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Injúria</td>
+                        <td>Ofender a dignidade ou decoro.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>
+                A regra é ação penal privada, salvo exceções previstas em lei.
+            </p>
+        </section>
+
+        <section class="secao" id="patrimonio">
+            <h2>Crimes Contra o Patrimônio</h2>
+
+            <h3>Furto</h3>
+
+            <p>
+                O furto consiste na subtração de coisa alheia móvel sem violência ou grave ameaça.
+            </p>
+
+            <div class="destaque">
+                <strong>Furto Privilegiado:</strong><br>
+                Réu primário + pequeno valor da coisa.
+            </div>
+
+            <h3>Roubo</h3>
+
+            <p>
+                O roubo envolve subtração mediante violência ou grave ameaça.
+            </p>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Roubo Próprio</th>
+                        <th>Roubo Impróprio</th>
+                    </tr>
+
+                    <tr>
+                        <td>Violência antes da subtração</td>
+                        <td>Violência após a subtração</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Receptação</h3>
+
+            <p>
+                Comprar, transportar ou ocultar objeto que sabe ser produto de crime.
+            </p>
+        </section>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="secao" id="crimesvida"> <!-- Conteúdo da seção crimesvida -->
+    <h2 class="titulo-toggle" onclick="toggleSecao('conteudocrimesvida')">▶ Crimes Contra a Vida</h2>    
+    <div id="conteudocrimesvida" class="conteudo-secao"> <!-- Conteúdo da seção -->
+        <h2>Crimes Contra a Vida</h2>
+        <div class="destaque">
+            <strong>H.I.I.S.A</strong><br>
+                Homicídio<br>
+                Infanticídio<br>
+                Instigação ao suicídio<br>
+                Aborto
+        </div>
+        <h3>Homicídio Doloso</h3>
+        <p>
+            O homicídio doloso está previsto no artigo 121 do Código Penal.
+        </p>
+        <div class="quadro">
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Características</th>
+                </tr>
+                <tr>
+                    <td>Simples</td>
+                    <td>Art. 121 caput</td>
+                </tr>
+                <tr>
+                    <td>Privilegiado</td>
+                    <td>Relevante valor moral ou social</td>
+                </tr>
+                <tr>
+                    <td>Qualificado</td>
+                    <td>Crime hediondo</td>
+                </tr>
+            </table>
+        </div>
+
+    </div> <!-- Fim do Conteúdo da seção -->        
+
+</section><!-- Fim do Conteúdo da seção crimesvida -->

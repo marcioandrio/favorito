@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA - Esquematizado Penal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            color: #333333;
+            padding-top: 220px;
+            padding-bottom: 160px;
+            line-height: 1.8;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 20px;
+        }
+
+        .logo {
+            width: 100px;
+            max-width: 90%;
+            margin-bottom: 15px;
+        }
+
+        .titulo-principal {
+            font-size: 24pt;
+            color: #4a0e1b;
+            text-align: center;
+        }
+
+        .subtitulo {
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .conteudo {
+            width: 900px;
+            max-width: 95%;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .indice {
+            background: #f8f8f8;
+            border-left: 5px solid #4a0e1b;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 50px;
+        }
+
+        .indice h2 {
+            margin-bottom: 20px;
+            color: #4a0e1b;
+        }
+
+        .indice ul {
+            list-style: none;
+        }
+
+        .indice li {
+            margin-bottom: 10px;
+        }
+
+        .indice a {
+            text-decoration: none;
+            color: #333;
+            transition: 0.2s;
+        }
+
+        .indice a:hover {
+            color: #4a0e1b;
+        }
+
+        .secao {
+            margin-bottom: 60px;
+            scroll-margin-top: 260px;
+        }
+
+        .secao h2 {
+            font-size: 24pt;
+            text-align: center;
+            color: #4a0e1b;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ececec;
+            padding-bottom: 10px;
+        }
+
+        .secao h3 {
+            font-size: 18pt;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .secao p {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+
+        .destaque {
+            background: #f2f2f2;
+            border-left: 5px solid #4a0e1b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .quadro {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: #4a0e1b;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 14px;
+            vertical-align: top;
+        }
+
+        .topo {
+            position: fixed;
+            right: 20px;
+            bottom: 180px;
+            background: #4a0e1b;
+            color: white;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 20px 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        footer p {
+            margin: 6px 0;
+        }
+
+        footer a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .icone {
+            width: 18px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding-top: 260px;
+            }
+
+            .conteudo {
+                padding: 25px;
+            }
+
+            .titulo-principal {
+                font-size: 22pt;
+            }
+
+            .secao h2 {
+                font-size: 20pt;
+            }
+        }
+h4 {
+    text-align: justify;    /* Alinha o texto */
+    font-style: italic;     /* Aplica o itálico */
+    color: #4a0e1b;         /* Cor do texto */
+    margin-left: 4cm;       /* Recuo de 4cm à esquerda (como no Word) */
+    margin-right: 20px;     /* Recuo opcional à direita para melhor leitura */
+    font-size: 12pt;        /* Tamanho levemente menor é comum em citações */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.titulo-toggle{
+    cursor:pointer;
+    background:#4a0e1b;
+    color:white;
+    padding:15px;
+    border-radius:12px;
+    transition:0.3s;
+    user-select:none;
+}
+
+.titulo-toggle:hover{
+    background:#6d1629;
+}
+
+.conteudo-secao{
+    display:none;
+    margin-top:25px;
+    animation:abrir 0.3s ease;
+}
+
+@keyframes abrir{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+</style>
+
+</head>
+    
+    
+    
+    <body>
+    
+    <h2 class="titulo-toggle"
+    
+        ▶ Crimes Contra a Vida
+    
+    <div id="conteudocrimesvida" class="conteudo-secao">
+        <div class="destaque">
+            <strong>H.I.I.S.A</strong><br>
+            Homicídio<br>
+            Infanticídio<br>
+            Instigação ao suicídio<br>
+            Aborto
+        </div>
+
+        <p>
+            Os crimes contra a vida estão previstos entre os artigos
+            121 ao 128 do Código Penal.
+        </p>
+
+        <p>
+            São julgados pelo Tribunal do Júri os crimes dolosos contra
+            a vida consumados ou tentados, por conexão ou continência.
+        </p>
+
+        <div class="destaque">
+            <strong>Tribunal do Júri:</strong><br>
+            Homicídio doloso<br>
+            Infanticídio<br>
+            Induzimento ao suicídio<br>
+            Aborto
+        </div>
+
+        <h3>Homicídio Doloso</h3>
+
+        <div class="quadro">
+            <table>
+                <tr>
+                    <th>Espécie</th>
+                    <th>Características</th>
+                </tr>
+
+                <tr>
+                    <td>Simples</td>
+                    <td>Art. 121 caput</td>
+                </tr>
+
+                <tr>
+                    <td>Privilegiado</td>
+                    <td>
+                        Relevante valor moral ou social.<br>
+                        Sob violenta emoção logo após injusta provocação.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Qualificado</td>
+                    <td>Crime hediondo</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio Privilegiado</h3>
+
+        <div class="destaque">
+            Redução de pena: 1/6 até 1/3.
+        </div>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Hipótese</th>
+                    <th>Exemplo</th>
+                </tr>
+
+                <tr>
+                    <td>Relevante valor social</td>
+                    <td>Matar traidor da pátria.</td>
+                </tr>
+
+                <tr>
+                    <td>Relevante valor moral</td>
+                    <td>Matar o estuprador da filha.</td>
+                </tr>
+
+                <tr>
+                    <td>Violenta emoção</td>
+                    <td>Logo após injusta provocação da vítima.</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio Qualificado</h3>
+
+        <p>
+            O homicídio qualificado será sempre hediondo.
+        </p>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Qualificadora</th>
+                    <th>Descrição</th>
+                </tr>
+
+                <tr>
+                    <td>Feminicídio</td>
+                    <td>
+                        Matar mulher por razão da condição do sexo feminino
+                        ou violência doméstica.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Homicídio funcional</td>
+                    <td>
+                        Contra autoridade ou agente de segurança pública.
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Homicídio na Direção de Veículo</h3>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Doloso</th>
+                    <th>Culposo</th>
+                </tr>
+
+                <tr>
+                    <td>
+                        Dolo eventual.<br>
+                        Assume o risco.<br>
+                        Racha.<br>
+                        Alta velocidade.
+                    </td>
+
+                    <td>
+                        Imprudência.<br>
+                        Negligência.<br>
+                        Imperícia.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Tribunal do Júri</td>
+                    <td>Vara Criminal</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <h3>Aborto</h3>
+
+        <p>
+            O sujeito passivo é o feto.
+            Não existe modalidade culposa.
+        </p>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Crime</th>
+                    <th>Artigo</th>
+                </tr>
+
+                <tr>
+                    <td>Autoaborto</td>
+                    <td>Art. 124</td>
+                </tr>
+
+                <tr>
+                    <td>Sem consentimento da gestante</td>
+                    <td>Art. 125</td>
+                </tr>
+
+                <tr>
+                    <td>Com consentimento da gestante</td>
+                    <td>Art. 126</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="destaque">
+            <strong>Aborto permitido:</strong><br>
+            Aborto necessário.<br>
+            Gravidez resultante de estupro.
+        </div>
+
+        <h3>Infanticídio</h3>
+
+        <p>
+            Mãe que mata o próprio filho durante ou logo após o parto,
+            sob influência do estado puerperal.
+        </p>
+
+        <h3>Induzimento, Instigação ou Auxílio ao Suicídio</h3>
+
+        <div class="quadro">
+            <table>
+
+                <tr>
+                    <th>Conduta</th>
+                    <th>Descrição</th>
+                </tr>
+
+                <tr>
+                    <td>Induzir</td>
+                    <td>Plantar a ideia.</td>
+                </tr>
+
+                <tr>
+                    <td>Instigar</td>
+                    <td>Reforçar a ideia.</td>
+                </tr>
+
+                <tr>
+                    <td>Auxiliar</td>
+                    <td>Dar meios para o ato.</td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="destaque">
+            Automutilação → Vara Criminal.<br>
+            Instigação ao suicídio → Tribunal do Júri.
+        </div>
+
+    </div>
+</body>

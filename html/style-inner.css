@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f5f4f0;
+    color: #222;
+    padding-top: 100px;
+    padding-bottom: 120px;
+    min-height: 100vh;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    z-index: 1000;
+}
+
+.btn-voltar {
+    position: absolute;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #4a0e1b;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: 1px solid #4a0e1b;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-voltar:hover {
+    background: #4a0e1b;
+    color: #fff;
+}
+
+.logo-header {
+    max-height: 64px;
+    width: auto;
+}
+
+/* ── Conteúdo ─────────────────────────────────────────── */
+h1 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: #4a0e1b;
+    margin: 24px 0 8px;
+    letter-spacing: 0.5px;
+}
+
+.caixa {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+}
+
+.lista {
+    width: 800px;
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.9;
+    padding: 32px 36px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    color: #1a1a1a;
+}
+
+.lista strong { color: #2a2a2a; }
+
+.lista a {
+    color: #4a0e1b;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(74,14,27,0.3);
+}
+
+.lista a:hover { border-bottom-color: #4a0e1b; }
+
+/* ── Footer ───────────────────────────────────────────── */
+footer {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: #fff;
+    text-align: center;
+    padding: 12px 16px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    font-size: 13px;
+    color: #444;
+}
+
+footer p { margin: 3px 0; }
+
+footer a {
+    color: #4a0e1b;
+    text-decoration: none;
+}
+
+footer small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #888;
+}
+
+/* ── Imagens (Citius) ─────────────────────────────────── */
+.passo {
+    text-align: center;
+    margin: 20px 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #4a0e1b;
+}
+
+.passo-img {
+    display: block;
+    margin: 0 auto 4px;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.passo-acao {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+    body { padding-top: 80px; padding-bottom: 130px; }
+    .btn-voltar { font-size: 12px; padding: 5px 10px; }
+    h1 { font-size: 20px; }
+    .caixa { padding: 10px; }
+    .lista { padding: 20px 18px; font-size: 14px; }
+}

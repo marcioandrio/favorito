@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA - Esquematizado Penal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            color: #333333;
+            padding-top: 220px;
+            padding-bottom: 160px;
+            line-height: 1.8;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 20px;
+        }
+
+        .logo {
+            width: 100px;
+            max-width: 90%;
+            margin-bottom: 15px;
+        }
+
+        .titulo-principal {
+            font-size: 24pt;
+            color: #4a0e1b;
+            text-align: center;
+        }
+
+        .subtitulo {
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .conteudo {
+            width: 900px;
+            max-width: 95%;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .indice {
+            background: #f8f8f8;
+            border-left: 5px solid #4a0e1b;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 50px;
+        }
+
+        .indice h2 {
+            margin-bottom: 20px;
+            color: #4a0e1b;
+        }
+
+        .indice ul {
+            list-style: none;
+        }
+
+        .indice li {
+            margin-bottom: 10px;
+        }
+
+        .indice a {
+            text-decoration: none;
+            color: #333;
+            transition: 0.2s;
+        }
+
+        .indice a:hover {
+            color: #4a0e1b;
+        }
+
+        .secao {
+            margin-bottom: 60px;
+            scroll-margin-top: 260px;
+        }
+
+        .secao h2 {
+            font-size: 24pt;
+            text-align: center;
+            color: #4a0e1b;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ececec;
+            padding-bottom: 10px;
+        }
+
+        .secao h3 {
+            font-size: 18pt;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .secao p {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+
+        .destaque {
+            background: #f2f2f2;
+            border-left: 5px solid #4a0e1b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .quadro {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: #4a0e1b;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 14px;
+            vertical-align: top;
+        }
+
+        .topo {
+            position: fixed;
+            right: 20px;
+            bottom: 180px;
+            background: #4a0e1b;
+            color: white;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 20px 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        footer p {
+            margin: 6px 0;
+        }
+
+        footer a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .icone {
+            width: 18px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding-top: 260px;
+            }
+
+            .conteudo {
+                padding: 25px;
+            }
+
+            .titulo-principal {
+                font-size: 22pt;
+            }
+
+            .secao h2 {
+                font-size: 20pt;
+            }
+        }
+h4 {
+    text-align: justify;    /* Alinha o texto */
+    font-style: italic;     /* Aplica o itálico */
+    color: #4a0e1b;         /* Cor do texto */
+    margin-left: 4cm;       /* Recuo de 4cm à esquerda (como no Word) */
+    margin-right: 20px;     /* Recuo opcional à direita para melhor leitura */
+    font-size: 12pt;        /* Tamanho levemente menor é comum em citações */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+
+<header>
+    <img src="png/logositema.png" alt="Logo" class="logo">
+
+    <h1 class="titulo-principal">Esquematizado Penal</h1>
+
+    <p class="subtitulo">
+        Código Penal • Processo Penal • Leis Especiais
+    </p>
+</header>
+
+<div class="container">
+    <div class="conteudo">
+
+        <div class="indice">
+            <h2>Índice</h2>
+
+            <ul>
+                <li><a href="#intercriminis">Inter Criminis</a></li>
+                <li><a href="#concurso">Concurso de Crimes</a></li>
+                <li><a href="#crimesvida">Crimes Contra a Vida</a></li>
+                <li><a href="#honra">Crimes Contra a Honra</a></li>
+                <li><a href="#patrimonio">Crimes Contra o Patrimônio</a></li>
+            </ul>
+        </div>
+
+        <section class="secao" id="intercriminis">
+            <h2>Inter Criminis</h2>
+
+            <p>
+                O Inter Criminis representa as fases do caminho do crime.
+            </p>
+
+            <div class="destaque">
+                <strong>Fases:</strong><br>
+                1ª Cogitação<br>
+                2ª Preparação<br>
+                3ª Execução<br>
+                4ª Consumação
+            </div>
+
+            <h3>Cogitação e Preparação</h3>
+
+            <p>
+                Em regra, são impuníveis, salvo quando houver previsão legal específica,
+                como nos crimes de organização criminosa ou terrorismo.
+            </p>
+            <p>
+                Exemplo: Terrorismo, Organização Criminosa, Associação Criminosa
+            </p>
+
+<h4>
+    “Considera-se organização criminosa a associação de 4 (quatro)
+    ou mais pessoas, estruturalmente ordenada e caracterizada pela
+    divisão de tarefas, ainda que de forma informal, com o objetivo
+    de obter, direta ou indiretamente, vantagem de qualquer natureza,
+    mediante a prática de infrações penais cujas penas máximas sejam
+    superiores a 4 (quatro) anos, ou que possuam caráter transnacional.”
+</h4>
+
+<p>
+    Atenção: se a conduta não se enquadrar em nenhum desses crimes e o agente
+    não iniciar os atos executórios, o fato será considerado atípico.
+    
+    <br><br>
+
+    <i>Contextualização:</i> <br><br>
+
+    Mônica descobre que Magali está tendo um relacionamento com Cebolinha,
+    <i>ad hoc</i>.
+    <div style="text-align:center;">
+        <img src="img penal/0.jpeg"
+        style="display:block; margin:15px auto;"
+        width="400">
+    </div>
+    Ao perceber que poderá ser trocada, ela pensa:
+    <br><i>“E se eu matar essa filha da puta?”</i><br>
+    <div style="text-align:center;">
+        <img src="img penal/2.jpeg"
+        style="display:block; margin:15px auto;"
+        width="400">
+    </div>
+    Nesse momento, existe apenas a cogitação do crime, isto é, uma ideia
+    interna que ainda não produz relevância penal.
+
+    <br><br>
+
+    Em seguida, Mônica compra uma Glock para executar o plano.
+    Aqui, há apenas a fase de preparação.
+
+    <div style="text-align:center;">
+        <img src="img penal/1.jpeg"
+        style="display:block; margin:15px auto;"
+        width="400">
+    </div>
+
+    Até esse momento, Mônica ainda não praticou o crime de homicídio,
+    pois não iniciou os atos executórios.
+
+    <br><br>
+
+    De acordo com o Código Penal, a responsabilização criminal,
+    em regra, somente ocorre quando o agente dá início à execução do crime.
+</p>
+
+<h3>Execução</h3>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Instituto</th>
+                        <th>Conceito</th>
+                    </tr>
+
+                    <tr>
+                        <td>Desistência Voluntária</td>
+                        <td>O agente pode continuar, mas desiste por vontade própria.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Arrependimento Eficaz</td>
+                        <td>O agente tenta impedir o resultado após esgotar os meios executórios.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Tentativa</td>
+                        <td>O crime não se consuma por circunstâncias alheias à vontade do agente.</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+<p><b>Desistência voluntária</b></p>
+<p>Eu posso, mas, não quero.<br>
+Paro por vontade própria, súplica da vítima, pedido de 3º. </p>
+    <div style="text-align:center;">
+        <img src="img penal/3.jpeg"
+        style="display:block; margin:15px auto;"
+        width="400">
+    </div>
+
+
+        <section class="secao" id="concurso">
+            <h2>Concurso de Crimes</h2>
+
+            <p>
+                O concurso de crimes ocorre quando o agente pratica dois ou mais crimes.
+            </p>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Espécie</th>
+                        <th>Requisitos</th>
+                        <th>Sistema</th>
+                    </tr>
+
+                    <tr>
+                        <td>Concurso Material</td>
+                        <td>Duas ou mais condutas</td>
+                        <td>Cumulação das penas</td>
+                    </tr>
+
+                    <tr>
+                        <td>Concurso Formal</td>
+                        <td>Uma conduta e vários resultados</td>
+                        <td>Exasperação</td>
+                    </tr>
+
+                    <tr>
+                        <td>Crime Continuado</td>
+                        <td>Pluralidade de condutas com continuidade</td>
+                        <td>Aumento de pena</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="secao" id="crimesvida">
+            <h2>Crimes Contra a Vida</h2>
+
+            <div class="destaque">
+                <strong>H.I.I.S.A</strong><br>
+                Homicídio<br>
+                Infanticídio<br>
+                Instigação ao suicídio<br>
+                Aborto
+            </div>
+
+            <h3>Homicídio Doloso</h3>
+
+            <p>
+                O homicídio doloso está previsto no artigo 121 do Código Penal.
+            </p>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Características</th>
+                    </tr>
+
+                    <tr>
+                        <td>Simples</td>
+                        <td>Art. 121 caput</td>
+                    </tr>
+
+                    <tr>
+                        <td>Privilegiado</td>
+                        <td>Relevante valor moral ou social</td>
+                    </tr>
+
+                    <tr>
+                        <td>Qualificado</td>
+                        <td>Crime hediondo</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section class="secao" id="honra">
+            <h2>Crimes Contra a Honra</h2>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Crime</th>
+                        <th>Descrição</th>
+                    </tr>
+
+                    <tr>
+                        <td>Calúnia</td>
+                        <td>Imputar falsamente fato definido como crime.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Difamação</td>
+                        <td>Imputar fato ofensivo à reputação.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Injúria</td>
+                        <td>Ofender a dignidade ou decoro.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>
+                A regra é ação penal privada, salvo exceções previstas em lei.
+            </p>
+        </section>
+
+        <section class="secao" id="patrimonio">
+            <h2>Crimes Contra o Patrimônio</h2>
+
+            <h3>Furto</h3>
+
+            <p>
+                O furto consiste na subtração de coisa alheia móvel sem violência ou grave ameaça.
+            </p>
+
+            <div class="destaque">
+                <strong>Furto Privilegiado:</strong><br>
+                Réu primário + pequeno valor da coisa.
+            </div>
+
+            <h3>Roubo</h3>
+
+            <p>
+                O roubo envolve subtração mediante violência ou grave ameaça.
+            </p>
+
+            <div class="quadro">
+                <table>
+                    <tr>
+                        <th>Roubo Próprio</th>
+                        <th>Roubo Impróprio</th>
+                    </tr>
+
+                    <tr>
+                        <td>Violência antes da subtração</td>
+                        <td>Violência após a subtração</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Receptação</h3>
+
+            <p>
+                Comprar, transportar ou ocultar objeto que sabe ser produto de crime.
+            </p>
+        </section>
+
+    </div>
+</div>
+
+<a href="#top" class="topo">↑ Topo</a>
+
+<footer>
+    <p>
+        <img src="https://img.icons8.com/ios-filled/50/000000/phone.png"
+             alt="Telefone"
+             class="icone">
+        +351 960 389 573
+    </p>
+
+    <p>
+        <img src="https://img.icons8.com/ios-filled/50/000000/email.png"
+             alt="Email"
+             class="icone">
+
+        <a href="mailto:marcio.andrio@ma-advocacia.com">
+            marcio.andrio@ma-advocacia.com
+        </a>
+    </p>
+
+    <p>
+        © 2026 Marcio Andrio Advocacia. Todos os direitos reservados.
+    </p>
+</footer>
+
+</body>
+</html>

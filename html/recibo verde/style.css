@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    
+    background: url('img/fundo.jpg') no-repeat center fixed;
+    background-size: cover;
+}
+h1 { /*Título*/
+    font-size: 30px;
+    padding-left: 3cm; /* Adiciona um espaço de 6 cm à esquerda */
+    padding-top: 50px;
+    /*height: 100vh; /* Garantir que ocupe toda a altura da página */
+    text-align: justify; /* Alinhar o texto dentro do elemento */
+}
+h2{
+    text-align: left;  
+    padding-left: 3cm; /* Adiciona um espaço de 6 cm à esquerda */
+}
+h3{
+    text-align: left;  
+    padding-left: 6cm; /* Adiciona um espaço de 6 cm à esquerda */
+}
+p { /*Parágrafo*/
+    font-size: 25px;
+    text-align: justify;
+    padding-left: 5cm; /* Adiciona um espaço de 6 cm à esquerda */
+    padding-right: 3cm; /* Adiciona um espaço de 3 cm à direita */
+    line-height: 1; /* Adiciona um espaçamento de 1.5 entre as linhas */
+    padding-bottom: 1.5;
+}
+.tabela {
+    font-size: 20px;
+    text-align: left; /* Alinha o texto à esquerda */
+    padding: 20px; /* Adiciona 20px de preenchimento em todos os lados */
+    width: fit-content; /* Ajusta a largura da tabela ao conteúdo */
+    margin-left: 4cm; /* Adiciona 3cm de margem à esquerda */    
+}
+.tabela table { /*Tira a linha dupla*/
+    width: 100%; /* Faz a tabela ocupar toda a largura disponível dentro da div */
+    border-collapse: collapse; /* Junta as bordas para um design mais limpo */
+    text-align: center; /* Centraliza o texto horizontalmente */
+}
+.tabela td { /*acrescentou espaços*/
+    text-align: center; /* Centraliza o texto dentro de cada célula */
+    vertical-align: middle; /* Centraliza o texto verticalmente */   
+    padding: 10px; /* Adiciona um espaçamento interno para melhorar a aparência */
+    color: rgb(3, 3, 3); /* Adiciona a cor branca ao texto */
+
+}
+.italico {
+    font-style: italic;
+    padding-left: 10px; /* Adiciona 10px antes da palavra */
+    padding-right: 10px; /* Adiciona 10px depois da palavra */
+}
+h4{
+    align-items: center;
+    text-align: center;
+}

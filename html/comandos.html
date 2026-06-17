@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicação das Tags HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 3px 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Principais Tags HTML</h1>
+    
+    <h2>&lt;h1&gt; até &lt;h6&gt; - Títulos</h2>
+    <p>As tags <code>&lt;h1&gt;</code> a <code>&lt;h6&gt;</code> são usadas para definir títulos, do maior (<code>&lt;h1&gt;</code>) ao menor (<code>&lt;h6&gt;</code>).</p>
+    <h1>Este é um título H1</h1>
+    <h2>Este é um título H2</h2>
+    <h3>Este é um título H3</h3>
+
+    <h2>&lt;p&gt; - Parágrafo</h2>
+    <p>A tag <code>&lt;p&gt;</code> é usada para definir parágrafos de texto.</p>
+    
+    <h2>&lt;a&gt; - Links</h2>
+    <p>A tag <code>&lt;a&gt;</code> cria links para outras páginas ou arquivos.</p>
+    <p>Exemplo: <a href="https://www.google.com" target="_blank">Clique aqui para acessar o Google</a>.</p>
+
+    <h2>&lt;img&gt; - Imagens</h2>
+    <p>A tag <code>&lt;img&gt;</code> exibe imagens.</p>
+    <p>Exemplo:</p>
+    <img src="https://via.placeholder.com/150" alt="Imagem de Exemplo">
+
+    <h2>&lt;ul&gt;, &lt;ol&gt; e &lt;li&gt; - Listas</h2>
+    <p>As tags <code>&lt;ul&gt;</code> (lista não ordenada), <code>&lt;ol&gt;</code> (lista ordenada) e <code>&lt;li&gt;</code> (itens da lista) são usadas para criar listas.</p>
+    <p>Exemplo de lista não ordenada:</p>
+    <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+    </ul>
+    <p>Exemplo de lista ordenada:</p>
+    <ol>
+        <li>Passo 1</li>
+        <li>Passo 2</li>
+    </ol>
+
+    <h2>&lt;table&gt; - Tabelas</h2>
+    <p>A tag <code>&lt;table&gt;</code> cria tabelas com linhas (<code>&lt;tr&gt;</code>) e colunas (<code>&lt;td&gt;</code>).</p>
+    <table border="1">
+        <tr>
+            <th>Nome</th>
+            <th>Idade</th>
+        </tr>
+        <tr>
+            <td>Ana</td>
+            <td>25</td>
+        </tr>
+        <tr>
+            <td>Pedro</td>
+            <td>30</td>
+        </tr>
+    </table>
+
+    <h2>&lt;div&gt; e &lt;span&gt; - Elementos de Agrupamento</h2>
+    <p>A tag <code>&lt;div&gt;</code> é um container genérico para agrupar elementos.</p>
+    <p>A tag <code>&lt;span&gt;</code> é usada para estilizar partes específicas de um texto.</p>
+    <p>Exemplo: <span style="color: red;">Este texto está vermelho</span>.</p>
+
+    <h2>&lt;form&gt; - Formulários</h2>
+    <p>A tag <code>&lt;form&gt;</code> é usada para criar formulários com campos de entrada (<code>&lt;input&gt;</code>).</p>
+    <form>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br>
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email"><br>
+        <input type="submit" value="Enviar">
+    </form>
+    <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/"> Link para a pagina CSS Tricks</a>
+</body>
+</html>
