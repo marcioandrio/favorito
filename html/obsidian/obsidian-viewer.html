@@ -18,6 +18,27 @@
   #notes-count { font-size: 11px; color: var(--text2); margin-left: auto; }
   #btn-load { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 11px; cursor: pointer; white-space: nowrap; }
   #btn-load:hover { border-color: var(--accent); color: var(--accent); }
+  #btn-settings { background: none; border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+  #btn-settings:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* SETTINGS MODAL */
+  #settings-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; }
+  #settings-modal.open { display: flex; }
+  #settings-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 540px; display: flex; flex-direction: column; gap: 14px; }
+  #settings-box h3 { color: var(--accent); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+  #settings-box label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px; }
+  #settings-box input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-size: 12px; outline: none; font-family: monospace; }
+  #settings-box input:focus { border-color: var(--accent); }
+  .settings-hint { font-size: 11px; color: var(--text2); }
+  .settings-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  .settings-btns button { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: bold; }
+  #btn-settings-save { background: var(--accent); color: #0d0f14; }
+  #btn-settings-cancel { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+  .open-folder-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 5px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); font-size: 11px; cursor: pointer; user-select: none; }
+  .open-folder-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-toast { position: fixed; bottom: 20px; right: 20px; background: var(--green); color: #0d0f14; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: bold; z-index: 300; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .copy-toast.show { opacity: 1; }
   #folder-input { display: none; }
 
   #layout { flex: 1; display: flex; overflow: hidden; }
@@ -79,7 +100,25 @@
   <h1>⚖️ MA Brain</h1>
   <label id="btn-load">📂 Pasta<input id="folder-input" type="file" webkitdirectory multiple></label>
   <span id="notes-count"></span>
+  <button id="btn-settings" onclick="openSettings()">⚙️</button>
 </div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal">
+  <div id="settings-box">
+    <h3>⚙️ Configuração</h3>
+    <div>
+      <label>Caminho base das pastas de clientes</label>
+      <input id="input-base-path" type="text" placeholder="/Users/marcio.andrio/pCloud/Law/01. Marcio Andrio - Advocacia/01. Brasil/01. Clientes Brasil/">
+      <p class="settings-hint" style="margin-top:6px;">Quando pesquisar um cliente, aparece um botão para copiar o caminho completo da sua pasta.</p>
+    </div>
+    <div class="settings-btns">
+      <button id="btn-settings-cancel" onclick="closeSettings()">Cancelar</button>
+      <button id="btn-settings-save" onclick="saveSettings()">Guardar</button>
+    </div>
+  </div>
+</div>
+<div class="copy-toast" id="copy-toast">✅ Caminho copiado!</div>
 
 <div id="layout">
   <div id="sidebar">
@@ -108,6 +147,39 @@
 <script>
 let notes = {};
 let allFiles = [];
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────────
+let basePath = localStorage.getItem('ma-base-path') || '';
+
+function openSettings() {
+  document.getElementById('input-base-path').value = basePath;
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+function saveSettings() {
+  basePath = document.getElementById('input-base-path').value.trim();
+  if (basePath && !basePath.endsWith('/')) basePath += '/';
+  localStorage.setItem('ma-base-path', basePath);
+  closeSettings();
+}
+
+function copyFolderPath(clientName) {
+  let path = basePath + clientName + '/';
+  if (!path.startsWith('~') && !path.startsWith('/')) path = '~/' + path;
+  navigator.clipboard.writeText(path).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.textContent = '✅ Copiado: ' + path;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  });
+}
+
+// Close modal on backdrop click
+document.getElementById('settings-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('settings-modal')) closeSettings();
+});
 
 // ── LOAD ─────────────────────────────────────────────────────────────────────
 document.getElementById('folder-input').addEventListener('change', e => loadFolder(e.target.files));
@@ -153,11 +225,21 @@ function buildClientList(q) {
     el.onclick = () => {
       document.querySelectorAll('.client-item').forEach(e => e.classList.remove('active'));
       el.classList.add('active');
-      document.getElementById('msg-input').value = name;
-      sendMessage();
+      openClient(name);
     };
     list.appendChild(el);
   }
+}
+
+// ── OPEN CLIENT DIRECT ────────────────────────────────────────────────────────
+function openClient(name) {
+  addMsg('user', '👤 ' + name);
+  const clientFiles = allFiles.filter(p => p.startsWith('01 - Clientes/' + name + '/'));
+  if (!clientFiles.length) {
+    addMsg('assistant', '⚠️ Nenhuma nota encontrada para <strong>' + name + '</strong>.');
+    return;
+  }
+  showResults(name, clientFiles);
 }
 
 // ── SEARCH ────────────────────────────────────────────────────────────────────
@@ -178,10 +260,14 @@ function sendMessage() {
   showResults(q, results);
 }
 
+const EXCLUDE_FILES = ['clientes.md', 'lista de clientes.md', 'inbox.md', 'moc', 'welcome.md', 'projetos.md', 'finanças.md'];
+
 function search(q) {
   const words = q.toLowerCase().split(/\s+/).filter(w => w.length > 1);
   const scores = {};
   for (const path of allFiles) {
+    const fileName = path.split('/').pop().toLowerCase();
+    if (EXCLUDE_FILES.some(e => fileName.includes(e))) continue;
     const text = (notes[path] || '').toLowerCase();
     const pathL = path.toLowerCase();
     let score = 0;
@@ -202,12 +288,33 @@ function showResults(q, paths) {
   document.getElementById('messages').appendChild(div);
 
   const bubble = div.querySelector('#res-bubble');
+
+  // If results are from a single client folder, show folder button once at top
+  const clientNames = [...new Set(paths.map(p => {
+    const parts = p.split('/');
+    return parts[0] === '01 - Clientes' && parts.length >= 2 ? parts[1] : null;
+  }).filter(Boolean))];
+
+  if (clientNames.length === 1 && basePath) {
+    const folderBtn = document.createElement('span');
+    folderBtn.className = 'open-folder-btn';
+    folderBtn.innerHTML = '📁 Copiar caminho da pasta — ' + clientNames[0];
+    folderBtn.onclick = () => copyFolderPath(clientNames[0]);
+    bubble.appendChild(folderBtn);
+  }
+
   for (const path of paths) {
     const text = notes[path] || '';
     const name = path.split('/').pop().replace('.md', '');
+    const parts = path.split('/');
+    const clientName = parts[0] === '01 - Clientes' && parts.length >= 2 ? parts[1] : null;
     const card = document.createElement('div');
     card.className = 'note-card';
-    card.innerHTML = '<div class="note-card-title">📄 ' + name + '</div>'
+    card.innerHTML = '<div class="note-card-title">📄 ' + name
+      + (clientName && basePath && clientNames.length > 1
+          ? ' <span class="open-folder-btn" style="margin-left:8px" onclick="copyFolderPath(\'' + clientName.replace(/'/g,"\\'") + '\')">📁 Pasta</span>'
+          : '')
+      + '</div>'
       + '<div class="note-card-body md-content">' + renderMd(text) + '</div>'
       + '<div class="note-card-path">' + path + '</div>';
     bubble.appendChild(card);
@@ -218,6 +325,15 @@ function showResults(q, paths) {
 // ── MARKDOWN ──────────────────────────────────────────────────────────────────
 function renderMd(text) {
   text = text.replace(/^---[\s\S]*?---\n?/, ''); // remove frontmatter
+
+  // Detect "Todos os documentos estão em:" BEFORE escaping HTML
+  text = text.replace(/^> Todos os documentos estão em:\s*(.+)/gim, (_, rawPath) => {
+    let path = rawPath.trim();
+    if (!path.startsWith('~') && !path.startsWith('/')) path = '~/' + path;
+    if (!path.endsWith('/')) path += '/';
+    return '\x00DOCPATH:' + path + '\x00';
+  });
+
   text = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
@@ -230,6 +346,15 @@ function renderMd(text) {
   text = text.replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>');
   text = text.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, '<span style="color:var(--accent)">$2 $1</span>');
   text = text.replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
+
+  // Render doc path buttons
+  text = text.replace(/\x00DOCPATH:(.+?)\x00/g, (_, path) =>
+    '<div style="margin:8px 0;padding:8px 12px;background:var(--bg);border-left:3px solid var(--accent);border-radius:4px;font-size:11px;">'
+    + '📁 <strong>Documentos:</strong> <code style="color:var(--accent)">' + path + '</code>'
+    + ' <span class="open-folder-btn" style="margin-left:8px" onclick="navigator.clipboard.writeText(\'' + path.replace(/'/g,"\\'") + '\').then(()=>{var t=document.getElementById(\'copy-toast\');t.textContent=\'✅ Copiado: ' + path.replace(/'/g,"\\'") + '\';t.classList.add(\'show\');setTimeout(()=>t.classList.remove(\'show\'),3000)})">📋 Copiar</span>'
+    + '</div>'
+  );
+
   return text;
 }
 
