@@ -33,10 +33,12 @@
   /* ─── PAGE ─── */
   .page {
     width: 210mm;
+    min-width: 210mm;
     min-height: 297mm;
     background: #fff;
     display: flex;
     flex-direction: row;
+    flex-shrink: 0;
     box-shadow: 0 10px 40px rgba(0,0,0,.25);
     margin-top: 24px;
     position: relative;
@@ -63,9 +65,9 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     border-bottom: 1.5px solid #4a1628;
-    padding-bottom: 14px;
+    padding-bottom: 10px;
   }
   .header h1 {
     font-family: 'Playfair Display', serif;
@@ -95,9 +97,9 @@
     color: #8a6630;
     text-transform: uppercase;
     border-bottom: 1.5px solid #c9a85c;
-    padding-bottom: 4px;
-    margin-bottom: 12px;
-    margin-top: 18px;
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+    margin-top: 10px;
     display: inline-block;
     width: 100%;
   }
@@ -105,14 +107,14 @@
   /* ─── BODY TEXT ─── */
   .body-text p {
     font-size: 10.5px;
-    line-height: 1.75;
+    line-height: 1.6;
     color: #1a1008;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 
   /* ─── SERVICE BLOCK ─── */
   .service-block {
-    margin-top: 14px;
+    margin-top: 8px;
   }
   .service-block h3 {
     font-family: 'Playfair Display', serif;
@@ -121,35 +123,35 @@
     letter-spacing: .1em;
     color: #1a0e00;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .service-block p {
     font-size: 10.5px;
-    line-height: 1.75;
+    line-height: 1.6;
     color: #1a1008;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .service-block ul {
-    margin: 4px 0 8px 16px;
+    margin: 2px 0 4px 16px;
     list-style: disc;
   }
   .service-block ul li {
     font-size: 10.5px;
-    line-height: 1.8;
+    line-height: 1.6;
     color: #1a1008;
   }
 
   /* ─── PRICE SECTION ─── */
   .price-section {
-    margin-top: 20px;
+    margin-top: 10px;
     border-top: 1px solid #d0c4aa;
-    padding-top: 14px;
+    padding-top: 10px;
   }
   .price-row {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   .price-box {
     flex: 1;
@@ -196,12 +198,12 @@
   /* ─── FOOTER ─── */
   .footer {
     margin-top: auto;
-    padding-top: 18px;
+    padding-top: 10px;
     border-top: 1.5px solid #4a1628;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .footer .name {
     font-family: 'Playfair Display', serif;
@@ -222,14 +224,50 @@
     line-height: 1.8;
   }
 
+  /* ─── MOBILE SCALE ─── */
+  @media (max-width: 800px) {
+    body { padding: 0 0 40px; align-items: flex-start; }
+    .toolbar { position: relative; }
+    #page-scale-wrapper {
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .page { margin-top: 0; transform-origin: top center; }
+  }
+
   /* ─── PRINT ─── */
   @media print {
     body { background: #fff; padding: 0; }
     .toolbar { display: none; }
-    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; }
+    #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
     @page { size: A4 portrait; margin: 0; }
   }
 </style>
+<script>
+  function scalePage() {
+    const wrapper = document.getElementById('page-scale-wrapper');
+    const page = document.querySelector('.page');
+    if (!wrapper || !page) return;
+    const vw = wrapper.offsetWidth;
+    const pageW = page.offsetWidth;
+    if (vw < pageW) {
+      const scale = vw / pageW;
+      page.style.transform = 'scale(' + scale + ')';
+      page.style.marginBottom = '-' + (pageW * (1 - scale)) + 'px';
+      wrapper.style.height = (page.offsetHeight * scale) + 'px';
+    } else {
+      page.style.transform = '';
+      page.style.marginBottom = '';
+      wrapper.style.height = '';
+    }
+  }
+  window.addEventListener('DOMContentLoaded', scalePage);
+  window.addEventListener('resize', scalePage);
+</script>
 </head>
 <body>
 
@@ -238,6 +276,7 @@
   <button onclick="window.print()">Imprimir / Guardar como PDF</button>
 </div>
 
+<div id="page-scale-wrapper">
 <div class="page">
   <div class="bar"></div>
   <div class="content">
@@ -334,6 +373,7 @@
 
   </div><!-- /content -->
 </div><!-- /page -->
+</div><!-- /page-scale-wrapper -->
 
 </body>
 </html>
