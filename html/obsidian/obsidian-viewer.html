@@ -135,6 +135,7 @@
       <label class="btn-load-big" id="btn-load-big">📂 Selecionar Pasta MA Brain
         <input type="file" webkitdirectory multiple style="display:none" onchange="loadFolder(this.files)">
       </label>
+      <p class="settings-hint" id="load-status" style="margin-top:10px;"></p>
     </div>
     <div id="messages" style="display:none"></div>
     <div id="input-area" style="display:none">
@@ -185,21 +186,53 @@ document.getElementById('settings-modal').addEventListener('click', e => {
 document.getElementById('folder-input').addEventListener('change', e => loadFolder(e.target.files));
 
 async function loadFolder(files) {
-  notes = {}; allFiles = [];
-  for (const file of Array.from(files)) {
-    const parts = file.webkitRelativePath.split('/');
-    const path = parts.slice(1).join('/');
-    if (!path || !file.name.endsWith('.md') || path.split('/').some(p => p.startsWith('.'))) continue;
-    notes[path] = await file.text();
-    allFiles.push(path);
+  const statusEl = document.getElementById('load-status');
+  if (!files || !files.length) {
+    if (statusEl) statusEl.textContent = '⚠️ Nenhuma pasta/ficheiro recebido do seletor.';
+    return;
   }
+
+  notes = {}; allFiles = [];
+  const skipped = [];
+
+  for (const file of Array.from(files)) {
+    try {
+      const rel = file.webkitRelativePath || file.name;
+      const parts = rel.split('/');
+      const path = parts.slice(1).join('/');
+      if (!path || !file.name.endsWith('.md') || path.split('/').some(p => p.startsWith('.'))) continue;
+      notes[path] = await file.text();
+      allFiles.push(path);
+    } catch (err) {
+      // Não deixa um único ficheiro problemático (ex: placeholder do pCloud
+      // ainda não sincronizado) travar a leitura de toda a pasta.
+      skipped.push(file.webkitRelativePath || file.name);
+      console.warn('Falha ao ler ficheiro, ignorado:', file.webkitRelativePath || file.name, err);
+    }
+  }
+
   allFiles.sort();
+
+  if (!allFiles.length) {
+    const msg = '⚠️ Nenhuma nota .md foi encontrada/lida nesta pasta.'
+      + (skipped.length ? ' (' + skipped.length + ' ficheiro(s) falharam ao ler — provavelmente ainda não sincronizados localmente pelo pCloud.)' : '')
+      + ' Confirme que selecionou a pasta correta (a pasta-raiz do vault, ex: "MA Brain").';
+    if (statusEl) statusEl.textContent = msg.replace(/<[^>]+>/g, '');
+    console.warn(msg, { totalFilesSeen: files.length, skipped });
+    return;
+  }
+
   buildClientList('');
   document.getElementById('notes-count').textContent = allFiles.length + ' notas';
   document.getElementById('welcome').style.display = 'none';
   document.getElementById('messages').style.display = 'flex';
   document.getElementById('input-area').style.display = 'flex';
-  addMsg('assistant', '✅ <strong>' + allFiles.length + ' notas carregadas.</strong><br><br>Escreva o nome de um cliente ou qualquer assunto para pesquisar nas notas.');
+
+  let msg = '✅ <strong>' + allFiles.length + ' notas carregadas.</strong><br><br>Escreva o nome de um cliente ou qualquer assunto para pesquisar nas notas.';
+  if (skipped.length) {
+    msg += '<br><br>⚠️ ' + skipped.length + ' ficheiro(s) não puderam ser lidos e foram ignorados (provavelmente ficheiros do pCloud ainda não baixados localmente). Veja a consola do navegador para a lista completa.';
+  }
+  addMsg('assistant', msg);
 }
 
 // ── SIDEBAR ───────────────────────────────────────────────────────────────────
@@ -326,9 +359,9 @@ function showResults(q, paths) {
 function renderMd(text) {
   text = text.replace(/^---[\s\S]*?---\n?/, ''); // remove frontmatter
 
-  // Detect "Todos os documentos estão em:" BEFORE escaping HTML
-  text = text.replace(/^> Todos os documentos estão em:\s*(.+)/gim, (_, rawPath) => {
-    let path = rawPath.trim();
+  // Detect "Todos os documentos estão em:" / "Pasta:" BEFORE escaping HTML
+  text = text.replace(/^> (?:Todos os documentos estão em|Pasta):\s*(.+)/gim, (_, rawPath) => {
+    let path = rawPath.trim().replace(/`/g, '');
     if (!path.startsWith('~') && !path.startsWith('/')) path = '~/' + path;
     if (!path.endsWith('/')) path += '/';
     return '\x00DOCPATH:' + path + '\x00';
