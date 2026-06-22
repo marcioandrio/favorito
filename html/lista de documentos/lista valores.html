@@ -1,260 +1,77 @@
-<style>
-body {
-    margin: 0; /* remove margem padrão do navegador */
-    font-family: Arial, sans-serif; /* fonte do site */
-    /*background: #f2f2f2; /*acinzentado*/
-    background: #fafafa; /*mais neutro*/
-    color: #333333; /* cor padrão dos textos */
-    /* espaço para header e footer fixos */
-    padding-top: 300px; /**/
-    padding-bottom: 140px;
-}
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 20px 0;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-    z-index: 1000;
-/**/    
-}
-.home-imagem {
-    max-width: 120px;
-    height: auto;
-    display: block;
-/**/
-}
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 24pt;
-    color: #4a0e1b;
-/**/
-}
-.caixa {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-/**/
-}
-.lista {
-    width: 800px;
-    max-width: 90%;
-    text-align: left;
-    font-size: 16px;
-    padding: 30px;
-    border-radius: 12px;
-    background: #fefefe;
-    color: #050505;
-    /*box-shadow: 0 4px 12px rgba(239, 237, 237, 0.2); /**/
-    line-height: 1.8;
-/**/
-}
-.rodape {
-    position: fixed; /**/
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    color: rgb(0, 0, 0);
-    text-align: center;
-    padding: 15px 10px;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-}
-.titulo-rodape-texto p,
-.titulo-rodape-texto h2 {
-    margin: 8px 0; /**/
-}
-.titulo-rodape-texto h2 {
-    font-size: 14px;
-    font-weight: normal;
-}
-.icones {
-    width: 18px;
-    vertical-align: middle;
-    margin-right: 8px;
-    /*filter: invert(1); /**/
-}
-.rodape a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-}
-</style>
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
-    <title>MA - Valores</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA - Valores dos Serviços</title>
     <link rel="icon" href="../../img/icone/ma.png">
+    <link rel="stylesheet" href="style-lista.css">
 </head>
+<body>
 <header>
-    <img class="home-imagem"
-         src="png/logositema.png"
-         alt="Logo do escritório"
-         loading="lazy">
+    <a class="btn-voltar" href="../../index.html">← Voltar</a>
+    <img class="home-imagem" src="png/logositema.png" alt="Logo MA Advocacia">
 </header>
 
-<body>
 <h1>Valores dos Serviços</h1>
-    <div class="caixa">
-    <div class="lista">
+<div class="caixa">
+<div class="lista">
 
-        <strong>
-        NIF – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, Comprovante de morada, Carimbo de entrada, visto
-        </i></span> <br> <br>
+    <strong>NIF – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, Comprovante de morada, Carimbo de entrada, Visto</i></span><br><br>
 
-        <strong>
-        TROCA DE SENHA NIF – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, Atestado de morada
-        </i></span> <br> <br>
+    <strong>TROCA DE SENHA NIF – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, Atestado de morada</i></span><br><br>
 
-        <strong>
-        TROCA DE MORADA FISCAL – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, Atestado de morada, Manifestação de Interesse  ou Visto  ou contrato de trabalho
-        </i></span> <br> <br>
+    <strong>TROCA DE MORADA FISCAL – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, Atestado de morada, Manifestação de Interesse ou Visto ou contrato de trabalho</i></span><br><br>
 
-        <strong>
-        NISS – € 300,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, Contrato de trabalho ou Atividade com os 3 últimos recibos e atestado de morada
-        </i></span> <br> <br>
+    <strong>NISS – € 300,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, Contrato de trabalho ou Atividade com os 3 últimos recibos e atestado de morada</i></span><br><br>
 
-        <strong>
-        SENHA DE NISS – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, NISS e atestado de morada
-        </i></span> <br> <br>
+    <strong>SENHA DE NISS – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, NISS e atestado de morada</i></span><br><br>
 
-        <strong>
-        ABERTURA DE ATIVIDADE – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, IBAN bancário e atestado de morada
-        </i></span> <br> <br>
+    <strong>ABERTURA DE ATIVIDADE – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, IBAN bancário e atestado de morada</i></span><br><br>
 
-        <strong>
-        UTENTE – € 80,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, NIF, NISS, Telemóvel, E-mail e atestado de morada
-        </i></span> <br> <br>
+    <strong>UTENTE – € 80,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, NIF, NISS, Telemóvel, E-mail e atestado de morada</i></span><br><br>
 
-        <strong>
-        LEGAL ENTRY - € 30,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, bilhete de passagem, comprovante de morada
-        </i></span> <br> <br>
+    <strong>LEGAL ENTRY – € 30,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte, bilhete de passagem, comprovante de morada</i></span><br><br>
 
-        <strong>
-        TRADUÇÃO DE DOCUMENTOS – € 15,00 (por folha)
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Documento a ser traduzido e o passaporte do titular do documento
-        </i></span> <br> <br>
+    <strong>TRADUÇÃO DE DOCUMENTOS – € 15,00 (por folha)</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Documento a ser traduzido e o passaporte do titular</i></span><br><br>
 
-        <strong>
-        DECLARAÇÃO DE ALOJAMENTO – € 30,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte do Arrendatário e do Senhorio, contrato de arrendamento ou título de propriedade do imóvel. 
-        </i></span> <br> <br>
+    <strong>DECLARAÇÃO DE ALOJAMENTO – € 30,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte do Arrendatário e do Senhorio, contrato de arrendamento ou título de propriedade</i></span><br><br>
 
-        <strong>
-        CERTIFICAÇÃO DE PASSPORTE – €15,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Passaporte, com todas as folhas escaneadas (PDF)
-        </i></span> <br> <br>
+    <strong>CERTIFICAÇÃO DE PASSAPORTE – € 15,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Passaporte com todas as folhas escaneadas (PDF)</i></span><br><br>
 
-        <strong>
-        RECONHECIMENTO DE ASSINATURA SIMPLES – €25,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Documentos necessários: Documento com a assinatura, igual Bilhete de Identidade
-        </i></span> <br> <br>
+    <strong>RECONHECIMENTO DE ASSINATURA SIMPLES – € 25,00</strong><br>
+    <span style="margin-left:40px"><i>Documentos necessários: Documento com a assinatura, igual Bilhete de Identidade</i></span><br><br>
 
-        <strong>
-        AÇÃO JUDICIAL - SOLICITAÇÃO DO CARTÃO – € 1.000,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Solicitação de Autorização de Residência
-        </i></span> <br> <br>
+    <strong>AÇÃO JUDICIAL – SOLICITAÇÃO DO CARTÃO – € 1.000,00</strong><br>
+    <span style="margin-left:40px"><i>Solicitação de Autorização de Residência</i></span><br><br>
 
-        <strong>
-        AÇÃO JUDICIAL - INDEFERIMENTO – € 1.200,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Após NAV
-        </i></span> <br> <br>
+    <strong>AÇÃO JUDICIAL – INDEFERIMENTO – € 1.200,00</strong><br>
+    <span style="margin-left:40px"><i>Após NAV</i></span><br><br>
 
-        <strong>
-        RECURSO ADMINISTRATIVO - Hierárquico – € 400,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Entrega de documentos, indeferimento, decisão final
-        </i></span> <br> <br>
+    <strong>RECURSO ADMINISTRATIVO – Hierárquico – € 400,00</strong><br>
+    <span style="margin-left:40px"><i>Entrega de documentos, indeferimento, decisão final</i></span><br><br>
 
-        <strong>
-        STATUS AIMA – € 200,00
-        </strong>
-        <br>
-        <span style="margin-left:40px;"> <i>
-        Informação a respeito do processo, indeferimento, decisão final
-        </i></span> <br> <br>
+    <strong>STATUS AIMA – € 200,00</strong><br>
+    <span style="margin-left:40px"><i>Informação a respeito do processo, indeferimento, decisão final</i></span>
 
+</div>
+</div>
 
-    </div>
-    </div>
-
-<footer class="rodape">
-    <div class="titulo-rodape-texto">
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/phone.png"
-                 alt="Telefone"
-                 class="icones">
-            +351 960 389 573
-        </p>
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/email.png"
-                 alt="Email"
-                 class="icones">
-            <a href="mailto:marcio.andrio@ma-advocacia.com">
-                marcio.andrio@ma-advocacia.com
-            </a>
-        </p>
-        <h2>
-            © 2025 Marcio Andrio Advocacia. Todos os direitos reservados.
-        </h2>
-    </div>
+<footer>
+    <p>📞 +351 960 389 573</p>
+    <p><a href="mailto:marcio.andrio@ma-advocacia.com">marcio.andrio@ma-advocacia.com</a></p>
+    <small>© 2025 Marcio Andrio Advocacia. Todos os direitos reservados.</small>
 </footer>
-
 </body>
+</html>

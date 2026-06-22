@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAV — Proposta de Serviço | MA Advocacia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #d0cfc9;
+    font-family: 'Lora', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0 60px;
+  }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; justify-content: center; gap: 12px;
+    padding: 12px; background: #1c1c1c; width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  .toolbar button {
+    font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em;
+    background: #c9a85c; color: #1a0e00; border: none;
+    padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700;
+  }
+  .toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+
+  /* ─── PAGE ─── */
+  .page {
+    width: 210mm;
+    min-width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    margin-top: 24px;
+    position: relative;
+  }
+
+  /* Left maroon bar */
+  .bar {
+    width: 10px;
+    min-height: 100%;
+    background: #4a1628;
+    flex-shrink: 0;
+  }
+
+  /* Main content */
+  .content {
+    flex: 1;
+    padding: 28px 32px 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    border-bottom: 1.5px solid #4a1628;
+    padding-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: .12em;
+    color: #1a0e00;
+    margin-top: 4px;
+  }
+  .logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .logo-area img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* ─── SECTION HEADING with gold underline ─── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    color: #8a6630;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid #c9a85c;
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+  }
+
+  /* ─── BODY TEXT ─── */
+  .body-text p {
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: #1a1008;
+    margin-bottom: 4px;
+  }
+
+  /* ─── SERVICE BLOCK ─── */
+  .service-block {
+    margin-top: 8px;
+  }
+  .service-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: #1a0e00;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .service-block p {
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: #1a1008;
+    margin-bottom: 4px;
+  }
+  .service-block ul {
+    margin: 2px 0 4px 16px;
+    list-style: disc;
+  }
+  .service-block ul li {
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: #1a1008;
+  }
+
+  /* ─── PRICE SECTION ─── */
+  .price-section {
+    margin-top: 10px;
+    border-top: 1px solid #d0c4aa;
+    padding-top: 10px;
+  }
+  .price-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .price-box {
+    flex: 1;
+    min-width: 120px;
+    background: #4a1628;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 2px;
+  }
+  .price-box .lbl {
+    font-size: 8px;
+    letter-spacing: .14em;
+    color: #e9d9de;
+    text-transform: uppercase;
+    font-family: monospace;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .price-box .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #c9a85c;
+  }
+  .price-box.total {
+    background: #1a0e00;
+    border: 1.5px solid #c9a85c;
+  }
+  .price-note {
+    font-size: 9px;
+    color: #6b5a3a;
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid #e0d6c4;
+    margin: 18px 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1.5px solid #4a1628;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+  }
+  .footer .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a0e00;
+  }
+  .footer .role {
+    font-size: 9px;
+    color: #6b5a3a;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .footer .contacts {
+    text-align: right;
+    font-size: 9.5px;
+    color: #3a2a1a;
+    line-height: 1.8;
+  }
+
+  /* ─── MOBILE SCALE ─── */
+  @media (max-width: 800px) {
+    body { padding: 0 0 40px; align-items: flex-start; }
+    .toolbar { position: relative; }
+    #page-scale-wrapper {
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .page { margin-top: 0; transform-origin: top center; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+<script>
+  function scalePage() {
+    const wrapper = document.getElementById('page-scale-wrapper');
+    const page = document.querySelector('.page');
+    if (!wrapper || !page) return;
+    const vw = wrapper.offsetWidth;
+    const pageW = page.offsetWidth;
+    if (vw < pageW) {
+      const scale = vw / pageW;
+      page.style.transform = 'scale(' + scale + ')';
+      page.style.marginBottom = '-' + (pageW * (1 - scale)) + 'px';
+      wrapper.style.height = (page.offsetHeight * scale) + 'px';
+    } else {
+      page.style.transform = '';
+      page.style.marginBottom = '';
+      wrapper.style.height = '';
+    }
+  }
+  window.addEventListener('DOMContentLoaded', scalePage);
+  window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <span>NAV — Pré-visualização A4</span>
+  <button onclick="window.print()">Imprimir / Guardar como PDF</button>
+</div>
+
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>PROPOSTA DE SERVIÇO</h1>
+      <div class="logo-area">
+        <img src="logo/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <!-- QUEM SOMOS -->
+    <div class="section-title">QUEM SOMOS</div>
+    <div class="body-text">
+      <p>Marcio Andrio Advocacia é especializado em imigração</p>
+      <p>Oferecendo suporte completo na obtenção de vistos, cidadania e emissão de documentos como NIF e NISS, Autorização de Residência</p>
+      <p>Com uma equipe experiente e multilingue, garantimos um atendimento personalizado, ético e eficiente</p>
+      <p>Entre em contacto e descubra como podemos facilitar sua jornada de imigração.</p>
+    </div>
+
+    <!-- ACÇÃO JUDICIAL -->
+    <div class="section-title">ACÇÃO JUDICIAL E RECURSO ADM.</div>
+
+    <!-- NAV Alert Box -->
+    <div style="background:#fdf6ee;border-left:3px solid #c9a85c;padding:10px 14px;margin-bottom:12px;border-radius:1px;">
+      <p style="font-size:9.5px;font-weight:700;letter-spacing:.08em;color:#4a1628;text-transform:uppercase;margin-bottom:4px;">O que é uma NAV?</p>
+      <p style="font-size:10px;line-height:1.75;color:#1a1008;margin:0;">A <strong>Notificação de Abandono Voluntário (NAV)</strong> é emitida pela AIMA quando o seu pedido de autorização de residência é indeferido. A notificação determina que abandone voluntariamente o território português num prazo de 20 dias. Ignorar a NAV pode resultar na instauração de um processo de afastamento coercivo. Ainda assim, é possível — e recomendável — contestar a NAV por via administrativa e judicial.</p>
+    </div>
+
+    <p style="font-size:10.5px;color:#1a1008;margin-bottom:10px;">O que está incluído:</p>
+
+    <!-- Análise -->
+    <div class="service-block">
+      <h3>ANÁLISE DETALHADA DA NOTIFICAÇÃO</h3>
+      <p>Análise jurídica completa da NAV recebida: verificamos os fundamentos do indeferimento, os prazos legais, eventuais vícios de forma ou ilegalidades no procedimento, e avaliamos as melhores vias de contestação disponíveis no seu caso concreto.</p>
+    </div>
+
+    <!-- Recurso -->
+    <div class="service-block">
+      <h3>RECURSO HIERÁRQUICO ADMINISTRATIVO</h3>
+      <p>Elaboração e apresentação de recurso hierárquico junto à AIMA para contestar a NAV antes da via judicial:</p>
+      <ul>
+        <li>Impugnar o indeferimento que originou a notificação</li>
+        <li>Arguir ilegalidades ou insuficiência de fundamentação</li>
+        <li>Suspender os efeitos da NAV durante a apreciação do recurso</li>
+        <li>Requerer a revisão da decisão pelo órgão superior competente</li>
+      </ul>
+    </div>
+
+    <!-- Acção Judicial -->
+    <div class="service-block">
+      <h3>AÇÃO JUDICIAL NOS TRIBUNAIS ADMINISTRATIVOS</h3>
+      <p>Caso o recurso administrativo não produza resultado, interpõe-se ação administrativa nos Tribunais Administrativos para:</p>
+      <ul>
+        <li>Anular a NAV e o indeferimento que lhe deu origem</li>
+        <li>Suspender os efeitos da notificação e impedir o afastamento coercivo</li>
+        <li>Garantir a sua permanência legal em Portugal durante o processo</li>
+        <li>Proteger os seus direitos fundamentais perante decisão ilegal da AIMA</li>
+      </ul>
+    </div>
+
+    <!-- PRICES -->
+    <div class="price-section">
+      <div class="price-row">
+        <div class="price-box">
+          <div class="lbl">RECURSO<br>ADMINISTRATIVO</div>
+          <div class="val">€ 700,00</div>
+        </div>
+        <div class="price-box">
+          <div class="lbl">AÇÃO JUDICIAL<br>(após 60 dias úteis)</div>
+          <div class="val">€ 700,00</div>
+        </div>
+        <div class="price-box total">
+          <div class="lbl">TOTAL DO<br>INVESTIMENTO</div>
+          <div class="val">€ 1.400,00</div>
+        </div>
+      </div>
+      <p class="price-note">* A ação judicial é iniciada após 60 dias úteis contados a partir do protocolo do Recurso Hierárquico Administrativo junto à AIMA.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        <div class="name">Marcio Andrio</div>
+        <div class="role">Sócio Fundador</div>
+      </div>
+      <div class="contacts">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /page -->
+</div><!-- /page-scale-wrapper -->
+
+</body>
+</html>

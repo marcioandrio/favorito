@@ -3,3 +3,8 @@
 ._*
 **/._*
 *.smbdelete*
+.claude/
+.vscode/
+**/.vscode/
+.wrangler/
+html/home/

@@ -1,157 +1,51 @@
-<style>
-body {
-    margin: 0; /* remove margem padrão do navegador */
-    font-family: Arial, sans-serif; /* fonte do site */
-    /*background: #f2f2f2; /*acinzentado*/
-    background: #fafafa; /*mais neutro*/
-    color: #333333; /* cor padrão dos textos */
-    /* espaço para header e footer fixos */
-    padding-top: 300px; /**/
-    padding-bottom: 140px;
-}
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 20px 0;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-    z-index: 1000;
-/**/    
-}
-.home-imagem {
-    max-width: 220px;
-    height: auto;
-    display: block;
-/**/
-}
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 24pt;
-    color: #4a0e1b;
-/**/
-}
-.caixa {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-/**/
-}
-.lista {
-    width: 800px;
-    max-width: 90%;
-    text-align: left;
-    font-size: 16px;
-    padding: 30px;
-    border-radius: 12px;
-    background: #fefefe;
-    color: #050505;
-    /*box-shadow: 0 4px 12px rgba(239, 237, 237, 0.2); /**/
-    line-height: 1.8;
-/**/
-}
-.rodape {
-    position: fixed; /**/
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    color: rgb(0, 0, 0);
-    text-align: center;
-    padding: 15px 10px;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-}
-.titulo-rodape-texto p,
-.titulo-rodape-texto h2 {
-    margin: 8px 0; /**/
-}
-.titulo-rodape-texto h2 {
-    font-size: 14px;
-    font-weight: normal;
-}
-.icones {
-    width: 18px;
-    vertical-align: middle;
-    margin-right: 8px;
-    /*filter: invert(1); /**/
-}
-.rodape a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-}
-</style>
-
-
-
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
-    <title>MA - Estudos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA - A.R. Estudos</title>
     <link rel="icon" href="../../img/icone/ma.png">
+    <link rel="stylesheet" href="style-lista.css">
 </head>
+<body>
 <header>
-    <img class="home-imagem"
-         src="png/logositema.png"
-         alt="Logo do escritório"
-         loading="lazy">
+    <a class="btn-voltar" href="../../index.html">← Voltar</a>
+    <img class="home-imagem" src="png/logositema.png" alt="Logo MA Advocacia">
 </header>
 
-<body>
 <h1>A.R. Estudos</h1>
-    <div class="caixa">
-    <div class="lista">
+<div class="caixa">
+<div class="lista">
 
-        Passaporte válido; <br>
-        <span style="margin-left:40px;"> <i>- Carimbo de entrada (Terrritório Nacional)</i></span> <br> <br>
-        
-        Declaração de morada (sob compromisso de honra); <br>
-        <span style="margin-left:40px;"> <i>- Declaração de Alojamento</i></span> <br>
-        <span style="margin-left:40px;"> <i>- Link: <a href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">clique aqui</a></i></span> <br> <br>                
+    Passaporte válido;<br>
+    <span style="margin-left:40px"><i>– Carimbo de entrada (Território Nacional)</i></span><br><br>
 
-        Certidão de Não Dívida das Finaças (<strong>NIF</strong>); <br>
-        <span style="margin-left:40px;"> <i>- Link: <a href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">clique aqui</a></i></span> <br> <br>        
+    Declaração de morada (sob compromisso de honra);<br>
+    <span style="margin-left:40px"><i>– Declaração de Alojamento</i></span><br>
+    <span style="margin-left:40px"><i>– <a href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">Consultar contrato nas Finanças</a></i></span><br><br>
 
-        Certidão de Não Dívida das Segurança Social (<strong>NISS</strong>); <br>
-        <span style="margin-left:40px;"> <i>- Link: <a href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin">clique aqui</a></i></span> <br> <br>
+    Certidão de Não Dívida das Finanças (<strong>NIF</strong>);<br>
+    <span style="margin-left:40px"><i>– <a href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">Emitir certidão nas Finanças</a></i></span><br><br>
 
-        Declaração da Instiuição de Ensino; <br> <br>
+    Certidão de Não Dívida da Segurança Social (<strong>NISS</strong>);<br>
+    <span style="margin-left:40px"><i>– <a href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin">Aceder à Segurança Social</a></i></span><br><br>
 
-        Registro criminal do país de origem (<strong>PCC</strong>). <br>
-        <span style="margin-left:40px;"> <i>- Requerente e Reagrupada (Original e apostilado)</i></span> <br> <br>
+    Declaração da Instituição de Ensino;<br><br>
 
-        Comprovativo de meios de subsistência. <br>
-        <span style="margin-left:40px;"> <i>- Contrato de trabalho</i></span> <br>
-        <span style="margin-left:40px;"> <i>- Vencimentos ou Recibos Verdes</i></span> <br>
+    Registo criminal do país de origem (<strong>PCC</strong>);<br>
+    <span style="margin-left:40px"><i>– Requerente e Reagrupada (Original e apostilado)</i></span><br><br>
 
+    Comprovativo de meios de subsistência;<br>
+    <span style="margin-left:40px"><i>– Contrato de trabalho</i></span><br>
+    <span style="margin-left:40px"><i>– Vencimentos ou Recibos Verdes</i></span>
 
-    </div>
-    </div>
+</div>
+</div>
 
-<footer class="rodape">
-    <div class="titulo-rodape-texto">
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/phone.png"
-                 alt="Telefone"
-                 class="icones">
-            +351 960 389 573
-        </p>
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/email.png"
-                 alt="Email"
-                 class="icones">
-            <a href="mailto:marcio.andrio@ma-advocacia.com">
-                marcio.andrio@ma-advocacia.com
-            </a>
-        </p>
-        <h2>
-            © 2025 Marcio Andrio Advocacia. Todos os direitos reservados.
-        </h2>
-    </div>
+<footer>
+    <p>📞 +351 960 389 573</p>
+    <p><a href="mailto:marcio.andrio@ma-advocacia.com">marcio.andrio@ma-advocacia.com</a></p>
+    <small>© 2025 Marcio Andrio Advocacia. Todos os direitos reservados.</small>
 </footer>
-
 </body>
+</html>

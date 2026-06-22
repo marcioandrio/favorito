@@ -1,224 +1,72 @@
-<style>
-body {
-    margin: 0; /* remove margem padrão do navegador */
-    font-family: Arial, sans-serif; /* fonte do site */
-    /*background: #f2f2f2; /*acinzentado*/
-    background: #fafafa; /*mais neutro*/
-    color: #333333; /* cor padrão dos textos */
-    /* espaço para header e footer fixos */
-    padding-top: 300px; /**/
-    padding-bottom: 140px;
-}
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 20px 0;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-    z-index: 1000;
-/**/    
-}
-.home-imagem {
-    max-width: 120px;
-    height: auto;
-    display: block;
-/**/
-}
-h1 {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 24pt;
-    color: #4a0e1b;
-/**/
-}
-.caixa {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-/**/
-}
-.lista {
-    width: 800px;
-    max-width: 90%;
-    text-align: left;
-    font-size: 16px;
-    padding: 30px;
-    border-radius: 12px;
-    background: #fefefe;
-    color: #050505;
-    /*box-shadow: 0 4px 12px rgba(239, 237, 237, 0.2); /**/
-    line-height: 1.8;
-/**/
-}
-.rodape {
-    position: fixed; /**/
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #f2f2f2; /*acinzentado*/
-    /*background: #fafafa; /*mais neutro*/
-    color: rgb(0, 0, 0);
-    text-align: center;
-    padding: 15px 10px;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-}
-.titulo-rodape-texto p,
-.titulo-rodape-texto h2 {
-    margin: 8px 0; /**/
-}
-.titulo-rodape-texto h2 {
-    font-size: 14px;
-    font-weight: normal;
-}
-.icones {
-    width: 18px;
-    vertical-align: middle;
-    margin-right: 8px;
-    /*filter: invert(1); /**/
-}
-.rodape a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-}
-
-</style>
-
-
-
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MA - Citius</title>
-    <link rel="icon" href="png/ma.png">
+    <link rel="icon" href="../../img/icone/ma.png">
+    <link rel="stylesheet" href="../style-inner.css">
 </head>
+<body>
 
 <header>
-    <img class="home-imagem"
-         src="png/ma.png"
-         alt="Logo do escritório"
-         loading="lazy">
+    <a class="btn-voltar" href="../../index.html">← Voltar</a>
+    <img class="logo-header" src="png/ma.png" alt="Logo MA Advocacia">
 </header>
 
-<body>
-<h1>Citius</h1>
-    <div class="caixa">
-    <div class="lista">
-        
-    <div style="text-align:center;">
-        <img src="img/citius1.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <div style="text-align:center;">
-        <img src="img/citius2.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <div style="text-align:center;">
-        <img src="img/citius3.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <div style="text-align:center;">
-        <img src="img/citius4.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
+<h1>Memento Citius</h1>
+<div class="caixa">
+<div class="lista">
 
-    <p style="text-align:center;">Lisboa - Tribunal Administrativo do Circulo de Lisboa</p>
-    <p style="text-align:center;">Administrativo Comum</p>
-    <p style="text-align:center;">Imtimação - Entrada e permanência em território nacional</p>
-    <div style="text-align:center;">
-        <img src="img/citius5.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Seguinte</p><br>
+    <p class="passo">1. Aceder ao Citius</p>
+    <img class="passo-img" src="img/citius1.png" width="400">
+    <img class="passo-img" src="img/citius2.png" width="400">
+    <img class="passo-img" src="img/citius3.png" width="400">
+    <img class="passo-img" src="img/citius4.png" width="400">
 
-    <p style="text-align:center;">30 000.01</p>
-    <div style="text-align:center;">
-        <img src="img/citius6.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Gravar </p><br>
+    <p class="passo">2. Tribunal e Tipo de Ação</p>
+    <p style="text-align:center; font-size:14px; color:#555; margin:4px 0;">Lisboa — Tribunal Administrativo do Círculo de Lisboa<br>Administrativo Comum<br>Intimação — Entrada e permanência em território nacional</p>
+    <img class="passo-img" src="img/citius5.png" width="400">
+    <p class="passo-acao">Seguinte</p>
 
-    <p style="text-align:center;">Autor</p>    
-    <div style="text-align:center;">
-        <img src="img/citius7.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Gravar </p><br>
+    <p class="passo">3. Valor da Causa</p>
+    <p style="text-align:center; font-size:14px; color:#555; margin:4px 0;">30 000.01</p>
+    <img class="passo-img" src="img/citius6.png" width="400">
+    <p class="passo-acao">Gravar</p>
 
-    <p style="text-align:center;">Requerida</p>
-    <p style="text-align:center;"> <strong>517686260</strong></p>        
-    <div style="text-align:center;">
-        <img src="img/citius8.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Gravar </p><br>
+    <p class="passo">4. Autor</p>
+    <img class="passo-img" src="img/citius7.png" width="400">
+    <p class="passo-acao">Gravar</p>
 
-    <p style="text-align:center;">Modalidade de Citação</p>    
-    <div style="text-align:center;">
-        <img src="img/citius10.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Gravar </p><br>
+    <p class="passo">5. Requerida</p>
+    <p style="text-align:center; font-size:14px; color:#555; margin:4px 0;"><strong>517686260</strong></p>
+    <img class="passo-img" src="img/citius8.png" width="400">
+    <p class="passo-acao">Gravar</p>
 
-    <p style="text-align:center;">Taxa</p>    
-    <div style="text-align:center;">
-        <img src="img/citius9.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Gravar </p><br>
+    <p class="passo">6. Modalidade de Citação</p>
+    <img class="passo-img" src="img/citius10.png" width="400">
+    <p class="passo-acao">Gravar</p>
 
-    <p style="text-align:center;">Petição Inicial</p>    
-    <div style="text-align:center;">
-        <img src="img/citius11.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Prosseguir para Assinar </p><br>
+    <p class="passo">7. Taxa</p>
+    <img class="passo-img" src="img/citius9.png" width="400">
+    <p class="passo-acao">Gravar</p>
 
-    <p style="text-align:center;">Protocolo</p>    
-    <div style="text-align:center;">
-        <img src="img/citius12.png"
-        style="display:block; margin:15px auto;"
-        width="400">
-    </div>
-    <p style="text-align:center;">Salvar</p><br>
-    
-    </div>
-    </div>
+    <p class="passo">8. Petição Inicial</p>
+    <img class="passo-img" src="img/citius11.png" width="400">
+    <p class="passo-acao">Prosseguir para Assinar</p>
 
-<footer class="rodape">
-    <div class="titulo-rodape-texto">
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/phone.png"
-                 alt="Telefone"
-                 class="icones">
-            +351 960 389 573
-        </p>
-        <p>
-            <img src="https://img.icons8.com/ios-filled/50/000000/email.png"
-                 alt="Email"
-                 class="icones">
-            <a href="mailto:marcio.andrio@ma-advocacia.com">
-                marcio.andrio@ma-advocacia.com
-            </a>
-        </p>
-        <h2>
-            © 2025 Marcio Andrio Advocacia. Todos os direitos reservados.
-        </h2>
-    </div>
+    <p class="passo">9. Protocolo</p>
+    <img class="passo-img" src="img/citius12.png" width="400">
+    <p class="passo-acao">Salvar</p>
+
+</div>
+</div>
+
+<footer>
+    <p>📞 +351 960 389 573</p>
+    <p><a href="mailto:marcio.andrio@ma-advocacia.com">marcio.andrio@ma-advocacia.com</a></p>
+    <small>© 2025 Marcio Andrio Advocacia. Todos os direitos reservados.</small>
 </footer>
 
 </body>
+</html>

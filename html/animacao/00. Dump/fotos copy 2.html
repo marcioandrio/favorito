@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Media Viewer v3 - Com HEIC</title>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    header {
+      background: #1e2937;
+      padding: 25px;
+      text-align: center;
+    }
+    button {
+      padding: 14px 32px;
+      font-size: 17px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .media-item {
+      background: #1e2937;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+    .media-item img, .media-item video {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .info {
+      padding: 12px;
+      font-size: 13.5px;
+    }
+    .path {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 6px;
+      word-break: break-all;
+    }
+    #status { padding: 20px; text-align: center; font-size: 15px; }
+    .loading { color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📁 Universal Media Viewer v3 (HEIC + Vídeos)</h1>
+    <button onclick="document.getElementById('folderInput').click()">📂 Escolher Pasta</button>
+  </header>
+
+  <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none">
+  <div id="status"></div>
+  <div id="gallery"></div>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const statusEl = document.getElementById('status');
+
+    document.getElementById('folderInput').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      gallery.innerHTML = '';
+      statusEl.textContent = `Encontrados ${files.length} arquivos. Processando...`;
+
+      const allowed = ['jpg','jpeg','png','gif','webp','heic','heif','mp4','mov','m4v'];
+      
+      let mediaFiles = files.filter(file => {
+        const ext = file.name.toLowerCase().split('.').pop();
+        return allowed.includes(ext);
+      });
+
+      statusEl.innerHTML = `✅ ${mediaFiles.length} mídias encontradas. Convertendo HEIC...`;
+
+      mediaFiles.sort((a, b) => a.webkitRelativePath.localeCompare(b.webkitRelativePath));
+
+      for (const file of mediaFiles) {
+        const div = document.createElement('div');
+        div.className = 'media-item';
+        const ext = file.name.toLowerCase().split('.').pop();
+        const isVideo = ['mp4','mov','m4v'].includes(ext);
+        const isHeic = ['heic','heif'].includes(ext);
+
+        let mediaUrl = URL.createObjectURL(file);
+
+        if (isHeic) {
+          try {
+            const jpegBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.85 });
+            mediaUrl = URL.createObjectURL(jpegBlob);
+          } catch (err) {
+            console.error("Erro ao converter HEIC:", file.name);
+          }
+        }
+
+        let mediaHTML = isVideo 
+          ? `<video src="${mediaUrl}" controls muted></video>`
+          : `<img src="${mediaUrl}" alt="${file.name}">`;
+
+        div.innerHTML = `
+          ${mediaHTML}
+          <div class="info">
+            <strong>${file.name}</strong>
+            <div class="path">${file.webkitRelativePath || file.name}</div>
+          </div>
+        `;
+        gallery.appendChild(div);
+      }
+
+      statusEl.textContent = `✅ Galeria carregada com ${mediaFiles.length} arquivos!`;
+    });
+  </script>
+</body>
+</html>

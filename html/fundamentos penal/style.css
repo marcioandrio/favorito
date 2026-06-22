@@ -97,3 +97,37 @@ p { /*Parágrafo*/
 a{
     color: black;
 }
+
+/* ── Header / Back button ─────────────────────────────── */
+header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(10, 10, 30, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.btn-voltar {
+    text-decoration: none;
+    color: #e8e8e8;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-family: Arial, sans-serif;
+}
+
+.btn-voltar:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+body {
+    padding-top: 60px;
+}

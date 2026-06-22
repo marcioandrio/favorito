@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borboletas</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { overflow: hidden; background: #87CEEB; }
+  canvas { display: block; }
+  .title {
+    position: fixed;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Georgia', serif;
+    font-size: 2.4rem;
+    font-style: italic;
+    font-weight: bold;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 18px rgba(30,80,160,0.4), 0 1px 0 rgba(255,255,255,0.3);
+    pointer-events: none;
+    letter-spacing: .08em;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="title">Butterflies</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ─── paletas de cores ──────────────────────────────────────────
+const PALETTES = [
+  { top: '#FF7043', bot: '#FF5722', low: '#BF360C', spot: '#FFD54F' }, // laranja-fogo
+  { top: '#EF5350', bot: '#C62828', low: '#B71C1C', spot: '#FFCDD2' }, // vermelho
+  { top: '#AB47BC', bot: '#7B1FA2', low: '#4A148C', spot: '#E1BEE7' }, // roxo
+  { top: '#42A5F5', bot: '#1565C0', low: '#0D47A1', spot: '#E3F2FD' }, // azul
+  { top: '#66BB6A', bot: '#2E7D32', low: '#1B5E20', spot: '#F1F8E9' }, // verde
+  { top: '#FFEE58', bot: '#F9A825', low: '#E65100', spot: '#FFF9C4' }, // amarelo
+  { top: '#ECEFF1', bot: '#B0BEC5', low: '#607D8B', spot: '#FFFFFF' }, // branco
+  { top: '#FF80AB', bot: '#F50057', low: '#C51162', spot: '#FCE4EC' }, // rosa
+];
+
+// ─── partículas de bokeh ───────────────────────────────────────
+const BOKEH = Array.from({ length: 40 }, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  r: 4 + Math.random() * 18,
+  alpha: 0.04 + Math.random() * 0.12,
+  speed: 0.1 + Math.random() * 0.2,
+  phase: Math.random() * Math.PI * 2,
+}));
+
+// ─── classe Borboleta ──────────────────────────────────────────
+class Butterfly {
+  constructor(init) {
+    this.init(init);
+  }
+
+  init(randomPos) {
+    const W = canvas.width, H = canvas.height;
+    this.x = randomPos ? Math.random() * W : -60;
+    this.y = randomPos ? Math.random() * H : 60 + Math.random() * (H - 120);
+    this.size   = 14 + Math.random() * 28;
+    this.pal    = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+    this.flapT  = Math.random() * Math.PI * 2;
+    this.flapSpd= 0.06 + Math.random() * 0.09;
+    // trajetória ondulada
+    this.vx     = (0.6 + Math.random() * 1.2) * (Math.random() < 0.5 ? 1 : -1);
+    this.vy     = (Math.random() - 0.5) * 0.6;
+    this.waveAmp= 20 + Math.random() * 40;
+    this.waveSpd= 0.008 + Math.random() * 0.012;
+    this.waveT  = Math.random() * Math.PI * 2;
+    this.opacity= 0.7 + Math.random() * 0.3;
+    // sombra
+    this.shadowY= 0;
+    // gradientes (criados na primeira renderização)
+    this._grad  = null;
+  }
+
+  update() {
+    this.flapT  += this.flapSpd;
+    this.waveT  += this.waveSpd;
+    this.x += this.vx;
+    this.y += this.vy + Math.sin(this.waveT) * 0.7;
+
+    const W = canvas.width, H = canvas.height;
+    if (this.x > W + 80 || this.x < -80 || this.y > H + 80 || this.y < -80) {
+      this.init(false);
+    }
+  }
+
+  draw() {
+    const s   = this.size;
+    const fold= Math.abs(Math.sin(this.flapT)); // 0=fechada, 1=aberta
+    const ctx2= ctx;
+
+    ctx2.save();
+    ctx2.translate(this.x, this.y);
+
+    // Rotaciona levemente na direção do voo
+    const angle = Math.atan2(this.vy, this.vx);
+    ctx2.rotate(angle * 0.5);
+
+    ctx2.globalAlpha = this.opacity;
+
+    // ── ASA SUPERIOR ESQUERDA ──
+    this._drawWing(ctx2, s, fold, -1, -1, 1.0, 0.85, this.pal.top, this.pal.bot);
+    // ── ASA SUPERIOR DIREITA ──
+    this._drawWing(ctx2, s, fold,  1, -1, 1.0, 0.85, this.pal.top, this.pal.bot);
+    // ── ASA INFERIOR ESQUERDA ──
+    this._drawWing(ctx2, s * 0.65, fold, -1, 1, 0.8, 0.75, this.pal.bot, this.pal.low);
+    // ── ASA INFERIOR DIREITA ──
+    this._drawWing(ctx2, s * 0.65, fold,  1, 1, 0.8, 0.75, this.pal.bot, this.pal.low);
+
+    // ── PONTOS NAS ASAS ──
+    this._drawSpots(ctx2, s, fold);
+
+    // ── CORPO ──
+    ctx2.globalAlpha = this.opacity;
+    const bodyGrad = ctx2.createLinearGradient(0, -s * 0.5, 0, s * 0.4);
+    bodyGrad.addColorStop(0, '#3E2723');
+    bodyGrad.addColorStop(1, '#1A0000');
+    ctx2.fillStyle = bodyGrad;
+    ctx2.beginPath();
+    ctx2.ellipse(0, 0, s * 0.055, s * 0.48, 0, 0, Math.PI * 2);
+    ctx2.fill();
+
+    // ── CABEÇA ──
+    ctx2.fillStyle = '#3E2723';
+    ctx2.beginPath();
+    ctx2.arc(0, -s * 0.52, s * 0.08, 0, Math.PI * 2);
+    ctx2.fill();
+
+    // ── ANTENAS ──
+    ctx2.strokeStyle = '#3E2723';
+    ctx2.lineWidth = s * 0.025;
+    ctx2.lineCap = 'round';
+    for (const side of [-1, 1]) {
+      ctx2.beginPath();
+      ctx2.moveTo(0, -s * 0.52);
+      ctx2.quadraticCurveTo(side * s * 0.22, -s * 0.82, side * s * 0.18, -s * 0.95);
+      ctx2.stroke();
+      // bolinha
+      ctx2.fillStyle = '#5D4037';
+      ctx2.beginPath();
+      ctx2.arc(side * s * 0.18, -s * 0.95, s * 0.055, 0, Math.PI * 2);
+      ctx2.fill();
+    }
+
+    ctx2.globalAlpha = 1;
+    ctx2.restore();
+  }
+
+  _drawWing(ctx2, s, fold, sx, sy, wx, wy, c1, c2) {
+    // sx/sy = sinal horizontal/vertical; wx/wy = escala
+    ctx2.save();
+    ctx2.scale(sx * fold, sy); // fold simula abertura
+
+    const grad = ctx2.createRadialGradient(
+      -s * 0.3, -s * 0.3, s * 0.05,
+      -s * 0.4, -s * 0.4, s * 0.9
+    );
+    grad.addColorStop(0, c1 + 'EE');
+    grad.addColorStop(0.6, c2 + 'CC');
+    grad.addColorStop(1,   c2 + '44');
+
+    ctx2.beginPath();
+    ctx2.moveTo(0, 0);
+    ctx2.bezierCurveTo(-s * 0.18, -s * 0.55, -s * wx, -s * 0.9, -s * 0.85, -s * wy * 0.25);
+    ctx2.bezierCurveTo(-s * 0.72,  s * 0.08, -s * 0.18,  s * 0.08, 0, 0);
+    ctx2.fillStyle = grad;
+    ctx2.fill();
+
+    // Nervuras
+    ctx2.strokeStyle = c2 + '66';
+    ctx2.lineWidth = s * 0.018;
+    ctx2.beginPath();
+    ctx2.moveTo(0, 0);
+    ctx2.quadraticCurveTo(-s * 0.4, -s * 0.4, -s * 0.75, -s * 0.7);
+    ctx2.moveTo(0, 0);
+    ctx2.quadraticCurveTo(-s * 0.5, -s * 0.1, -s * 0.85, -s * 0.1);
+    ctx2.stroke();
+
+    ctx2.restore();
+  }
+
+  _drawSpots(ctx2, s, fold) {
+    const spots = [
+      { ox: -0.45, oy: -0.42, r: 0.09 },
+      { ox: -0.65, oy: -0.20, r: 0.06 },
+    ];
+    ctx2.globalAlpha = this.opacity * 0.6;
+    ctx2.fillStyle = this.pal.spot;
+    for (const sp of spots) {
+      for (const side of [-1, 1]) {
+        ctx2.save();
+        ctx2.scale(side * fold, 1);
+        ctx2.beginPath();
+        ctx2.arc(sp.ox * s, sp.oy * s, sp.r * s, 0, Math.PI * 2);
+        ctx2.fill();
+        ctx2.restore();
+      }
+    }
+    ctx2.globalAlpha = this.opacity;
+  }
+}
+
+// ─── criar borboletas ──────────────────────────────────────────
+const COUNT = 28;
+const butterflies = Array.from({ length: COUNT }, () => new Butterfly(true));
+
+// ─── nuvens simples ────────────────────────────────────────────
+function drawCloud(x, y, scale) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.globalAlpha = 0.22;
+  ctx.fillStyle = '#fff';
+  const blobs = [
+    [0, 0, 38], [36, -12, 28], [-34, -8, 24],
+    [60, 4, 22], [-58, 2, 18], [20, -24, 20],
+  ];
+  for (const [bx, by, r] of blobs) {
+    ctx.beginPath();
+    ctx.arc(bx * scale, by * scale, r * scale, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// ─── loop de animação ──────────────────────────────────────────
+let t = 0;
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  t += 0.004;
+
+  // Fundo gradiente céu
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0,   '#4FC3F7');
+  sky.addColorStop(0.45,'#81D4FA');
+  sky.addColorStop(1,   '#B3E5FC');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Luz solar suave no canto
+  const sun = ctx.createRadialGradient(W * 0.85, H * 0.08, 0, W * 0.85, H * 0.08, W * 0.5);
+  sun.addColorStop(0,   'rgba(255,253,210,0.28)');
+  sun.addColorStop(0.5, 'rgba(255,236,150,0.06)');
+  sun.addColorStop(1,   'rgba(255,255,255,0)');
+  ctx.fillStyle = sun;
+  ctx.fillRect(0, 0, W, H);
+
+  // Bokeh
+  for (const b of BOKEH) {
+    b.x += Math.sin(t + b.phase) * 0.15;
+    b.y -= b.speed * 0.3;
+    if (b.y < -b.r * 2) b.y = H + b.r;
+    const bg = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+    bg.addColorStop(0, `rgba(255,255,255,${b.alpha})`);
+    bg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Nuvens lentas
+  drawCloud((W * 0.1 + t * 18) % (W + 200) - 100, H * 0.14, 1.1);
+  drawCloud((W * 0.45 + t * 12) % (W + 200) - 100, H * 0.09, 0.8);
+  drawCloud((W * 0.72 + t * 16) % (W + 200) - 100, H * 0.22, 1.3);
+  drawCloud((W * 0.25 + t *  9) % (W + 200) - 100, H * 0.28, 0.65);
+
+  // Borboletas
+  for (const b of butterflies) {
+    b.update();
+    b.draw();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>

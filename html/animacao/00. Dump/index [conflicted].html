@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borboletas Voando</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6, #60a5fa);
+      height: 100vh;
+      position: relative;
+    }
+
+    .butterfly {
+      position: absolute;
+      font-size: 40px;
+      pointer-events: none;
+      animation: fly linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
+      opacity: 0.9;
+    }
+
+    @keyframes fly {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(var(--x), var(--y)) rotate(var(--rot)); }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 8px white;
+      animation: sparkleAnim 4s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes sparkleAnim {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 0.9; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    const butterflies = ['🦋', '🌸', '🦋', '🌼', '🦋'];
+
+    function createButterfly() {
+      const bf = document.createElement('div');
+      bf.className = 'butterfly';
+      bf.textContent = butterflies[Math.floor(Math.random() * butterflies.length)];
+      
+      const size = Math.random() * 25 + 35;
+      bf.style.fontSize = `${size}px`;
+      
+      // Posição inicial
+      bf.style.left = Math.random() * 100 + 'vw';
+      bf.style.top = Math.random() * 60 + 'vh';
+      
+      // Duração aleatória
+      const duration = Math.random() * 25 + 20;
+      bf.style.animationDuration = `${duration}s`;
+      
+      // Movimento aleatório
+      const x = (Math.random() - 0.5) * 1200;
+      const y = (Math.random() - 0.5) * 800;
+      const rot = (Math.random() - 0.5) * 800;
+      
+      bf.style.setProperty('--x', `${x}px`);
+      bf.style.setProperty('--y', `${y}px`);
+      bf.style.setProperty('--rot', `${rot}deg`);
+      
+      document.body.appendChild(bf);
+
+      // Remove depois da animação
+      setTimeout(() => {
+        bf.remove();
+      }, duration * 1000 + 1000);
+    }
+
+    // Cria borboletas continuamente
+    setInterval(createButterfly, 280);
+
+    // Cria algumas imediatamente
+    for (let i = 0; i < 12; i++) {
+      setTimeout(createButterfly, i * 150);
+    }
+
+    // Partículas brilhantes
+    function createSparkle() {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      s.style.animationDelay = Math.random() * 2 + 's';
+      
+      document.body.appendChild(s);
+      
+      setTimeout(() => s.remove(), 6000);
+    }
+
+    setInterval(createSparkle, 80);
+  </script>
+
+</body>
+</html>

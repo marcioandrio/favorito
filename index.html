@@ -11,16 +11,39 @@
 </head>
 <body>
     <header class="cabecalho">
-        <script src="js/calendario.js"></script> <!--link para o js-->
+        <script src="js/calendario.js"></script>
         <script src="js/relogio.js"></script>
-    </header>  
-    
+    </header>
+
+    <nav class="nav-topo" id="navTopo">
+        <button class="nav-hamburguer" id="navToggle" onclick="toggleNav()">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="html/home/home.html" target="_blank">🏠 Home</a>
+            <a href="#sec-br">BR</a>
+            <a href="#sec-eu">EU</a>
+            <a href="#sec-relogio">Relógio</a>
+            <a href="#sec-valores">Escritório</a>
+            <a href="#sec-lista">Lista</a>
+            <a href="#sec-tutorial">Tutorial</a>
+            <a href="#sec-europa">Europa</a>
+            <a href="#sec-aima">AIMA</a>
+            <a href="#sec-checklist">Check List</a>
+            <a href="#sec-ferramentas">Ferramentas</a>
+            <a href="#sec-ia">IA</a>
+            <a href="#sec-arquivos">Arquivos</a>
+        </div>
+        <div class="nav-pesquisa">
+            <input type="text" id="campoPesquisa" placeholder="🔍 Pesquisar..." oninput="pesquisarFavoritos()" autocomplete="off">
+            <button class="nav-limpar" id="btnLimpar" onclick="limparPesquisa()" title="Limpar">✕</button>
+        </div>
+    </nav>
+
     <main class="site">
 
         <section>
 
 <!----------------------------------------------------------Advocacia BR---------------------------------------------------------->        
-    <h1 id="advocaciabr">Advocacia BR</h1>
+    <h1 id="sec-br">Advocacia BR</h1>
     <div class="caixa-icone">
         
             <div class="botao">
@@ -156,7 +179,7 @@
             </div>        
     </div>
 <!----------------------------------------------------------Advocacia EU---------------------------------------------------------->        
-    <h1 id="advocaciabr">Advocacia EU</h1>
+    <h1 id="sec-eu">Advocacia EU</h1>
     <div class="caixa-icone">
         
             <div class="botao">
@@ -223,13 +246,89 @@
             </div>
     </div>
 <!----------------------------------------------------------Relógio---------------------------------------------------------->        
-        <h1 id="hora">Relógio</h1>
+        <h1 id="sec-relogio">Relógio</h1>
         <div class="caixa-relogio">
                 <div id="relogio-digital"></div>
                 <div id="calendario"></div>
         </div>    
+<!----------------------------------------------------------Escritório---------------------------------------------------------->        
+    <h1 id="sec-valores">Escritório</h1>
+    <div class="caixa-icone">
+            <div class="botao">
+                <div class="targeta">
+                    <a class="icone" href="https://webmail.ma-advocacia.com/cpsess6575314675/3rdparty/roundcube/?_task=mail&_mbox=INBOX">
+                        <img width="48" height="38"
+                        src="img/icone/ma.png"
+                        alt="scales"/>
+                    </a>             
+                </div>
+                <span>E-mail MA</span>
+            </div>
+           <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="https://marcioandrio.github.io/marketing-status/">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>WhatsApp Status</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="https://marcioandrio.github.io/whatsapp-viewer/">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>WhatsApp Wiewer</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="html/obsidian/obsidian-viewer.html">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>Obsidian<br>OffLine</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="html/prompt/index.html">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>Prompt</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="html/fotos/fotos.html">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>Fotos</span>
+            </div>
+            <div class="botao">
+                <div class="targeta">
+                <a class="icone" href="html/animacao/borboletas.html">
+                <img width="48" height="48" 
+                    src="img/icone/ma.png" 
+                    alt="calendar--v2"/>
+                </a>             
+                </div>
+            <span>Borboletas</span>
+            </div>
+
+    </div>
+
 <!----------------------------------------------------------Valores Praticados---------------------------------------------------------->        
-    <h1 class="titulo" id="documentos">Valores Praticados</h1>
+    <h1 id="sec-valores">Valores Praticados</h1>
     <div class="caixa-icone">
         <div class="botao">
             <div class="targeta">
@@ -276,10 +375,6 @@
             </div>
             <span>Flyer ENG</span>
         </div>
-    </div>
-<!----------------------------------------------------------Lista---------------------------------------------------------->            
-    <h1 class="titulo" id="documentos">Lista</h1>
-    <div class="caixa-icone"> <!---div da caixa--->        
         <div class="botao">
             <div class="targeta">
                 <a class="icone-pdf" href="html/lista de documentos/lista valores.html">
@@ -289,6 +384,29 @@
             </div>
             <span>Valores<br>Serviços</span>
         </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/servico/nav.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Valores<br>NAV</span>
+        </div>
+        <div class="botao">
+            <div class="targeta">
+                <a class="icone-pdf" href="html/servico/status.html">
+                    <img width="48" height="48"
+                        src="img/icone/tuto.png" alt="scales"/>
+                </a>             
+            </div>
+            <span>Valores<br>Aima Status</span>
+        </div>
+
+    </div>
+<!----------------------------------------------------------Lista---------------------------------------------------------->            
+    <h1 id="sec-lista">Lista</h1>
+    <div class="caixa-icone"> <!---div da caixa--->        
         <div class="botao">
             <div class="targeta">
                 <a class="icone-pdf" href="html/lista de documentos/lista declaracao alojamento.html">
@@ -325,11 +443,12 @@
             </div>
             <span>A.R.<br>Estudos</span>
         </div>
+
     </div> <!---End div da caixa--->        
 </section>
 <!----------------------------------------------------------Tutorial---------------------------------------------------------->        
 <section>
-    <h1 class="titulo" id="documentos">Tutorial</h1>
+    <h1 id="sec-tutorial">Tutorial</h1>
     <div class="caixa-icone">
         <div class="botao">
             <div class="targeta">
@@ -448,7 +567,7 @@
         </div>
     </div>
 <!----------------------------------------------------------Europa---------------------------------------------------------->        
-        <h1 class="titulo" id="aima">Europa</h1>
+        <h1 id="sec-europa">Europa</h1>
         <div class="caixa-icone">
             <div class="botao">
                 <div class="targeta">
@@ -523,7 +642,7 @@
             </div>
        </div>
 <!----------------------------------------------------------AIMA---------------------------------------------------------->        
-        <h1 class="titulo" id="aima">Aima</h1>
+        <h1 id="sec-aima">Aima</h1>
         <div class="caixa-icone">
             <div class="botao">
                 <div class="targeta">
@@ -617,7 +736,7 @@
             </div>
        </div>
 <!----------------------------------------------------------Check List---------------------------------------------------------->        
-    <h1 class="titulo" id="documentos">Check List</h1>
+    <h1 id="sec-checklist">Check List</h1>
     <div class="caixa-icone">
         <div class="botao">
             <div class="targeta">
@@ -678,7 +797,7 @@
 
 <!----------------------------------------------------------Ferramentas---------------------------------------------------------->        
 <section>
-    <h1 class="titulo" id="ferramentas">Ferramentas</h1>
+    <h1 id="sec-ferramentas">Ferramentas</h1>
     <div class="caixa-icone">
             <div class="botao">
                 <div class="targeta">
@@ -723,16 +842,6 @@
             </div>
             <div class="botao">
                 <div class="targeta">
-                    <a class="icone" href="https://webmail.ma-advocacia.com/cpsess6575314675/3rdparty/roundcube/?_task=mail&_mbox=INBOX">
-                        <img width="48" height="38"
-                        src="img/icone/ma.png"
-                        alt="scales"/>
-                    </a>             
-                </div>
-                <span>@ma-advocacia.com</span>
-            </div>
-            <div class="botao">
-                <div class="targeta">
                     <a class="icone" href="https://github.com/">
                         <img width="50" height="50" src="https://img.icons8.com/3d-fluency/94/github.png" alt="github"/>
                     </a>             
@@ -765,9 +874,10 @@
                 </div>
                 <span>Rastreio CTT</span>
             </div>
+ 
     </div>
 <!----------------------------------------------------------Artificial---------------------------------------------------------->        
-    <h1 class="titulo" id="arquivvos">Artificial</h1>
+    <h1 id="sec-ia">Artificial</h1>
     <div class="caixa-icone">
             <div class="botao">
                 <div class="targeta">
@@ -837,7 +947,7 @@
             </div>
     </div>
 <!----------------------------------------------------------Arquivos---------------------------------------------------------->        
-    <h1 class="titulo" id="arquivvos">Arquivos</h1>
+    <h1 id="sec-arquivos">Arquivos</h1>
     <div class="caixa-icone">
             <div class="botao">
                 <div class="targeta">
@@ -916,16 +1026,6 @@
                     </a>             
             </div>
             <span>Victor Andrio<br>Alexa</span>
-            <div class="botao">
-                <div class="targeta">
-                <a class="icone" href="https://marcioandriobr.github.io/mamovies/">
-                <img width="48" height="48" 
-                    src="img/icone/ma.png" 
-                    alt="calendar--v2"/>
-                </a>             
-                </div>
-            <span>Filmes</span>
-            </div>
     </div>       
 </section>
 <!-- Pop-up -->
@@ -950,7 +1050,40 @@
 <footer>
         
 </footer>
-    <script src="js/popup.js"></script> <!--link par o pop-up-->
+    <script src="js/popup.js"></script>
+    <script>
+    function pesquisarFavoritos() {
+        const filtro = document.getElementById('campoPesquisa').value.toLowerCase().trim();
+        const btnLimpar = document.getElementById('btnLimpar');
+        btnLimpar.style.display = filtro ? 'flex' : 'none';
+
+        document.querySelectorAll('.botao').forEach(function(botao) {
+            const texto = botao.querySelector('span') ? botao.querySelector('span').innerText.toLowerCase() : '';
+            botao.style.display = (!filtro || texto.includes(filtro)) ? 'flex' : 'none';
+        });
+
+        document.querySelectorAll('section').forEach(function(sec) {
+            const visiveis = sec.querySelectorAll('.botao[style*="flex"], .botao:not([style])');
+            const algumVisivel = Array.from(sec.querySelectorAll('.botao')).some(b => b.style.display !== 'none');
+            sec.style.display = (!filtro || algumVisivel) ? 'flex' : 'none';
+        });
+    }
+
+    function limparPesquisa() {
+        document.getElementById('campoPesquisa').value = '';
+        pesquisarFavoritos();
+    }
+
+    function toggleNav() {
+        const links = document.getElementById('navLinks');
+        links.classList.toggle('aberto');
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.remove('aberto');
+        });
+    });
+    </script>
 <!----------------------------------------------------------Alexa---------------------------------------------------------->        
 <script>
     document.getElementById('btn-alexa-victor').addEventListener('click', function(e) {
