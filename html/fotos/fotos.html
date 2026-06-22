@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Media Viewer v4</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { background: #1e2937; padding: 20px 25px; text-align: center; }
+    header h1 { margin: 0 0 10px; }
+    .btn { padding: 12px 28px; font-size: 16px; background: #3b82f6; color: #fff; border: none; border-radius: 10px; cursor: pointer; }
+    .notice { margin-top: 10px; font-size: 12px; padding: 8px 14px; border-radius: 8px; display: inline-block; }
+    .notice.ok   { background: #14532d; color: #86efac; }
+    .notice.warn { background: #431407; color: #fdba74; }
+    .notice.info { background: #1e3a5f; color: #93c5fd; }
+    #gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; padding: 20px; }
+    .media-item { background: #1e2937; border-radius: 12px; overflow: hidden; border: 1px solid #334155; }
+    .thumb-wrap { width: 100%; height: 220px; background: #0f172a; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; overflow: hidden; }
+    .thumb-wrap img, .thumb-wrap video { width: 100%; height: 220px; object-fit: cover; }
+    .lbl { font-size: 12px; color: #94a3b8; text-align: center; padding: 6px 12px; }
+    .btn-dl { font-size: 11px; background: #334155; color: #cbd5e1; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; text-decoration: none; }
+    .info { padding: 12px; font-size: 13.5px; }
+    .path { font-size: 11px; color: #94a3b8; margin-top: 4px; word-break: break-all; }
+    #status { padding: 16px 20px; text-align: center; font-size: 14px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>📁 Universal Media Viewer v4</h1>
+  <button class="btn" onclick="document.getElementById('fi').click()">📂 Escolher Pasta</button>
+  <div id="heicStatus" class="notice info">A verificar suporte HEIC…</div>
+</header>
+
+<input type="file" id="fi" webkitdirectory directory multiple style="display:none">
+<div id="status"></div>
+<div id="gallery"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<script>
+const SERVER   = 'http://localhost:8765';
+const ALLOWED  = ['jpg','jpeg','png','gif','webp','heic','heif','mp4','mov','m4v'];
+const HEIC_EXT = ['heic','heif'];
+const VIDEO_EXT= ['mp4','mov','m4v'];
+
+let serverOk  = false;
+let heic2anyOk= false;
+
+// ── Detectar métodos disponíveis ──────────────────────────────────────────────
+async function detectSupport() {
+  const el = document.getElementById('heicStatus');
+
+  // 1. Verificar servidor local (python server.py)
+  try {
+    const r = await fetch(`${SERVER}/ping`, { signal: AbortSignal.timeout(1500) });
+    if (r.ok) { serverOk = true; }
+  } catch {}
+
+  // 2. Verificar heic2any
+  heic2anyOk = typeof heic2any === 'function';
+
+  // 3. Verificar suporte nativo (Safari/macOS)
+  const testUrl = 'data:image/heic;base64,AAAAGGZ0eXBoZWljAAAAAG1pZjE=';
+  const nativeOk = await new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror= () => res(false);
+    img.src = testUrl;
+    setTimeout(() => res(false), 800);
+  });
+
+  if (serverOk) {
+    el.className = 'notice ok';
+    el.textContent = '✅ Servidor local ativo — todos os HEIC/iPhone suportados';
+  } else if (nativeOk) {
+    el.className = 'notice ok';
+    el.textContent = '✅ Safari: HEIC suportado nativamente';
+  } else if (heic2anyOk) {
+    el.className = 'notice warn';
+    el.innerHTML = '⚠️ Modo limitado (heic2any) — alguns iPhone 14/15/16 podem falhar.<br>'
+      + '<small>Para suporte total: <code>python3 server.py</code> e abra <a href="http://localhost:8765/fotos.html" style="color:#fdba74">localhost:8765/fotos.html</a></small>';
+  } else {
+    el.className = 'notice warn';
+    el.innerHTML = '❌ HEIC não suportado neste browser.<br>'
+      + '<small>Solução: abra um terminal na pasta e execute <strong>python3 server.py</strong>, depois acesse <a href="http://localhost:8765/fotos.html" style="color:#fdba74">localhost:8765/fotos.html</a></small>';
+  }
+}
+
+detectSupport();
+
+// ── Conversão HEIC → JPEG ─────────────────────────────────────────────────────
+async function convertHeic(file) {
+  // Método 1: nativo (Safari — mais rápido, sem conversão)
+  const nativeUrl = URL.createObjectURL(file);
+  const nativeOk  = await new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror= () => res(false);
+    img.src = nativeUrl;
+    setTimeout(() => res(false), 2000);
+  });
+  if (nativeOk) return nativeUrl;
+  URL.revokeObjectURL(nativeUrl);
+
+  // Método 2: servidor local Python com sips (mais fiável — suporta todos os iPhones)
+  if (serverOk) {
+    const buf = await file.arrayBuffer();
+    const res = await fetch(`${SERVER}/convert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'image/heic' },
+      body: buf,
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!res.ok) throw new Error(`Servidor: ${await res.text()}`);
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  }
+
+  // Método 3: heic2any (fallback para formatos mais antigos)
+  if (heic2anyOk) {
+    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+    return URL.createObjectURL(Array.isArray(blob) ? blob[0] : blob);
+  }
+
+  throw new Error('Nenhum método disponível. Execute python3 server.py e acesse localhost:8765/fotos.html');
+}
+
+// ── Listener principal ────────────────────────────────────────────────────────
+document.getElementById('fi').addEventListener('change', async e => {
+  const files = Array.from(e.target.files);
+  document.getElementById('gallery').innerHTML = '';
+  const statusEl = document.getElementById('status');
+
+  const mediaFiles = files
+    .filter(f => ALLOWED.includes(f.name.toLowerCase().split('.').pop()))
+    .sort((a, b) => a.webkitRelativePath.localeCompare(b.webkitRelativePath));
+
+  const heicCount = mediaFiles.filter(f => HEIC_EXT.includes(f.name.toLowerCase().split('.').pop())).length;
+  statusEl.textContent = `${mediaFiles.length} ficheiros${heicCount ? ` — ${heicCount} HEIC a converter…` : ''}`;
+
+  let heicDone = 0;
+  const gallery = document.getElementById('gallery');
+
+  for (const file of mediaFiles) {
+    const ext     = file.name.toLowerCase().split('.').pop();
+    const isVideo = VIDEO_EXT.includes(ext);
+    const isHeic  = HEIC_EXT.includes(ext);
+
+    const div = document.createElement('div');
+    div.className = 'media-item';
+    div.innerHTML = `
+      <div class="thumb-wrap">
+        ${isHeic ? '<div class="lbl">⏳ Convertendo HEIC…</div>' : ''}
+      </div>
+      <div class="info">
+        <strong>${file.name}</strong>
+        <div class="path">${file.webkitRelativePath || file.name}</div>
+      </div>`;
+    gallery.appendChild(div);
+
+    const wrap = div.querySelector('.thumb-wrap');
+
+    if (isVideo) {
+      const vid = Object.assign(document.createElement('video'), { controls: true, muted: true });
+      vid.src = URL.createObjectURL(file);
+      wrap.innerHTML = ''; wrap.appendChild(vid);
+
+    } else if (isHeic) {
+      convertHeic(file).then(url => {
+        wrap.innerHTML = '';
+        const img = Object.assign(document.createElement('img'), { alt: file.name, loading: 'lazy' });
+        img.src = url;
+        wrap.appendChild(img);
+        heicDone++;
+        if (heicDone === heicCount) statusEl.textContent = `✅ ${mediaFiles.length} ficheiros — ${heicCount} HEIC convertidos`;
+      }).catch(err => {
+        const origUrl = URL.createObjectURL(file);
+        wrap.innerHTML = `
+          <div class="lbl" style="color:#f87171">❌ ${err.message}</div>
+          <a class="btn-dl" href="${origUrl}" download="${file.name}">⬇ Descarregar original</a>`;
+        heicDone++;
+      });
+
+    } else {
+      const img = Object.assign(document.createElement('img'), { alt: file.name, loading: 'lazy' });
+      img.src = URL.createObjectURL(file);
+      wrap.innerHTML = ''; wrap.appendChild(img);
+    }
+  }
+
+  if (!heicCount) statusEl.textContent = `✅ ${mediaFiles.length} ficheiros carregados`;
+});
+</script>
+</body>
+</html>
