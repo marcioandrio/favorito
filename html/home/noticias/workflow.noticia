@@ -1,0 +1,55 @@
+# Workflow: Notícias de Imigração em Portugal
+
+## Ativação
+Quando o utilizador disser: **"noticia"** (ou iniciar o programa do Claude)
+
+---
+
+## Passos
+
+### 1. Recolher notícias
+Fazer fetch simultâneo dos seguintes sites:
+- https://www.cmjornal.pt/cmtv
+- https://www.publico.pt/
+- https://dnbrasil.dn.pt/
+- https://www.stts.pt/
+
+Complementar com pesquisa web direcionada:
+- Query: `imigração Portugal lei [ANO] [MÊS] alterações SEF AIMA`
+- Query: `lei nacionalidade portuguesa promulgação [ANO]`
+- Domínios preferidos: publico.pt, dn.pt, cmjornal.pt, stts.pt, rtp.pt, observador.pt, jn.pt
+
+### 2. Filtrar notícias relevantes
+Selecionar apenas notícias que impactem:
+- Trabalho de migração em Portugal
+- Alterações às leis de imigração (Lei dos Estrangeiros, Lei da Nacionalidade)
+- AIMA / SEF / UNEF — mudanças de procedimento
+- Reagrupamento familiar
+- Vistos de residência
+- Detenção e retorno de imigrantes
+- Fiscalizações e novas políticas do Governo
+
+### 3. Criar pasta e ficheiro
+- **Pasta:** `[ANO].[MÊS].[DIA]. Noticias/`
+  Exemplo: `2026.06.17. Noticias/`
+- **Ficheiro:** `[ANO].[MÊS].[DIA]. Noticias.html`
+  Exemplo: `2026.06.17. Noticias.html`
+
+### 4. Formato do ficheiro HTML
+- Fundo bege quente (`#f4f1eb`), texto escuro suave (`#3a3530`)
+- Cores terrosas (sem vermelho forte), sem branco puro
+- Cards com borda lateral discreta, sombra suave
+- Fonte Georgia, tamanho 17px, espaçamento 1.75
+- Tags de categoria (urgente com destaque sutil)
+- Caixa de aviso para alterações legislativas recentes
+- Secção final "Resumo para o advogado"
+- Footer com fontes e data
+
+### 5. Resumo verbal
+Fazer um resumo falado das notícias mais importantes para o utilizador ouvir enquanto trabalha.
+
+---
+
+## Localização
+Guardar ficheiro em:
+`/Users/marcio.andrio/pCloud/Projetos/Sexta Feira/Projects/Noticias/[ANO].[MÊS].[DIA]. Noticias/`
