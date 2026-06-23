@@ -1,0 +1,4 @@
+.git
+node_modules
+*.log
+00. Dump
