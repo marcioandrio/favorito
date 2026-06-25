@@ -247,19 +247,53 @@
     line-height: 1.7;
   }
 
-  /* ─── MOBILE ─── */
+  /* ─── MOBILE SCALE ─── */
   @media (max-width: 800px) {
-    body { background: #fff; padding: 0; }
-    .toolbar { position: fixed; top: 0; left: 0; right: 0; }
-    .page {
+    body { padding: 0 0 40px; align-items: flex-start; }
+    .toolbar { position: relative; }
+    #page-scale-wrapper {
       width: 100vw;
-      min-width: unset;
-      margin-top: 80px;
-      box-shadow: none;
-      transform-origin: top left;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
     }
+    .page { margin-top: 0; transform-origin: top center; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
+    .doc-sub a::after { content: " (" attr(href) ")"; font-size: 7px; color: #888; word-break: break-all; }
+    @page { size: A4 portrait; margin: 0; }
   }
 </style>
+<script>
+  function scalePage() {
+    const wrappers = document.querySelectorAll('#page-scale-wrapper');
+    wrappers.forEach(wrapper => {
+      const page = wrapper.querySelector('.page');
+      if (!wrapper || !page) return;
+      const vw = wrapper.offsetWidth;
+      const pageW = page.offsetWidth;
+      if (vw < pageW) {
+        const scale = vw / pageW;
+        page.style.transform = 'scale(' + scale + ')';
+        page.style.marginBottom = '-' + (pageW * (1 - scale)) + 'px';
+        wrapper.style.height = (page.offsetHeight * scale) + 'px';
+      } else {
+        page.style.transform = '';
+        page.style.marginBottom = '';
+        wrapper.style.height = '';
+      }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', scalePage);
+  window.addEventListener('resize', scalePage);
+</script>
 </head>
 <body>
 
@@ -268,6 +302,7 @@
   <span>Reagrupamento Familiar — Lista de Documentos</span>
 </div>
 
+<div id="page-scale-wrapper">
 <div class="page">
   <div class="bar"></div>
   <div class="content">
@@ -457,24 +492,6 @@
 
   </div>
 </div>
-
-<script>
-  // Escala para mobile
-  function scalePage() {
-    const page = document.querySelector('.page');
-    if (!page) return;
-    const vw = window.innerWidth;
-    if (vw < 800) {
-      const scale = vw / page.offsetWidth;
-      page.style.transform = `scale(${scale})`;
-      page.style.marginBottom = `-${page.offsetHeight * (1 - scale)}px`;
-    } else {
-      page.style.transform = '';
-      page.style.marginBottom = '';
-    }
-  }
-  window.addEventListener('resize', scalePage);
-  scalePage();
-</script>
+</div>
 </body>
 </html>
