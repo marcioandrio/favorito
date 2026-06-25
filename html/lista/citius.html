@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Renovação de Residência — Lista de Documentos | MA Advocacia</title>
+<title>Citius — Guia de Submissão | MA Advocacia</title>
 <link rel="icon" href="../../img/icone/ma.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
@@ -20,16 +20,14 @@
   .header h1 { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 17px; letter-spacing: .12em; color: #1a0e00; }
   .header .subtitle { font-size: 9px; color: #6b5a3a; letter-spacing: .08em; text-transform: uppercase; margin-top: 3px; }
   .logo-area img { height: 48px; width: auto; object-fit: contain; }
-  .section-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 10px; letter-spacing: .14em; color: #8a6630; text-transform: uppercase; border-bottom: 1.5px solid #c9a85c; padding-bottom: 2px; margin-bottom: 10px; margin-top: 16px; }
-  .doc-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
-  .doc-num { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; color: #4a1628; min-width: 18px; margin-top: 1px; }
-  .doc-body { flex: 1; }
-  .doc-title { font-size: 10.5px; font-weight: 600; color: #1a0e00; line-height: 1.4; }
-  .doc-sub { margin-top: 3px; padding-left: 2px; }
-  .doc-sub li { list-style: none; font-size: 9.5px; font-style: italic; color: #4a3a20; line-height: 1.6; padding-left: 10px; position: relative; }
-  .doc-sub li::before { content: '–'; position: absolute; left: 0; color: #c9a85c; }
-  .doc-sub a { color: #4a1628; text-decoration: none; border-bottom: 1px dotted #c9a85c; font-style: italic; }
-  .doc-sub a:hover { color: #8a3050; }
+  .section-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 10px; letter-spacing: .14em; color: #8a6630; text-transform: uppercase; border-bottom: 1.5px solid #c9a85c; padding-bottom: 2px; margin-bottom: 12px; margin-top: 18px; }
+  .step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; }
+  .step-num { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; color: #4a1628; min-width: 22px; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-label { font-size: 10px; font-weight: 600; color: #6b5a3a; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .step-action { font-size: 10.5px; font-weight: 600; color: #1a0e00; margin-bottom: 4px; }
+  .step-img { display: block; max-width: 100%; border: 1px solid #e0d0b0; border-radius: 2px; margin-top: 6px; }
+  .step-note { font-size: 9px; font-style: italic; color: #6b5a3a; margin-top: 4px; }
   .footer { margin-top: auto; padding-top: 10px; border-top: 1.5px solid #4a1628; display: flex; justify-content: space-between; align-items: flex-end; }
   .footer .name { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; color: #1a0e00; }
   .footer .role { font-size: 8px; color: #6b5a3a; letter-spacing: .1em; text-transform: uppercase; }
@@ -45,7 +43,6 @@
     .toolbar { display: none; }
     #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
     .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
-    .doc-sub a::after { content: " (" attr(href) ")"; font-size: 7px; color: #888; word-break: break-all; }
     @page { size: A4 portrait; margin: 0; }
   }
 </style>
@@ -71,7 +68,7 @@
 <div class="toolbar">
   <button onclick="window.print()">🖨 Imprimir / PDF</button>
   <a href="../../index.html">← Voltar</a>
-  <span>Renovação de Residência — Lista de Documentos</span>
+  <span>Citius — Guia de Submissão</span>
 </div>
 
 <div id="page-scale-wrapper">
@@ -81,87 +78,92 @@
 
     <div class="header">
       <div>
-        <h1>RENOVAÇÃO DE RESIDÊNCIA</h1>
-        <div class="subtitle">Lista de Documentos Necessários</div>
+        <h1>CITIUS</h1>
+        <div class="subtitle">Guia de Submissão — Intimação de Entrada e Permanência</div>
       </div>
       <div class="logo-area">
         <img src="../../img/icone/ma.png" alt="MA Advocacia">
       </div>
     </div>
 
-    <div class="section-title">Identificação</div>
+    <div class="section-title">Tribunal e Tipo de Processo</div>
 
-    <div class="doc-item">
-      <div class="doc-num">1.</div>
-      <div class="doc-body">
-        <div class="doc-title">Passaporte válido</div>
-        <ul class="doc-sub">
-          <li>Todas as páginas certificadas</li>
-        </ul>
+    <div class="step">
+      <div class="step-num">1.</div>
+      <div class="step-body">
+        <div class="step-action">Lisboa — Tribunal Administrativo do Círculo de Lisboa<br>Administrativo Comum — Intimação — Entrada e permanência em território nacional</div>
+        <img class="step-img" src="../citius/img/citius1.png" alt="Passo 1">
+        <img class="step-img" src="../citius/img/citius2.png" alt="Passo 2">
+        <img class="step-img" src="../citius/img/citius3.png" alt="Passo 3">
+        <img class="step-img" src="../citius/img/citius4.png" alt="Passo 4">
+        <div class="step-note">→ Clique em Seguinte</div>
       </div>
     </div>
 
-    <div class="section-title">Meios de Subsistência e Habitação</div>
+    <div class="section-title">Valor e Dados do Processo</div>
 
-    <div class="doc-item">
-      <div class="doc-num">2.</div>
-      <div class="doc-body">
-        <div class="doc-title">Comprovativo de meios de subsistência</div>
-        <ul class="doc-sub">
-          <li>Vencimentos ou Recibos Verdes</li>
-        </ul>
+    <div class="step">
+      <div class="step-num">2.</div>
+      <div class="step-body">
+        <div class="step-action">Valor: 30 000.01</div>
+        <img class="step-img" src="../citius/img/citius6.png" alt="Valor">
+        <div class="step-note">→ Gravar</div>
       </div>
     </div>
 
-    <div class="doc-item">
-      <div class="doc-num">3.</div>
-      <div class="doc-body">
-        <div class="doc-title">Declaração de morada (sob compromisso de honra)</div>
-        <ul class="doc-sub">
-          <li>Declaração de Alojamento assinada pelo proprietário</li>
-          <li><a href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">Consultar contrato nas Finanças</a></li>
-        </ul>
+    <div class="step">
+      <div class="step-num">3.</div>
+      <div class="step-body">
+        <div class="step-action">Autor</div>
+        <img class="step-img" src="../citius/img/citius7.png" alt="Autor">
+        <div class="step-note">→ Gravar</div>
       </div>
     </div>
 
-    <div class="section-title">Obrigações Fiscais e Sociais</div>
-
-    <div class="doc-item">
-      <div class="doc-num">4.</div>
-      <div class="doc-body">
-        <div class="doc-title">Certidão de Não Dívida das Finanças <strong>(NIF)</strong></div>
-        <ul class="doc-sub">
-          <li><a href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">Emitir certidão no Portal das Finanças</a></li>
-        </ul>
+    <div class="step">
+      <div class="step-num">4.</div>
+      <div class="step-body">
+        <div class="step-action">Requerida — NIF: <strong>517686260</strong></div>
+        <img class="step-img" src="../citius/img/citius8.png" alt="Requerida">
+        <div class="step-note">→ Gravar</div>
       </div>
     </div>
 
-    <div class="doc-item">
-      <div class="doc-num">5.</div>
-      <div class="doc-body">
-        <div class="doc-title">Certidão de Não Dívida da Segurança Social <strong>(NISS)</strong></div>
-        <ul class="doc-sub">
-          <li><a href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin">Aceder à Segurança Social Direta</a></li>
-        </ul>
+    <div class="step">
+      <div class="step-num">5.</div>
+      <div class="step-body">
+        <div class="step-action">Modalidade de Citação</div>
+        <img class="step-img" src="../citius/img/citius10.png" alt="Citação">
+        <div class="step-note">→ Gravar</div>
       </div>
     </div>
 
-    <div class="section-title">Antecedentes e Saúde</div>
-
-    <div class="doc-item">
-      <div class="doc-num">6.</div>
-      <div class="doc-body">
-        <div class="doc-title">Registo Criminal do país de origem <strong>(PCC)</strong></div>
+    <div class="step">
+      <div class="step-num">6.</div>
+      <div class="step-body">
+        <div class="step-action">Taxa</div>
+        <img class="step-img" src="../citius/img/citius9.png" alt="Taxa">
+        <div class="step-note">→ Gravar</div>
       </div>
     </div>
 
-    <div class="doc-item">
-      <div class="doc-num">7.</div>
-      <div class="doc-body">
-        <div class="doc-title">Seguro de saúde ou comprovativo de abrangência pelo SNS</div>
-        <ul class="doc-sub">
-          <li>Cartão de utente do SNS ou apólice de seguro de saúde válida</li>
-        </ul>
+    <div class="section-title">Petição e Protocolo</div>
+
+    <div class="step">
+      <div class="step-num">7.</div>
+      <div class="step-body">
+        <div class="step-action">Petição Inicial</div>
+        <img class="step-img" src="../citius/img/citius11.png" alt="Petição">
+        <div class="step-note">→ Prosseguir para Assinar</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8.</div>
+      <div class="step-body">
+        <div class="step-action">Protocolo</div>
+        <img class="step-img" src="../citius/img/citius12.png" alt="Protocolo">
+        <div class="step-note">→ Salvar</div>
       </div>
     </div>
 

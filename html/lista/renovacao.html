@@ -1,48 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MA - Renovação de Residência</title>
-    <link rel="icon" href="../../img/icone/ma.png">
-    <link rel="stylesheet" href="style-lista.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renovação de Residência — Lista de Documentos | MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding: 30px 0 60px; }
+  .toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+  .toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
+  .toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+  .toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+  .page { width: 210mm; min-width: 210mm; min-height: 297mm; background: #fff; display: flex; flex-direction: row; flex-shrink: 0; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 24px; position: relative; }
+  .bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+  .content { flex: 1; padding: 24px 32px 28px 26px; display: flex; flex-direction: column; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1.5px solid #4a1628; padding-bottom: 10px; }
+  .header h1 { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 17px; letter-spacing: .12em; color: #1a0e00; }
+  .header .subtitle { font-size: 9px; color: #6b5a3a; letter-spacing: .08em; text-transform: uppercase; margin-top: 3px; }
+  .logo-area img { height: 48px; width: auto; object-fit: contain; }
+  .section-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 10px; letter-spacing: .14em; color: #8a6630; text-transform: uppercase; border-bottom: 1.5px solid #c9a85c; padding-bottom: 2px; margin-bottom: 10px; margin-top: 16px; }
+  .doc-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; }
+  .doc-num { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; color: #4a1628; min-width: 18px; margin-top: 1px; }
+  .doc-body { flex: 1; }
+  .doc-title { font-size: 10.5px; font-weight: 600; color: #1a0e00; line-height: 1.4; }
+  .doc-sub { margin-top: 3px; padding-left: 2px; }
+  .doc-sub li { list-style: none; font-size: 9.5px; font-style: italic; color: #4a3a20; line-height: 1.6; padding-left: 10px; position: relative; }
+  .doc-sub li::before { content: '–'; position: absolute; left: 0; color: #c9a85c; }
+  .doc-sub a { color: #4a1628; text-decoration: none; border-bottom: 1px dotted #c9a85c; font-style: italic; }
+  .doc-sub a:hover { color: #8a3050; }
+  .footer { margin-top: auto; padding-top: 10px; border-top: 1.5px solid #4a1628; display: flex; justify-content: space-between; align-items: flex-end; }
+  .footer .name { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700; color: #1a0e00; }
+  .footer .role { font-size: 8px; color: #6b5a3a; letter-spacing: .1em; text-transform: uppercase; }
+  .footer .contact { text-align: right; font-size: 8px; color: #6b5a3a; line-height: 1.7; }
+  @media (max-width: 800px) {
+    body { padding: 0 0 40px; align-items: flex-start; }
+    .toolbar { position: relative; }
+    #page-scale-wrapper { width: 100vw; overflow: hidden; display: flex; justify-content: center; margin-top: 16px; }
+    .page { margin-top: 0; transform-origin: top center; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
+    .doc-sub a::after { content: " (" attr(href) ")"; font-size: 7px; color: #888; word-break: break-all; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+<script>
+  function scalePage() {
+    document.querySelectorAll('#page-scale-wrapper').forEach(wrapper => {
+      const page = wrapper.querySelector('.page');
+      if (!page) return;
+      const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+      if (vw < pw) {
+        const s = vw / pw;
+        page.style.transform = 'scale(' + s + ')';
+        page.style.marginBottom = '-' + (pw * (1 - s)) + 'px';
+        wrapper.style.height = (page.offsetHeight * s) + 'px';
+      } else { page.style.transform = ''; page.style.marginBottom = ''; wrapper.style.height = ''; }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', scalePage);
+  window.addEventListener('resize', scalePage);
+</script>
 </head>
 <body>
-<header>
-    <a class="btn-voltar" href="../../index.html">← Voltar</a>
-    <img class="home-imagem" src="png/logositema.png" alt="Logo MA Advocacia">
-</header>
-
-<h1>Renovação de Residência</h1>
-<div class="caixa">
-<div class="lista">
-
-    Passaporte válido (todas as páginas certificadas);<br><br>
-
-    Comprovativo de meios de subsistência;<br>
-    <span style="margin-left:40px"><i>– Vencimentos ou Recibos Verdes</i></span><br><br>
-
-    Declaração de morada (sob compromisso de honra);<br>
-    <span style="margin-left:40px"><i>– Declaração de Alojamento</i></span><br>
-    <span style="margin-left:40px"><i>– <a href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">Consultar contrato nas Finanças</a></i></span><br><br>
-
-    Certidão de Não Dívida das Finanças (<strong>NIF</strong>);<br>
-    <span style="margin-left:40px"><i>– <a href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">Emitir certidão nas Finanças</a></i></span><br><br>
-
-    Certidão de Não Dívida da Segurança Social (<strong>NISS</strong>);<br>
-    <span style="margin-left:40px"><i>– <a href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin">Aceder à Segurança Social</a></i></span><br><br>
-
-    Registo criminal do país de origem (<strong>PCC</strong>);<br><br>
-
-    Seguro de saúde ou comprovativo de abrangência pelo SNS (<strong>Utente</strong>).
-
-</div>
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Renovação de Residência — Lista de Documentos</span>
 </div>
 
-<footer>
-    <p>📞 +351 960 389 573</p>
-    <p><a href="mailto:marcio.andrio@ma-advocacia.com">marcio.andrio@ma-advocacia.com</a></p>
-    <small>© 2025 Marcio Andrio Advocacia. Todos os direitos reservados.</small>
-</footer>
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="content">
+
+    <div class="header">
+      <div>
+        <h1>RENOVAÇÃO DE RESIDÊNCIA</h1>
+        <div class="subtitle">Lista de Documentos Necessários</div>
+      </div>
+      <div class="logo-area">
+        <img src="../../img/icone/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <div class="section-title">Identificação</div>
+
+    <div class="doc-item">
+      <div class="doc-num">1.</div>
+      <div class="doc-body">
+        <div class="doc-title">Passaporte válido</div>
+        <ul class="doc-sub">
+          <li>Todas as páginas certificadas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Meios de Subsistência e Habitação</div>
+
+    <div class="doc-item">
+      <div class="doc-num">2.</div>
+      <div class="doc-body">
+        <div class="doc-title">Comprovativo de meios de subsistência</div>
+        <ul class="doc-sub">
+          <li>Vencimentos ou Recibos Verdes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-num">3.</div>
+      <div class="doc-body">
+        <div class="doc-title">Declaração de morada (sob compromisso de honra)</div>
+        <ul class="doc-sub">
+          <li>Declaração de Alojamento assinada pelo proprietário</li>
+          <li><a href="https://imoveis.portaldasfinancas.gov.pt/arrendamento/consultarContratos/locatario?">Consultar contrato nas Finanças</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Obrigações Fiscais e Sociais</div>
+
+    <div class="doc-item">
+      <div class="doc-num">4.</div>
+      <div class="doc-body">
+        <div class="doc-title">Certidão de Não Dívida das Finanças <strong>(NIF)</strong></div>
+        <ul class="doc-sub">
+          <li><a href="https://www.portaldasfinancas.gov.pt/pt/emissaoCertidaoForm.action">Emitir certidão no Portal das Finanças</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-num">5.</div>
+      <div class="doc-body">
+        <div class="doc-title">Certidão de Não Dívida da Segurança Social <strong>(NISS)</strong></div>
+        <ul class="doc-sub">
+          <li><a href="https://www.seg-social.pt/sso/login?service=https%3A%2F%2Fwww.seg-social.pt%2Fptss%2Fcaslogin">Aceder à Segurança Social Direta</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Antecedentes e Saúde</div>
+
+    <div class="doc-item">
+      <div class="doc-num">6.</div>
+      <div class="doc-body">
+        <div class="doc-title">Registo Criminal do país de origem <strong>(PCC)</strong></div>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-num">7.</div>
+      <div class="doc-body">
+        <div class="doc-title">Seguro de saúde ou comprovativo de abrangência pelo SNS</div>
+        <ul class="doc-sub">
+          <li>Cartão de utente do SNS ou apólice de seguro de saúde válida</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>
+        <div class="name">Marcio Andrio</div>
+        <div class="role">Advogado · Cédula Profissional PT</div>
+      </div>
+      <div class="contact">
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
 </body>
 </html>
