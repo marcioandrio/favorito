@@ -511,13 +511,32 @@
   </div>
 
   <!-- CALENDÁRIO -->
-  <div class="panel" id="calendario-panel" style="grid-column: 1 / -1;">
-    <div class="panel-header">
-      <span class="icon">📅</span>
-      <span class="title">Calendário — Hoje</span>
-      <span id="calendario-data" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
+  <div class="panel" id="calendario-panel" style="grid-column: 1 / -1; position: relative; display: flex; flex-direction: row; overflow: hidden;">
+    <!-- Clementine avatar -->
+    <div style="display:flex; align-items:center; justify-content:center; padding: 6px; flex-shrink:0; width:160px;">
+      <div id="clem-ring" style="
+        position:relative; width:148px; height:148px; border-radius:50%;
+        box-shadow: 0 0 0 2px var(--accent), 0 0 16px rgba(196,163,90,0.4);
+        transition: box-shadow 0.3s;
+      ">
+        <img src="clementine/Clementine.gif" alt="Clementine" id="clementine-avatar" style="
+          width:100%; height:100%;
+          border-radius:50%;
+          object-fit:cover;
+          object-position:top center;
+          display:block;
+        ">
+      </div>
     </div>
-    <div class="panel-body" id="calendario-body" style="display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;align-items:stretch;gap:8px;padding:8px;"></div>
+    <!-- Conteúdo do calendário -->
+    <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+      <div class="panel-header">
+        <span class="icon">📅</span>
+        <span class="title">Calendário — Hoje</span>
+        <span id="calendario-data" style="font-size:10px;color:var(--text2);margin-left:auto;"></span>
+      </div>
+      <div class="panel-body" id="calendario-body" style="display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;align-items:stretch;gap:8px;padding:8px;flex:1;"></div>
+    </div>
   </div>
 
 </div></div>
@@ -996,6 +1015,85 @@ carregarNoticias();
 carregarEmail();
 fcRender();
 carregarCalendario();
+
+// ── CLEMENTINE AUDIO SCHEDULER ────────────────────────────────
+(function() {
+  const MP3 = 'clementine/mp3/';
+
+  function getSlot(now) {
+    const day = now.getDay(); // 0=Dom 1-5=Seg-Sex 6=Sab
+    const h   = now.getHours();
+    if (day === 6) return null; // Sábado — silêncio
+    if (day === 0) return (h >= 14 && h < 22) ? MP3 + 'luna.bom.dia.mp3' : null;
+    // Seg–Sex
+    if      (h >= 8  && h < 11) return MP3 + 'luna.bom.dia.mp3';
+    else if (h >= 11 && h < 12) return MP3 + 'luna.whatasapp.mp3';
+    else if (h >= 12 && h < 14) return MP3 + 'luana.hora.almoco.mp3';
+    else if (h >= 14 && h < 22) return MP3 + 'luna.whatasapp.mp3';
+    else                         return MP3 + 'luna.boa.noite.mp3';
+  }
+
+  function slotKey(now) {
+    const h = now.getHours();
+    const band = h < 8 ? 0 : h < 11 ? 8 : h < 12 ? 11 : h < 14 ? 12 : h < 22 ? 14 : 22;
+    return `${now.getDay()}:${band}`;
+  }
+
+  const POINT_TRIGGERS = [
+    { key: 'cafe',   days: [0,1,2,3,4,5,6], h: 16, audio: MP3 + 'luna.cafe.mp3'      },
+    { key: 'mkt-15', days: [3, 5],           h: 15, audio: MP3 + 'luna.marketing.mp3' },
+    { key: 'mkt-18', days: [3, 5],           h: 18, audio: MP3 + 'luna.marketing.mp3' },
+  ];
+  const firedAt = new Map();
+
+  function setSpeaking(on) {
+    const ring = document.getElementById('clem-ring');
+    if (!ring) return;
+    ring.style.boxShadow = on
+      ? '0 0 0 3px #c9a85c, 0 0 28px rgba(196,163,90,0.9), 0 0 0 6px rgba(196,163,90,0.3)'
+      : '0 0 0 2px var(--accent), 0 0 16px rgba(196,163,90,0.4)';
+  }
+
+  function playFile(src) {
+    if (!src) return;
+    const a = new Audio(src);
+    a.volume = 0.85;
+    setSpeaking(true);
+    a.addEventListener('ended', () => setSpeaking(false));
+    a.addEventListener('error', () => setSpeaking(false));
+    a.addEventListener('pause', () => setSpeaking(false));
+    a.play().catch(() => setSpeaking(false));
+  }
+
+  function checkPointTriggers(now) {
+    const day     = now.getDay();
+    const h       = now.getHours();
+    const m       = now.getMinutes();
+    const dateStr = now.toDateString();
+    POINT_TRIGGERS.forEach(pt => {
+      if (!pt.days.includes(day) || h !== pt.h || m !== 0) return;
+      const fk = `${pt.key}-${dateStr}`;
+      if (firedAt.has(fk)) return;
+      firedAt.set(fk, true);
+      playFile(pt.audio);
+    });
+  }
+
+  // Toca saudação inicial ao abrir a página
+  playFile(getSlot(new Date()));
+
+  // Verifica mudança de slot e triggers a cada 30 s
+  let lastSlot = slotKey(new Date());
+  setInterval(() => {
+    const now = new Date();
+    checkPointTriggers(now);
+    const key = slotKey(now);
+    if (key !== lastSlot) {
+      lastSlot = key;
+      playFile(getSlot(now));
+    }
+  }, 30_000);
+})();
 </script>
 </body>
 </html>
