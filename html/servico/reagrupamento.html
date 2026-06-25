@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reagrupamento Familiar — Proposta de Serviço | MA Advocacia</title>
+    <link rel="icon" href="logo/ma.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #d0cfc9;
+        font-family: 'Lora', serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0 60px;
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px;
+        background: #1c1c1c;
+        width: 100%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+      .toolbar button {
+        font-family: 'Lora', serif;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        background: #c9a85c;
+        color: #1a0e00;
+        border: none;
+        padding: 9px 22px;
+        border-radius: 2px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .toolbar span {
+        color: #bdb08a;
+        font-size: 12px;
+        align-self: center;
+        font-family: monospace;
+      }
+
+      /* ─── PAGE ─── */
+      .page {
+        width: 210mm;
+        min-width: 210mm;
+        height: 297mm;
+        background: #fff;
+        display: flex;
+        flex-direction: row;
+        flex-shrink: 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        margin-top: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .bar {
+        width: 10px;
+        height: 100%;
+        background: #4a1628;
+        flex-shrink: 0;
+      }
+
+      .content {
+        flex: 1;
+        padding: 20px 28px 20px 22px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ─── HEADER ─── */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        border-bottom: 1.5px solid #4a1628;
+        padding-bottom: 8px;
+      }
+      .header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 19px;
+        letter-spacing: 0.12em;
+        color: #1a0e00;
+      }
+      .header .subtitle {
+        font-size: 9px;
+        color: #6b5a3a;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .logo-area img {
+        height: 52px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      /* ─── SECTION HEADING ─── */
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        color: #8a6630;
+        text-transform: uppercase;
+        border-bottom: 1.5px solid #c9a85c;
+        padding-bottom: 2px;
+        margin-bottom: 5px;
+        margin-top: 8px;
+        display: inline-block;
+        width: 100%;
+      }
+
+      /* ─── BODY TEXT ─── */
+      .body-text p {
+        font-size: 9.5px;
+        line-height: 1.5;
+        color: #1a1008;
+        margin-bottom: 2px;
+      }
+
+      /* ─── ALERT BOX ─── */
+      .alert-box {
+        background: #fdf6ee;
+        border-left: 3px solid #c9a85c;
+        padding: 7px 12px;
+        margin-bottom: 6px;
+        border-radius: 1px;
+      }
+      .alert-box .alert-title {
+        font-size: 8.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #4a1628;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .alert-box p {
+        font-size: 9px;
+        line-height: 1.6;
+        color: #1a1008;
+        margin: 0;
+      }
+
+      /* ─── SERVICE BLOCK ─── */
+      .service-block {
+        margin-top: 5px;
+      }
+      .service-block h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: #1a0e00;
+        text-align: center;
+        margin-bottom: 3px;
+      }
+      .service-block p {
+        font-size: 9.5px;
+        line-height: 1.5;
+        color: #1a1008;
+        margin-bottom: 3px;
+      }
+      .service-block ul {
+        margin: 1px 0 3px 14px;
+        list-style: disc;
+      }
+      .service-block ul li {
+        font-size: 9.5px;
+        line-height: 1.5;
+        color: #1a1008;
+      }
+
+      /* ─── FAMILIARES GRID ─── */
+      .familiares-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        margin: 5px 0;
+      }
+      .familiar-card {
+        background: #fdf6ee;
+        border: 1px solid #e0d0b0;
+        border-top: 3px solid #4a1628;
+        padding: 6px 8px;
+        border-radius: 1px;
+      }
+      .familiar-card .fc-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 8.5px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: #4a1628;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .familiar-card ul {
+        margin: 0 0 0 10px;
+        list-style: disc;
+      }
+      .familiar-card ul li {
+        font-size: 8px;
+        line-height: 1.5;
+        color: #1a1008;
+      }
+
+      /* ─── PRICE SECTION ─── */
+      .price-section {
+        margin-top: 8px;
+        border-top: 1px solid #d0c4aa;
+        padding-top: 8px;
+      }
+      .price-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 5px;
+      }
+      .price-box {
+        flex: 1;
+        background: #4a1628;
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 2px;
+      }
+      .price-box .lbl {
+        font-size: 8px;
+        letter-spacing: 0.14em;
+        color: #e9d9de;
+        text-transform: uppercase;
+        font-family: monospace;
+        line-height: 1.5;
+        margin-bottom: 4px;
+      }
+      .price-box .val {
+        font-family: 'Playfair Display', serif;
+        font-size: 17px;
+        font-weight: 700;
+        color: #c9a85c;
+      }
+      .price-box.total {
+        background: #1a0e00;
+        border: 1.5px solid #c9a85c;
+      }
+      .price-note {
+        font-size: 8.5px;
+        color: #6b5a3a;
+        font-style: italic;
+        margin-top: 3px;
+        line-height: 1.55;
+      }
+
+      /* ─── FOOTER ─── */
+      .footer {
+        margin-top: auto;
+        padding-top: 8px;
+        border-top: 1.5px solid #4a1628;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .footer .name {
+        font-family: 'Playfair Display', serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #1a0e00;
+      }
+      .footer .role {
+        font-size: 8.5px;
+        color: #6b5a3a;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .footer .contacts {
+        text-align: right;
+        font-size: 9px;
+        color: #3a2a1a;
+        line-height: 1.7;
+      }
+
+      /* ─── MOBILE SCALE ─── */
+      @media (max-width: 800px) {
+        body {
+          padding: 0 0 40px;
+          align-items: flex-start;
+        }
+        .toolbar {
+          position: relative;
+        }
+        #page-scale-wrapper {
+          width: 100vw;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          margin-top: 16px;
+        }
+        .page {
+          margin-top: 0;
+          transform-origin: top center;
+        }
+      }
+
+      /* ─── PRINT ─── */
+      @media print {
+        body {
+          background: #fff;
+          padding: 0;
+        }
+        .toolbar {
+          display: none;
+        }
+        #page-scale-wrapper {
+          margin: 0;
+          width: auto;
+          overflow: visible;
+        }
+        .page {
+          box-shadow: none;
+          margin: 0;
+          width: 210mm;
+          height: 297mm;
+          transform: none !important;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 0;
+        }
+      }
+    </style>
+    <script>
+      function scalePage() {
+        const wrapper = document.getElementById('page-scale-wrapper');
+        const page = document.querySelector('.page');
+        if (!wrapper || !page) return;
+        const vw = wrapper.offsetWidth;
+        const pageW = page.offsetWidth;
+        if (vw < pageW) {
+          const scale = vw / pageW;
+          page.style.transform = 'scale(' + scale + ')';
+          page.style.marginBottom = '-' + pageW * (1 - scale) + 'px';
+          wrapper.style.height = page.offsetHeight * scale + 'px';
+        } else {
+          page.style.transform = '';
+          page.style.marginBottom = '';
+          wrapper.style.height = '';
+        }
+      }
+      window.addEventListener('DOMContentLoaded', scalePage);
+      window.addEventListener('resize', scalePage);
+    </script>
+  </head>
+  <body>
+    <div class="toolbar">
+      <span>REAGRUPAMENTO FAMILIAR — Pré-visualização A4</span>
+      <button onclick="window.print()">Imprimir / Guardar como PDF</button>
+    </div>
+
+    <div id="page-scale-wrapper">
+      <div class="page">
+        <div class="bar"></div>
+        <div class="content">
+          <!-- HEADER -->
+          <div class="header">
+            <div>
+              <h1>PROPOSTA DE SERVIÇO</h1>
+              <div class="subtitle">Reagrupamento Familiar</div>
+            </div>
+            <div class="logo-area">
+              <img src="logo/ma.png" alt="MA Advocacia" />
+            </div>
+          </div>
+
+          <!-- QUEM SOMOS -->
+          <div class="section-title">QUEM SOMOS</div>
+          <div class="body-text">
+            <p>
+              Marcio Andrio Advocacia é especializado em imigração, oferecendo
+              suporte completo na obtenção de vistos, cidadania e processos de
+              reunificação familiar em Portugal.
+            </p>
+            <p>
+              Com uma equipa experiente e multilingue, garantimos um atendimento
+              personalizado, ético e eficiente em cada fase do processo, desde a
+              análise documental até à decisão final da AIMA.
+            </p>
+          </div>
+
+          <!-- O QUE É -->
+          <div class="section-title">O QUE É O REAGRUPAMENTO FAMILIAR?</div>
+          <div class="alert-box">
+            <div class="alert-title">
+              Direito legal garantido pela lei portuguesa
+            </div>
+            <p>
+              O <strong>Reagrupamento Familiar</strong> é o direito que assiste
+              a quem já possui residência legal em Portugal a viver junto dos
+              seus familiares mais próximos. O pedido é regulado pelo
+              <strong>Artigo 98.º da Lei de Estrangeiros</strong> e instruído
+              junto da AIMA. Com a
+              <strong>Lei n.º 61/2025, de 22 de outubro</strong>, foram
+              introduzidas novas regras que todo o requerente deve conhecer
+              antes de iniciar o processo.
+            </p>
+          </div>
+
+          <!-- QUEM PODE REAGRUPAR -->
+          <div class="section-title">QUEM PODE SER REAGRUPADO?</div>
+          <div class="familiares-grid">
+            <div class="familiar-card">
+              <div class="fc-title">Cônjuge / União de Facto</div>
+              <ul>
+                <li>
+                  Casamento ou união de facto reconhecidos pela lei portuguesa
+                </li>
+                <li>Ambos com idade mínima de 18 anos</li>
+                <li>Casamento não pode ser de conveniência</li>
+              </ul>
+            </div>
+            <div class="familiar-card">
+              <div class="fc-title">Filhos</div>
+              <ul>
+                <li>Filhos menores do casal ou de um dos cônjuges</li>
+                <li>Filhos menores adotados</li>
+                <li>
+                  Filhos maiores, solteiros e a cargo, a estudar em Portugal
+                </li>
+              </ul>
+            </div>
+            <div class="familiar-card">
+              <div class="fc-title">Pais / Ascendentes</div>
+              <ul>
+                <li>Pais do residente ou do cônjuge</li>
+                <li>Dependência económica comprovada</li>
+                <li>Sem limite de idade definido na lei</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- REQUISITOS -->
+          <div class="section-title">REQUISITOS DO REQUERENTE</div>
+          <div class="service-block">
+            <p>
+              O titular da residência em Portugal que pretende reunificar a
+              família deve cumprir os seguintes requisitos:
+            </p>
+            <ul>
+              <li>
+                <strong>Residência mínima de 2 anos</strong> em Portugal com
+                autorização válida (reduzida para <strong>15 meses</strong> para
+                cônjuge/união de facto)
+              </li>
+              <li>
+                Sem prazo mínimo quando estão envolvidos
+                <strong>menores ou incapazes</strong> a cargo
+              </li>
+              <li>
+                Comprovativo de <strong>alojamento adequado</strong> para
+                receber o familiar
+              </li>
+              <li>
+                Comprovativo de
+                <strong>meios de subsistência suficientes</strong> para sustento
+                da família
+              </li>
+              <li>
+                Autorização de Residência válida e situação regularizada perante
+                a Segurança Social e Finanças
+              </li>
+            </ul>
+          </div>
+
+          <!-- SERVIÇOS INCLUÍDOS -->
+          <div class="section-title">O QUE ESTÁ INCLUÍDO NESTE SERVIÇO</div>
+
+          <div class="service-block">
+            <h3>ANÁLISE E PREPARAÇÃO DO PROCESSO</h3>
+            <p>
+              Avaliação completa da situação do cliente e dos familiares a
+              reagrupar, com verificação de elegibilidade e identificação de
+              eventuais impedimentos antes da submissão:
+            </p>
+            <ul>
+              <li>
+                Análise da situação migratória do requerente e dos familiares
+              </li>
+              <li>
+                Verificação de requisitos legais ao abrigo do Art.º 98.º e Lei
+                n.º 61/2025
+              </li>
+              <li>
+                Levantamento e orientação sobre toda a documentação necessária
+              </li>
+              <li>
+                Preparação, tradução e autenticação dos documentos exigidos
+              </li>
+              <li>Elaboração da petição e submissão do pedido na AIMA</li>
+            </ul>
+          </div>
+
+          <div class="service-block">
+            <h3>ACOMPANHAMENTO ATÉ À DECISÃO</h3>
+            <p>
+              Monitorização ativa do processo junto da AIMA durante o prazo
+              legal de apreciação (até 9 meses, nos termos da Lei n.º 61/2025),
+              com comunicação regular ao cliente:
+            </p>
+            <ul>
+              <li>Acompanhamento do estado do processo na AIMA</li>
+              <li>
+                Resposta a pedidos de esclarecimento ou documentação adicional
+              </li>
+              <li>Intervenção em caso de demora ou silêncio administrativo</li>
+            </ul>
+          </div>
+
+          <!-- PRICES -->
+          <div class="price-section">
+            <div class="price-row">
+              <div class="price-box total">
+                <div class="lbl">
+                  ANÁLISE, PREPARAÇÃO E ACOMPANHAMENTO ATÉ À DECISÃO
+                </div>
+                <div class="val">€ 1.000,00</div>
+              </div>
+            </div>
+            <p class="price-note">
+              * Valor dos honorários de advocacia. Não inclui taxas pagas à
+              AIMA, custos de tradução juramentada, apostila ou deslocações. O
+              processo pode ser instruído com o familiar em território nacional
+              (Art.º 98.º, n.º 2) ou fora de Portugal (Art.º 98.º, n.º 1). Prazo
+              legal de apreciação pela AIMA: até 9 meses (Lei n.º 61/2025).
+            </p>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="footer">
+            <div>
+              <div class="name">Marcio Andrio</div>
+              <div class="role">Sócio Fundador</div>
+            </div>
+            <div class="contacts">
+              www.ma-advocacia.com<br />
+              +351 960 389 573<br />
+              marcio.andrio@ma-advocacia.com
+            </div>
+          </div>
+        </div>
+        <!-- /content -->
+      </div>
+      <!-- /page -->
+    </div>
+    <!-- /page-scale-wrapper -->
+  </body>
+</html>
