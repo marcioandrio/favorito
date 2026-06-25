@@ -102,7 +102,20 @@
     @media (max-width: 500px) {
       #grid { gap: 10px; }
       #grid .panel { min-height: 280px; }
-      #calendario-panel { min-height: 180px; }
+      #calendario-panel {
+        min-height: 280px;
+        flex-direction: column !important;
+      }
+      /* Clementine fica em cima, ocupa largura total */
+      #calendario-panel > div:first-child {
+        width: 100% !important;
+        height: 120px !important;
+        padding: 8px 0 4px !important;
+      }
+      #clem-ring {
+        width: 100px !important;
+        height: 100px !important;
+      }
       .panel-header { padding: 0 10px; }
     }
 
