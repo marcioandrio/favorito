@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recibo — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
+
+/* ── Toolbar ── */
+.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
+.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+
+/* ── Form panel ── */
+.form-panel { width: 210mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
+.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
+.fp-input:focus { border-color: #c9a85c; }
+.fp-input::placeholder { color: #555; }
+.fp-input:read-only { color: #777; cursor: default; }
+select.fp-input { cursor: pointer; }
+.field-row { display: contents; }
+.full { grid-column: 1 / -1; }
+.total-group { display: contents; }
+.total-group.hidden > div { display: none; }
+
+/* ── A4 Page ── */
+#page-scale-wrapper { display: flex; justify-content: center; }
+.page {
+  width: 210mm; min-height: 297mm;
+  background: #fff;
+  display: flex; flex-direction: row;
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  margin-top: 18px;
+  position: relative;
+}
+.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+.rec-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 1.5px solid #c9a85c; margin-bottom: 20px; }
+.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 24pt; font-weight: 800; color: #1a0e00; letter-spacing: .04em; line-height: 1; }
+.rec-header-left .subtitle { font-size: 7.5pt; letter-spacing: .16em; text-transform: uppercase; color: #8a6630; margin-top: 5px; font-family: 'Lora', serif; }
+.logo-box { flex-shrink: 0; margin-left: 16px; }
+.logo-box img { height: 48px; width: auto; display: block; }
+
+/* ── Body ── */
+.rec-body { flex: 1; font-family: 'Lora', serif; font-size: 10.5pt; color: #1a0e00; }
+.rec-para { text-align: justify; line-height: 1.7; margin-bottom: 16px; display: flex; gap: 10px; }
+.rec-para .num { min-width: 18px; font-weight: 600; flex-shrink: 0; padding-top: 1px; }
+.rec-date { text-align: right; margin-top: 24px; margin-bottom: 28px; font-size: 10.5pt; }
+.rec-sig { text-align: center; line-height: 1.7; font-size: 10.5pt; }
+.rec-sig .sig-name { font-weight: 700; font-family: 'Playfair Display', serif; font-size: 12pt; }
+.rec-sig .sig-role { font-weight: 600; }
+
+/* ── Footnotes ── */
+.rec-footnotes { border-top: .8px solid #c9a85c; margin-top: 20px; padding-top: 6px; }
+.rec-footnotes p { font-size: 6.8pt; line-height: 1.55; color: #4a3a20; font-family: 'Lora', serif; }
+
+/* ── Footer ── */
+.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; padding-top: 8px; border-top: 1px solid #c9a85c; }
+.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
+.rec-footer .role { font-size: 7pt; letter-spacing: .1em; text-transform: uppercase; color: #6b5a3a; margin-top: 2px; }
+.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
+
+/* ── Mobile ── */
+@media (max-width: 800px) {
+  body { align-items: flex-start; }
+  .toolbar { position: relative; }
+  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
+  .total-group.hidden > div { display: none; }
+  #page-scale-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
+  .page { margin-top: 0; transform-origin: top center; }
+}
+
+/* ── Print ── */
+@media print {
+  body { background: #fff; padding: 0; }
+  .toolbar, .form-panel { display: none; }
+  #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+  .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
+  @page { size: A4 portrait; margin: 0; }
+}
+</style>
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MESES_ABR = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+const ORDINAIS = [
+  'única',
+  '1ª (primeira)','2ª (segunda)','3ª (terceira)','4ª (quarta)',
+  '5ª (quinta)','6ª (sexta)','7ª (sétima)','8ª (oitava)',
+  '9ª (nona)','10ª (décima)','11ª (décima primeira)','12ª (décima segunda)'
+];
+
+const TIPODOC_LABEL = {
+  passaporte: 'Passaporte número',
+  titulo: 'Título de Residência número',
+  cpf: 'CPF número'
+};
+
+const today   = new Date();
+const DIA     = String(today.getDate());
+const MES     = MESES[today.getMonth()];
+const MES_ABR = MESES_ABR[today.getMonth()];
+const ANO     = String(today.getFullYear());
+const ANO2    = ANO.slice(2); // "26"
+
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+function el(id){ return document.getElementById(id); }
+
+function capitalize(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+function update(){
+  const nome    = v('f_nome')    || '[NOME]';
+  const tipodoc = v('f_tipodoc') || 'passaporte';
+  const pass    = v('f_pass')    || '[NÚMERO]';
+  const valor   = v('f_valor')   || '[VALOR]';
+  const extenso = capitalize(v('f_extenso')) || '[EXTENSO]';
+  const parcela = parseInt(v('f_parcela'));  // 0 = única
+  const service = v('f_service') || '[SERVIÇO]';
+
+  const isUnica = parcela === 0;
+
+  // Auto-fill total quando única
+  const total    = isUnica ? valor   : (v('f_total')    || '[TOTAL]');
+  const totalExt = isUnica ? extenso : (capitalize(v('f_totalext')) || '[TOTAL POR EXTENSO]');
+
+  // Mostrar/ocultar campos de total
+  el('total-group').classList.toggle('hidden', isUnica);
+
+  // Texto do tipo de documento
+  const docLabel = TIPODOC_LABEL[tipodoc] || 'Passaporte número';
+
+  // Texto da parcela no parágrafo 1
+  const parcelaTexto = isUnica
+    ? '<strong>parcela única</strong>'
+    : `<strong>${ORDINAIS[parcela]} parcela</strong>`;
+
+  // Texto do parágrafo 2 (acordados em parcelas vs. pagamento integral)
+  const para2extra = isUnica
+    ? 'referente ao pagamento integral do serviço acordado, no valor total de'
+    : 'os quais foram acordados e divididos em parcelas preestabelecidas, totalizando ao final o montante de';
+
+  el('r_nome').innerHTML      = `<strong>${nome.toUpperCase()}</strong>`;
+  el('r_tipodoc').textContent = docLabel;
+  el('r_pass').textContent    = pass.toUpperCase();
+  el('r_valor').innerHTML     = `<strong>€ ${valor},00</strong>`;
+  el('r_extenso').innerHTML   = `<strong>(${extenso} Euros e Zero Cêntimos)</strong>`;
+  el('r_parcela').innerHTML   = parcelaTexto;
+  el('r_service').innerHTML   = `<strong>${service}</strong>`;
+  el('r_para2extra').innerHTML = para2extra;
+  el('r_total').innerHTML     = `<strong>€ ${total},00</strong>`;
+  el('r_totalext').innerHTML  = `<strong>(${totalExt} Euros e Zero Cêntimos)</strong>`;
+  el('r_date').textContent    = `Almada, ${DIA} de ${MES} de ${ANO}`;
+}
+
+function scalePage(){
+  const wrapper = el('page-scale-wrapper');
+  const page = wrapper.querySelector('.page');
+  if(!page) return;
+  const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+  if(vw < pw){
+    const s = vw / pw;
+    page.style.transform = 'scale('+s+')';
+    page.style.marginBottom = '-'+(pw*(1-s))+'px';
+    wrapper.style.height = (page.offsetHeight*s)+'px';
+  } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+}
+
+// Tab order for Enter key
+const TAB_ORDER = ['f_nome','f_tipodoc','f_pass','f_valor','f_extenso','f_parcela','f_service','f_total','f_totalext'];
+
+function nextField(current){
+  const idx = TAB_ORDER.indexOf(current.id);
+  for(let i = idx+1; i < TAB_ORDER.length; i++){
+    const next = el(TAB_ORDER[i]);
+    if(next && !next.closest('.hidden') && next.offsetParent !== null){
+      next.focus(); return;
+    }
+  }
+}
+
+function imprimir(){
+  const parcela = parseInt(v('f_parcela'));
+  const isUnica = parcela === 0;
+  const parcelaLabel = isUnica ? 'Único' : ORDINAIS[parcela].split(' ')[0]; // "1ª", "2ª" etc.
+  const suffix = isUnica ? 'Único' : `${parcelaLabel} Parcela`;
+  document.title = `Recibo ${suffix} - ${MES_ABR} ${ANO2}`;
+  window.print();
+  // Restore title after print dialog
+  setTimeout(()=>{ document.title = 'Recibo — MA Advocacia'; }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
+window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Recibo — MA Advocacia</span>
+</div>
+
+<!-- Formulário -->
+<div class="form-panel">
+
+  <div class="full">
+    <div class="fp-label">Nome completo do cliente</div>
+    <input id="f_nome" class="fp-input" type="text" placeholder="ex: NIVALDO PEREIRA SPINOLA"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Tipo de documento</div>
+    <select id="f_tipodoc" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="passaporte">Passaporte</option>
+      <option value="titulo">Título de Residência</option>
+      <option value="cpf">CPF</option>
+    </select>
+  </div>
+
+  <div>
+    <div class="fp-label">Número do documento</div>
+    <input id="f_pass" class="fp-input" type="text" placeholder="ex: GI729090"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Valor desta parcela (€)</div>
+    <input id="f_valor" class="fp-input" type="text" placeholder="ex: 200"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Valor por extenso</div>
+    <input id="f_extenso" class="fp-input" type="text" placeholder="ex: Duzentos"
+      oninput="this.value=this.value.charAt(0).toUpperCase()+this.value.slice(1);update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Nº da parcela</div>
+    <select id="f_parcela" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="0">Parcela única</option>
+      <option value="1">1ª (primeira)</option>
+      <option value="2">2ª (segunda)</option>
+      <option value="3">3ª (terceira)</option>
+      <option value="4">4ª (quarta)</option>
+      <option value="5">5ª (quinta)</option>
+      <option value="6">6ª (sexta)</option>
+      <option value="7">7ª (sétima)</option>
+      <option value="8">8ª (oitava)</option>
+      <option value="9">9ª (nona)</option>
+      <option value="10">10ª (décima)</option>
+      <option value="11">11ª (décima primeira)</option>
+      <option value="12">12ª (décima segunda)</option>
+    </select>
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Serviço prestado</div>
+    <input id="f_service" class="fp-input" type="text" placeholder="ex: Ação de Autorização de Residência por Estudos"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div id="total-group" class="total-group">
+    <div>
+      <div class="fp-label">Total acordado (€)</div>
+      <input id="f_total" class="fp-input" type="text" placeholder="ex: 800"
+        oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+    </div>
+    <div>
+      <div class="fp-label">Total por extenso</div>
+      <input id="f_totalext" class="fp-input" type="text" placeholder="ex: Oitocentos"
+        oninput="this.value=this.value.charAt(0).toUpperCase()+this.value.slice(1);update()"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+    </div>
+  </div>
+
+</div>
+
+<!-- A4 -->
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+
+  <div class="rec-header">
+    <div class="rec-header-left">
+      <div class="title">RECIBO</div>
+      <div class="subtitle">Comprovativo de Pagamento de Serviços Jurídicos</div>
+    </div>
+    <div class="logo-box">
+      <img src="../../img/icone/ma.png" alt="MA">
+    </div>
+  </div>
+
+  <div class="rec-body">
+
+    <div class="rec-para">
+      <span class="num">1.</span>
+      <span>EU, <strong>Dr. MARCIO ANDRIO</strong>, brasileiro, advogado, C.P. nº 68721P,
+      declaro para os devidos fins e efeitos de direito, que recebi de
+      <span id="r_nome"><strong>[NOME]</strong></span>,
+      portador(a) do <span id="r_tipodoc">Passaporte número</span>: <span id="r_pass">[NÚMERO]</span>,
+      a importância de <span id="r_valor"><strong>€ [VALOR],00</strong></span>
+      <span id="r_extenso"><strong>([EXTENSO] Euros e Zero Cêntimos)</strong></span>,
+      referente ao pagamento da <span id="r_parcela"><strong>parcela única</strong></span>.</span>
+    </div>
+
+    <div class="rec-para">
+      <span class="num">2.</span>
+      <span>Esclareço que o valor recebido corresponde ao pagamento de serviços jurídicos
+      (<span id="r_service"><strong>[SERVIÇO]</strong></span>),
+      <span id="r_para2extra">referente ao pagamento integral do serviço acordado, no valor total de</span>
+      <span id="r_total"><strong>€ [TOTAL],00</strong></span>
+      <span id="r_totalext"><strong>([TOTAL POR EXTENSO] Euros e Zero Cêntimos)</strong></span>.</span>
+    </div>
+
+    <div class="rec-para">
+      <span class="num">3.</span>
+      <span>Declaro ainda estar ciente de que a falsidade das informações aqui prestadas constitui
+      infração grave, sujeita a punições conforme o disposto no art. 256º, 1, d)<sup>1</sup>
+      do Decreto-Lei nº 48/95, de 15 de março (Código Penal).</span>
+    </div>
+
+    <div class="rec-date" id="r_date">Almada, — de — de —</div>
+
+    <div class="rec-sig">
+      <div class="sig-name">MARCIO ANDRIO</div>
+      <div class="sig-role">Advogado C.P. nº 68721P</div>
+      <div>(Assinado digitalmente<sup>2</sup>)</div>
+    </div>
+
+  </div>
+
+  <div class="rec-footnotes">
+    <p><sup>1</sup> CP, artigo 256.º Falsificação ou contrafacção de documento <br>
+      1 — Quem, com intenção de causar prejuízo a outra pessoa ou ao Estado, de obter para si ou para outra pessoa benefício ilegítimo, ou de preparar, facilitar, executar ou encobrir outro crime: <br>
+      (...) <br>
+      d) Fizer constar falsamente de documento ou de qualquer dos seus componentes facto juridicamente relevante; é punido com pena de prisão até três anos ou com pena de multa.<br>
+      <sup>2</sup> Artigo 2.º, alínea "b", inciso III do Decreto-Lei nº 290-D/99, de 2 de agosto.</p>
+  </div>
+
+  <div class="rec-footer">
+    <div>
+      <div class="name">Marcio Andrio</div>
+      <div class="role">Sócio Fundador</div>
+    </div>
+    <div class="contact">
+      www.ma-advocacia.com<br>
+      +351 960 389 573<br>
+      marcio.andrio@ma-advocacia.com
+    </div>
+  </div>
+
+  </div><!-- page-content -->
+</div>
+</div>
+
+</body>
+</html>

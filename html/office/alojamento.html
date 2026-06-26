@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aima — Declaração de Alojamento</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#1a1d23;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:24px}
+  h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px}
+  .sub{font-size:13px;color:#64748b;margin-bottom:24px}
+  .card{background:#22262e;border:1px solid #2d3340;border-radius:12px;padding:20px;margin-bottom:16px}
+  .section-title{font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+  .fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:#94a3b8}
+  label span{font-size:11px;color:#64748b}
+  input,select{background:#1a1d23;border:1px solid #2d3340;border-radius:7px;color:#e2e8f0;font-size:13px;padding:8px 10px;width:100%;outline:none;transition:border .15s}
+  input:focus,select:focus{border-color:#3b82f6}
+  select option{background:#1a1d23}
+  .required{color:#ef4444;margin-left:2px}
+
+  .dropzone{border:2px dashed #2d3340;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:.2s;margin-top:10px}
+  .dropzone:hover,.dropzone.over{border-color:#3b82f6;background:#1e2733}
+  .dropzone.loaded{border-color:#22c55e;background:#0f2618}
+  .dropzone input[type=file]{display:none}
+  .dz-icon{font-size:28px;margin-bottom:8px}
+  .dz-text{font-size:13px;color:#94a3b8}
+  .dz-filename{font-size:12px;color:#22c55e;margin-top:4px;font-weight:600}
+
+  .btn{display:block;width:100%;padding:14px;background:#3b82f6;border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;margin-top:8px}
+  .btn:hover{background:#2563eb}
+  .btn:active{transform:scale(.99)}
+  .btn:disabled{background:#334155;color:#64748b;cursor:not-allowed}
+
+  #status{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+  #status.ok{background:#0f2618;border:1px solid #22c55e;color:#4ade80}
+  #status.err{background:#2d1515;border:1px solid #ef4444;color:#f87171}
+  #status.info{background:#1e2733;border:1px solid #3b82f6;color:#93c5fd}
+
+  .divider{border:none;border-top:1px solid #2d3340;margin:16px 0}
+  .full{grid-column:1/-1}
+</style>
+</head>
+<body>
+<div style="max-width:860px;margin:0 auto">
+  <h1>📄 Aima — Declaração de Alojamento</h1>
+  <p class="sub">Script 6 · Gera o documento completo com papel timbrado</p>
+
+  <!-- SECÇÃO 1: Arrendatário -->
+  <div class="card">
+    <div class="section-title">👤 Arrendatário (titular da casa)</div>
+    <div class="fields">
+      <label>Nome completo <span class="required">*</span>
+        <input id="nome" placeholder="NOME EM MAIÚSCULAS" style="text-transform:uppercase">
+      </label>
+      <label>Data de nascimento <span class="required">*</span>
+        <input id="nascimento" placeholder="DD de Mês de AAAA">
+      </label>
+      <label>Tipo de documento <span class="required">*</span>
+        <select id="bi">
+          <option value="Passaporte">Passaporte</option>
+          <option value="Título de Residência">Título de Residência</option>
+          <option value="Bilhete de Identidade">Bilhete de Identidade</option>
+          <option value="Cartão de Cidadão">Cartão de Cidadão</option>
+        </select>
+      </label>
+      <label>Número do documento <span class="required">*</span>
+        <input id="binumero" placeholder="Número" style="text-transform:uppercase">
+      </label>
+      <label>Válido até <span class="required">*</span>
+        <input id="validade" placeholder="DD/MM/AAAA">
+      </label>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 2: Requerente -->
+  <div class="card">
+    <div class="section-title">👤 Requerente (quem mora)</div>
+    <div class="fields">
+      <label>Nome completo <span class="required">*</span>
+        <input id="nome1" placeholder="NOME EM MAIÚSCULAS" style="text-transform:uppercase">
+      </label>
+      <label>Data de nascimento <span class="required">*</span>
+        <input id="nascimento1" placeholder="DD de Mês de AAAA">
+      </label>
+      <label>Tipo de documento <span class="required">*</span>
+        <select id="bi1">
+          <option value="Passaporte">Passaporte</option>
+          <option value="Título de Residência">Título de Residência</option>
+          <option value="Bilhete de Identidade">Bilhete de Identidade</option>
+          <option value="Cartão de Cidadão">Cartão de Cidadão</option>
+        </select>
+      </label>
+      <label>Número do documento <span class="required">*</span>
+        <input id="binumero1" placeholder="Número" style="text-transform:uppercase">
+      </label>
+      <label>Válido até <span class="required">*</span>
+        <input id="validade1" placeholder="DD/MM/AAAA">
+      </label>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 3: Alojamento -->
+  <div class="card">
+    <div class="section-title">🏠 Alojamento</div>
+    <div class="fields">
+      <label class="full">Morada completa <span class="required">*</span>
+        <input id="morada" placeholder="Rua, número, andar, código postal, cidade">
+      </label>
+      <label>Vínculo / parentesco <span class="required">*</span>
+        <input id="vinculo" placeholder="ex: amigo, familiar, cônjuge">
+      </label>
+      <label>Desde (data vigência) <span class="required">*</span>
+        <input id="vigencia" placeholder="DD/MM/AAAA">
+      </label>
+      <label>Documento de suporte <span class="required">*</span>
+        <input id="documento" placeholder="ex: Contrato de Arrendamento">
+      </label>
+      <label>Número de folhas <span class="required">*</span>
+        <input id="folhas" placeholder="ex: 01 (uma)">
+      </label>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 4: Registo -->
+  <div class="card">
+    <div class="section-title">📋 Reconhecimento</div>
+    <div class="fields">
+      <label>Executado a <span style="font-style:italic">(hora/data)</span>
+        <input id="executado" placeholder="ex: 10h30 de 26/06/2026">
+      </label>
+      <label>Registado a
+        <input id="registado" placeholder="ex: 26/06/2026">
+      </label>
+      <label>Com o nº
+        <input id="numero" placeholder="Número de registo">
+      </label>
+      <label>Código de consulta
+        <input id="codigo" placeholder="Código para oa.pt/atos">
+      </label>
+    </div>
+  </div>
+
+  <!-- Modelo DOCX -->
+  <div class="card">
+    <div class="section-title">📄 Modelo com Papel Timbrado</div>
+    <p style="font-size:12px;color:#64748b;margin-bottom:8px">Selecione o ficheiro <strong style="color:#94a3b8">modelo.docx</strong> (papel timbrado em branco)</p>
+    <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept=".docx">
+      <div class="dz-icon">📂</div>
+      <div class="dz-text">Clique para selecionar o modelo.docx</div>
+      <div class="dz-filename" id="dzFilename"></div>
+    </div>
+  </div>
+
+  <button class="btn" id="btnGerar" onclick="generate()">✅ Gerar Declaração de Alojamento</button>
+  <div id="status"></div>
+</div>
+
+<script>
+// ─── File picker ───────────────────────────────────────────────────────────
+let modeloFile = null;
+const fileInput = document.getElementById('fileInput');
+const dropzone  = document.getElementById('dropzone');
+const dzFilename= document.getElementById('dzFilename');
+
+fileInput.addEventListener('change', e => {
+  if(e.target.files[0]) setModelo(e.target.files[0]);
+});
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault(); dropzone.classList.remove('over');
+  if(e.dataTransfer.files[0]) setModelo(e.dataTransfer.files[0]);
+});
+function setModelo(f) {
+  modeloFile = f;
+  dzFilename.textContent = '✓ ' + f.name;
+  dropzone.classList.add('loaded');
+}
+
+// ─── Status ────────────────────────────────────────────────────────────────
+function showStatus(msg, type='info') {
+  const s = document.getElementById('status');
+  s.textContent = msg; s.className = type; s.style.display = 'block';
+  if(type==='ok') setTimeout(()=>s.style.display='none', 5000);
+}
+
+// ─── XML helpers ───────────────────────────────────────────────────────────
+function xe(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Create a run element: {text, b=bold}
+function mkRun(part) {
+  if(typeof part === 'string') {
+    if(!part) return '';
+    return `<w:r><w:t xml:space="preserve">${xe(part)}</w:t></w:r>`;
+  }
+  const rpr = part.b ? '<w:rPr><w:b/><w:bCs/></w:rPr>' : '';
+  if(!part.text) return '';
+  return `<w:r>${rpr}<w:t xml:space="preserve">${xe(part.text)}</w:t></w:r>`;
+}
+
+// Create a paragraph
+// parts: string | {text,b} | array of those
+// opts: {center, b (all runs bold), before, after}
+function mkPara(parts, opts={}) {
+  const pprParts = [];
+  if(opts.center) pprParts.push('<w:jc w:val="center"/>');
+  if(opts.before!=null||opts.after!=null) {
+    pprParts.push(`<w:spacing w:before="${opts.before||0}" w:after="${opts.after||0}"/>`);
+  }
+  // default paragraph spacing in docx is 200 twips after — we set 0 to keep tight
+  const ppr = pprParts.length ? `<w:pPr>${pprParts.join('')}</w:pPr>` : '';
+
+  let runsXml = '';
+  if(!parts && parts !== 0) {
+    // empty paragraph
+  } else if(Array.isArray(parts)) {
+    runsXml = parts.map(p => {
+      if(opts.b && typeof p === 'string') return mkRun({text:p,b:true});
+      return mkRun(p);
+    }).join('');
+  } else if(typeof parts === 'string') {
+    runsXml = mkRun(opts.b ? {text:parts,b:true} : parts);
+  } else {
+    runsXml = mkRun(parts);
+  }
+  return `<w:p>${ppr}${runsXml}</w:p>`;
+}
+
+function empty() { return '<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr></w:p>'; }
+function pgBreak() { return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'; }
+
+// ─── Date helpers ──────────────────────────────────────────────────────────
+function todayPt() {
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho',
+                 'julho','agosto','setembro','outubro','novembro','dezembro'];
+  const d = new Date();
+  return { dia: String(d.getDate()).padStart(2,'0'), mes: meses[d.getMonth()], ano: String(d.getFullYear()) };
+}
+
+// ─── Document body generator ───────────────────────────────────────────────
+function generateBody(d) {
+  const paras = [];
+  const dt = todayPt();
+
+  // ═══════════════════════════════════════════════════════════════
+  // PÁGINA 1: RECONHECIMENTO DE ASSINATURA
+  // ═══════════════════════════════════════════════════════════════
+  paras.push(empty());
+  paras.push(mkPara('RECONHECIMENTO DE ASSINATURA', {center:true, b:true, before:0, after:120}));
+
+  paras.push(mkPara([
+    'Eu, Dr. ', {text:'MARCIO ANDRIO',b:true},
+    ', Advogado, portador da Cédula Profissional ', {text:'68721P',b:true},
+    ' emitida pelo Conselho Regional da Ordem dos Advogados no Porto, com domicílio profissional à Avenida D. Afonso Henriques, número 14, 2º Dto, 2800-009, Almada, no exercício das competências conferidas pelo artigo 38 do Decreto-Lei 76-A/2006, de 29 de março, e pela Portaria n.º 657-B/2006, venho por este meio certificar e reconhecer que:'
+  ], {before:0, after:80}));
+
+  paras.push(empty());
+  paras.push(mkPara('RECONHECER', {center:true, b:true, before:0, after:80}));
+  paras.push(empty());
+
+  // UM
+  paras.push(mkPara([
+    {text:'UM',b:true},
+    ' - Reconheço a legitimidade da assinatura de ',
+    {text:d.nome,b:true},
+    ', na qual verifiquei por exibição do documento de identidade, denominado ',
+    d.bi,
+    ' número: ',
+    {text:d.binumero,b:true},
+    ', válido até: ',
+    d.validade,
+    ', no documento denominado Declaração de Alojamento.'
+  ], {before:0, after:80}));
+
+  paras.push(empty());
+
+  // DOIS
+  paras.push(mkPara([
+    {text:'DOIS',b:true},
+    ' - Reconheço a legitimidade da assinatura de ',
+    {text:d.nome1,b:true},
+    ', na qual verifiquei por exibição do documento de identidade, denominado ',
+    d.bi1,
+    ' número: ',
+    {text:d.binumero1,b:true},
+    ', válido até: ',
+    d.validade1,
+    ', no documento denominado Declaração de Alojamento.'
+  ], {before:0, after:80}));
+
+  paras.push(empty());
+
+  // TRÊS
+  paras.push(mkPara([
+    {text:'TRÊS',b:true},
+    ' - Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.'
+  ], {before:0, after:80}));
+
+  paras.push(empty());
+
+  // QUATRO
+  paras.push(mkPara([
+    {text:'QUATRO',b:true},
+    ' - Que não contém irregularidades, ocupa 01 (uma) folha, que tem aposto o meu carimbo na folha de certificação.'
+  ], {before:0, after:80}));
+
+  paras.push(empty());
+  paras.push(mkPara('CERTIFICO', {center:true, b:true, before:0, after:80}));
+  paras.push(empty());
+
+  // a)
+  paras.push(mkPara(
+    'a) Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.',
+    {before:0, after:60}
+  ));
+  paras.push(empty());
+
+  // b)
+  paras.push(mkPara([
+    'b) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
+    {text:'ORIGINAL',b:true},
+    ', que foi apresentado e verificado por comparação, referente ao ',
+    d.bi,
+    ' com o número: ',
+    {text:d.binumero,b:true},
+    ', do(a) Sr.(ª) ',
+    {text:d.nome,b:true},
+    ', nascido(a) em ',
+    d.nascimento,
+    ', válido até: ',
+    d.validade,
+    '.'
+  ], {before:0, after:60}));
+  paras.push(empty());
+
+  // c)
+  paras.push(mkPara([
+    'c) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
+    {text:'ORIGINAL',b:true},
+    ', que foi apresentado e verificado por comparação, referente ao ',
+    d.bi1,
+    ' com o número: ',
+    {text:d.binumero1,b:true},
+    ', do(a) Sr.(ª) ',
+    {text:d.nome1,b:true},
+    ', nascido(a) em ',
+    d.nascimento1,
+    ', válido até: ',
+    d.validade1,
+    '.'
+  ], {before:0, after:60}));
+  paras.push(empty());
+
+  // d)
+  paras.push(mkPara([
+    'd) A fotocópia anexa, composta por ',
+    {text:d.folhas,b:true},
+    ' folhas, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
+    {text:'ORIGINAL',b:true},
+    ', que foi apresentado e verificado por comparação, referente ao ',
+    {text:d.documento,b:true},
+    '.'
+  ], {before:0, after:60}));
+  paras.push(empty());
+
+  // e)
+  paras.push(mkPara(
+    'e) As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1o do Decreto-Lei 28/2000, de 13 de março.',
+    {before:0, after:60}
+  ));
+  paras.push(empty());
+
+  // Registo (opcional)
+  if(d.executado) {
+    paras.push(mkPara([{text:'EXECUTADO A: ',b:true}, d.executado], {before:0, after:40}));
+    paras.push(mkPara([{text:'REGISTADO A: ',b:true}, d.registado||''], {before:0, after:40}));
+    paras.push(mkPara([{text:'COM O Nº: ',b:true}, d.numero||''], {before:0, after:40}));
+    if(d.codigo) {
+      paras.push(mkPara([
+        'Poderá consultar este registo em http://oa.pt/atos, usando o código ',
+        {text:d.codigo,b:true}, '.'
+      ], {before:0, after:60}));
+    }
+    paras.push(empty());
+  }
+
+  // Notas finais
+  paras.push(mkPara('----Sem cobrança de honorários.', {before:0, after:40}));
+  paras.push(mkPara('----Não há lugar ao pagamento de imposto de selo.', {before:0, after:40}));
+  paras.push(mkPara(`----Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}.`, {before:0, after:80}));
+  paras.push(empty());
+  paras.push(mkPara('O Advogado,', {before:0, after:80}));
+  paras.push(empty());
+  paras.push(mkPara('MARCIO ANDRIO', {b:true, before:0, after:40}));
+  paras.push(mkPara('C.P. nº 68721P', {before:0, after:0}));
+
+  // ═══════════════════════════════════════════════════════════════
+  // PÁGINA 2: Declaração de Alojamento (requerente) — assinado por nome1
+  // ═══════════════════════════════════════════════════════════════
+  paras.push(pgBreak());
+  paras.push(empty());
+  paras.push(mkPara('Declaração de Alojamento (requerente)', {center:true, b:true, before:0, after:120}));
+  paras.push(empty());
+
+  paras.push(mkPara([
+    'Para os devidos efeitos, eu, ',
+    {text:d.nome1,b:true},
+    ', portador do ',
+    d.bi1,
+    ' número: ',
+    {text:d.binumero1,b:true},
+    ', nascido em ',
+    d.nascimento1,
+    ', válido até: ',
+    d.validade1,
+    ', declaro sob compromisso de honra que possuo alojamento, em regime familiar (parentesco: ',
+    d.vinculo,
+    '), residindo na ',
+    d.morada,
+    ', desde ',
+    d.vigencia,
+    '.'
+  ], {before:0, after:160}));
+
+  paras.push(empty());
+  paras.push(mkPara(`Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}`, {before:0, after:0}));
+  paras.push(empty());
+  paras.push(empty());
+  paras.push(empty());
+  paras.push(mkPara('_____________________________________________', {before:0, after:40}));
+  paras.push(mkPara({text:d.nome1,b:true}, {center:true, before:0, after:0}));
+
+  // ═══════════════════════════════════════════════════════════════
+  // PÁGINA 3: Declaração de Alojamento — assinado por nome
+  // ═══════════════════════════════════════════════════════════════
+  paras.push(pgBreak());
+  paras.push(empty());
+  paras.push(mkPara('Declaração de Alojamento', {center:true, b:true, before:0, after:120}));
+  paras.push(empty());
+
+  paras.push(mkPara([
+    'Para os devidos efeitos, Eu, ',
+    {text:d.nome,b:true},
+    ', portador do ',
+    d.bi,
+    ' número: ',
+    {text:d.binumero,b:true},
+    ', nascido em ',
+    d.nascimento,
+    ', válido até: ',
+    d.validade,
+    ', com morada habitual na ',
+    d.morada,
+    '.'
+  ], {before:0, after:100}));
+
+  paras.push(empty());
+
+  paras.push(mkPara([
+    'Declaro sob compromisso de honra que ',
+    {text:d.nome1,b:true},
+    ', portador do ',
+    d.bi1,
+    ' número: ',
+    {text:d.binumero1,b:true},
+    ', nascido em ',
+    d.nascimento1,
+    ', válido até: ',
+    d.validade1,
+    ', reside no referido imóvel, desde ',
+    d.vigencia,
+    ', em regime de alojamento familiar (parentesco: ',
+    d.vinculo,
+    '), local pelo qual sou responsável enquanto arrendatário do contrato de arrendamento, conforme comprovativos em anexo (',
+    d.documento,
+    '), e que a casa reúne condições de habitabilidade.'
+  ], {before:0, after:160}));
+
+  paras.push(empty());
+  paras.push(mkPara(`Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}`, {before:0, after:0}));
+  paras.push(empty());
+  paras.push(empty());
+  paras.push(empty());
+  paras.push(mkPara('_____________________________________________', {before:0, after:40}));
+  paras.push(mkPara({text:d.nome,b:true}, {center:true, before:0, after:0}));
+
+  return paras.join('');
+}
+
+// ─── Main generator ────────────────────────────────────────────────────────
+async function generate() {
+  // Collect data
+  const get = id => document.getElementById(id).value.trim();
+  const d = {
+    nome      : get('nome').toUpperCase(),
+    nascimento: get('nascimento'),
+    bi        : get('bi'),
+    binumero  : get('binumero').toUpperCase(),
+    validade  : get('validade'),
+    nome1     : get('nome1').toUpperCase(),
+    nascimento1:get('nascimento1'),
+    bi1       : get('bi1'),
+    binumero1 : get('binumero1').toUpperCase(),
+    validade1 : get('validade1'),
+    morada    : get('morada'),
+    documento : get('documento'),
+    folhas    : get('folhas'),
+    vinculo   : get('vinculo'),
+    vigencia  : get('vigencia'),
+    executado : get('executado'),
+    registado : get('registado'),
+    numero    : get('numero'),
+    codigo    : get('codigo'),
+  };
+
+  // Validate required fields
+  const required = ['nome','nascimento','bi','binumero','validade',
+                    'nome1','nascimento1','bi1','binumero1','validade1',
+                    'morada','documento','folhas','vinculo','vigencia'];
+  for(const f of required) {
+    if(!d[f]) { showStatus(`⚠️ Campo obrigatório em falta: ${f}`, 'err'); return; }
+  }
+  if(!modeloFile) { showStatus('⚠️ Selecione o ficheiro modelo.docx', 'err'); return; }
+
+  const btn = document.getElementById('btnGerar');
+  btn.disabled = true; btn.textContent = '⏳ A gerar documento...';
+  showStatus('A processar o modelo e a gerar o documento...', 'info');
+
+  try {
+    // Load the modelo.docx
+    const arrayBuffer = await modeloFile.arrayBuffer();
+    const zip = await JSZip.loadAsync(arrayBuffer);
+
+    // Read existing document.xml
+    let docXml = await zip.files['word/document.xml'].async('string');
+
+    // Extract sectPr (page setup: margins, header/footer refs, page size)
+    // from the original — we keep it to preserve the letterhead headers/footers
+    const sectPrMatch = docXml.match(/<w:sectPr[\s\S]*?<\/w:sectPr>/);
+    const sectPr = sectPrMatch ? sectPrMatch[0] : '<w:sectPr/>';
+
+    // Generate new body content
+    const bodyContent = generateBody(d);
+
+    // Replace the entire body
+    const newDocXml = docXml.replace(
+      /<w:body>[\s\S]*<\/w:body>/,
+      `<w:body>${bodyContent}${sectPr}</w:body>`
+    );
+
+    zip.file('word/document.xml', newDocXml);
+
+    // Generate output
+    const blob = await zip.generateAsync({
+      type: 'blob',
+      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 }
+    });
+
+    // Build filename from nome1 (the requerente)
+    const safeName = d.nome1.replace(/[^A-Z0-9 ]/gi,'').replace(/\s+/g,'_');
+    const filename = `Declaracao_Alojamento_${safeName}.docx`;
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
+
+    showStatus(`✅ Documento gerado: ${filename}`, 'ok');
+  } catch(e) {
+    console.error(e);
+    showStatus('❌ Erro ao gerar documento: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✅ Gerar Declaração de Alojamento';
+  }
+}
+</script>
+</body>
+</html>
