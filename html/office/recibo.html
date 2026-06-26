@@ -154,16 +154,20 @@ function update(){
     ? 'referente ao pagamento integral do serviço acordado, no valor total de'
     : 'os quais foram acordados e divididos em parcelas preestabelecidas, totalizando ao final o montante de';
 
+  const isBRL   = tipodoc === 'cpf';
+  const simbolo = isBRL ? 'R$' : '€';
+  const moeda   = isBRL ? 'Reais e Zero Centavos' : 'Euros e Zero Cêntimos';
+
   el('r_nome').innerHTML      = `<strong>${nome.toUpperCase()}</strong>`;
   el('r_tipodoc').textContent = docLabel;
   el('r_pass').textContent    = pass.toUpperCase();
-  el('r_valor').innerHTML     = `<strong>€ ${valor},00</strong>`;
-  el('r_extenso').innerHTML   = `<strong>(${extenso} Euros e Zero Cêntimos)</strong>`;
+  el('r_valor').innerHTML     = `<strong>${simbolo} ${valor},00</strong>`;
+  el('r_extenso').innerHTML   = `<strong>(${extenso} ${moeda})</strong>`;
   el('r_parcela').innerHTML   = parcelaTexto;
   el('r_service').innerHTML   = `<strong>${service}</strong>`;
   el('r_para2extra').innerHTML = para2extra;
-  el('r_total').innerHTML     = `<strong>€ ${total},00</strong>`;
-  el('r_totalext').innerHTML  = `<strong>(${totalExt} Euros e Zero Cêntimos)</strong>`;
+  el('r_total').innerHTML     = `<strong>${simbolo} ${total},00</strong>`;
+  el('r_totalext').innerHTML  = `<strong>(${totalExt} ${moeda})</strong>`;
   el('r_date').textContent    = `Almada, ${DIA} de ${MES} de ${ANO}`;
 }
 
