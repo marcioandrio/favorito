@@ -43,19 +43,19 @@ select.fp-input { cursor: pointer; }
 .page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
 
 /* ── Header ── */
-.rec-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; border-bottom: 1.5px solid #c9a85c; margin-bottom: 20px; }
-.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 24pt; font-weight: 800; color: #1a0e00; letter-spacing: .04em; line-height: 1; }
-.rec-header-left .subtitle { font-size: 7.5pt; letter-spacing: .16em; text-transform: uppercase; color: #8a6630; margin-top: 5px; font-family: 'Lora', serif; }
+.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
+.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: #1a0e00; letter-spacing: .12em; line-height: 1; }
+.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
 .logo-box { flex-shrink: 0; margin-left: 16px; }
-.logo-box img { height: 48px; width: auto; display: block; }
+.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
 
 /* ── Body ── */
-.rec-body { flex: 1; font-family: 'Lora', serif; font-size: 10.5pt; color: #1a0e00; }
+.rec-body { flex: 1; font-family: 'Lora', serif; font-size: 12pt; color: #1a0e00; }
 .rec-para { text-align: justify; line-height: 1.7; margin-bottom: 16px; display: flex; gap: 10px; }
-.rec-para .num { min-width: 18px; font-weight: 600; flex-shrink: 0; padding-top: 1px; }
-.rec-date { text-align: right; margin-top: 24px; margin-bottom: 28px; font-size: 10.5pt; }
-.rec-sig { text-align: center; line-height: 1.7; font-size: 10.5pt; }
-.rec-sig .sig-name { font-weight: 700; font-family: 'Playfair Display', serif; font-size: 12pt; }
+.rec-para .num { min-width: 20px; font-weight: 600; flex-shrink: 0; padding-top: 1px; }
+.rec-date { text-align: right; margin-top: 24px; margin-bottom: 60pt; font-size: 12pt; }
+.rec-sig { text-align: center; line-height: 1.3; font-size: 12pt; }
+.rec-sig .sig-name { font-weight: 700; font-family: 'Playfair Display', serif; font-size: 13pt; }
 .rec-sig .sig-role { font-weight: 600; }
 
 /* ── Footnotes ── */
@@ -86,7 +86,13 @@ select.fp-input { cursor: pointer; }
   .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
   @page { size: A4 portrait; margin: 0; }
 }
+/* ── Upload zone ── */
+.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 11px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
+.upload-zone:hover { background: rgba(201,168,92,.08); }
+.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
+.upload-zone.err { border-color: #e06c75; color: #e06c75; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -200,6 +206,83 @@ function imprimir(){
 
 window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
 window.addEventListener('resize', scalePage);
+
+/* ── PDF.js worker ── */
+if(typeof pdfjsLib !== 'undefined')
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+async function parsePDF(file) {
+  const zone = document.getElementById('upload-zone');
+  zone.className = 'upload-zone full';
+  zone.innerHTML = '⏳ A ler PDF&hellip; <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+  try {
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let txt = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const content = await pg.getTextContent();
+      txt += content.items.map(x => x.str).join(' ') + ' ';
+    }
+    txt = txt.replace(/\s+/g,' ').trim();
+
+    // Nome
+    const mNome = txt.match(/recebi de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇÀ\s]+?),\s*portador/i);
+    const nome = mNome ? mNome[1].trim() : '';
+
+    // Tipo documento
+    let tipodoc = 'passaporte';
+    if(/Título de Residência número/i.test(txt)) tipodoc = 'titulo';
+    else if(/CPF número/i.test(txt)) tipodoc = 'cpf';
+    const mNum = txt.match(/(?:Passaporte|Residência|CPF) número[:\s]+([A-Z0-9]+)/i);
+    const numDoc = mNum ? mNum[1].trim() : '';
+
+    // Valor
+    const mVal = txt.match(/importância de €\s*([\d.]+),00/);
+    const valor = mVal ? mVal[1].replace(/\./g,'') : '';
+
+    // Extenso (1ª e 2ª ocorrências)
+    const exts = [...txt.matchAll(/\(([^)]+) Euros e Zero Cêntimos\)/g)];
+    const extenso  = exts[0] ? exts[0][1].trim() : '';
+    const totalExt = exts[1] ? exts[1][1].trim() : '';
+
+    // Parcela — incrementa 1
+    let parcela = 0;
+    if(!/parcela única/i.test(txt)){
+      const mP = txt.match(/(\d+)ª \([^)]+\) parcela/);
+      if(mP) parcela = Math.min(parseInt(mP[1]) + 1, 12);
+    }
+
+    // Serviço
+    const mServ = txt.match(/serviços jurídicos \(([^)]+)\)/i);
+    const servico = mServ ? mServ[1].trim() : '';
+
+    // Total acordado
+    const mTot = txt.match(/(?:montante de|valor total de) €\s*([\d.]+),00/i);
+    const total = mTot ? mTot[1].replace(/\./g,'') : '';
+
+    // Preenche form
+    el('f_nome').value    = nome;
+    el('f_tipodoc').value = tipodoc;
+    el('f_pass').value    = numDoc;
+    el('f_valor').value   = valor;
+    el('f_extenso').value = extenso;
+    el('f_parcela').value = String(parcela);
+    el('f_service').value = servico;
+    el('f_total').value   = total;
+    el('f_totalext').value = totalExt;
+    update();
+
+    const parLabel = parcela === 0 ? 'parcela única' : ORDINAIS[parcela] + ' parcela';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ PDF lido — ${nome || 'cliente'} · ${parLabel} <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">`;
+  } catch(e) {
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Não foi possível ler o PDF — preencha manualmente <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+    console.error(e);
+  }
+}
 </script>
 </head>
 <body>
@@ -212,6 +295,13 @@ window.addEventListener('resize', scalePage);
 
 <!-- Formulário -->
 <div class="form-panel">
+
+  <div class="upload-zone full" id="upload-zone"
+       onclick="document.getElementById('pdf-file').click()">
+    📄 Subir recibo anterior (PDF) — preenche automaticamente e avança parcela
+    <input type="file" id="pdf-file" accept=".pdf" style="display:none"
+           onchange="parsePDF(this.files[0])">
+  </div>
 
   <div class="full">
     <div class="fp-label">Nome completo do cliente</div>
@@ -355,8 +445,8 @@ window.addEventListener('resize', scalePage);
 
   <div class="rec-footer">
     <div>
-      <div class="name">Marcio Andrio</div>
-      <div class="role">Sócio Fundador</div>
+      <div class="name">MA Advocacia</div>
+      <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
     </div>
     <div class="contact">
       www.ma-advocacia.com<br>
