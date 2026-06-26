@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento Jhon — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0f0f1a;color:#cdd6f4;min-height:100vh;padding:0 0 60px}
+
+.toolbar{display:flex;justify-content:center;gap:12px;padding:12px;background:#1c1c1c;width:100%;box-shadow:0 2px 10px rgba(0,0,0,.3);margin-bottom:24px}
+.toolbar button{font-family:'Lora',serif;font-size:13px;letter-spacing:.06em;background:#c9a85c;color:#1a0e00;border:none;padding:9px 22px;border-radius:2px;cursor:pointer;font-weight:700}
+.toolbar a{color:#bdb08a;font-size:12px;align-self:center;font-family:monospace;text-decoration:none}
+
+.wrap{max-width:520px;margin:0 auto;padding:0 16px;display:flex;flex-direction:column;gap:16px}
+.card{background:#1e1e2e;border-radius:14px;padding:20px}
+.ctitle{font-size:11px;font-weight:700;color:#89b4fa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+
+/* ── Linhas de cliente ── */
+.client-row{display:grid;grid-template-columns:1fr 90px 80px;align-items:center;gap:8px;margin-bottom:10px}
+.client-row:last-child{margin-bottom:0}
+.client-name{font-size:13px;color:#cdd6f4;font-weight:500}
+.client-name small{display:block;font-size:9px;color:#585b70;margin-top:1px}
+.client-input{background:#313244;border:1px solid #45475a;border-radius:7px;padding:8px 10px;color:#cdd6f4;font-size:15px;outline:none;font-family:inherit;transition:.15s;text-align:center;width:100%}
+.client-input:focus{border-color:#89b4fa;background:#252535}
+.client-val{text-align:right;font-size:14px;font-weight:700;color:#a6e3a1}
+.client-val.zero{color:#45475a}
+.divider{border:none;border-top:1px solid #313244;margin:12px 0}
+.col-header{display:grid;grid-template-columns:1fr 90px 80px;gap:8px;margin-bottom:6px}
+.col-header span{font-size:9px;color:#585b70;text-transform:uppercase;letter-spacing:.05em;text-align:center}
+.col-header span:first-child{text-align:left}
+.col-header span:last-child{text-align:right}
+
+/* ── Resumo ── */
+.summary-box{background:#13131f;border:1px solid #313244;border-radius:10px;padding:16px 18px;font-family:'Lora',serif}
+.sline{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid #252535}
+.sline:last-of-type{border-bottom:none}
+.sline .sn{color:#bac2de}
+.sline .sv{font-weight:600;color:#a6e3a1}
+.sline .sv.zero{color:#45475a}
+.ssep{border:none;border-top:1px solid #45475a;margin:8px 0}
+.stotal{display:flex;justify-content:space-between;padding-top:8px}
+.stotal .sn{font-weight:700;color:#cdd6f4;font-size:14px}
+.stotal .sv{font-weight:800;color:#a6e3a1;font-size:20px}
+
+.btn{width:100%;padding:13px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+.btn:active{transform:scale(.98)}
+.btn-pdf{background:#c9a85c;color:#1a0e00}
+.btn-pdf:hover{opacity:.88}
+
+/* ════ PRINT — layout MA Advocacia ════ */
+@media print {
+  body > *:not(#print-area){ display:none !important }
+  #print-area{
+    display:flex !important;
+    position:fixed;top:0;left:0;width:210mm;min-height:297mm;
+    background:#fff;
+  }
+  .p-bar{width:10px;min-height:100%;background:#4a1628;flex-shrink:0}
+  .p-content{flex:1;padding:14mm 16mm 10mm 14mm;display:flex;flex-direction:column;font-family:'Lora',serif;color:#1a0e00}
+  .p-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid #4a1628;padding-bottom:10px;margin-bottom:18px}
+  .p-header-left .p-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:.12em;color:#1a0e00;line-height:1}
+  .p-header-left .p-sub{font-size:9px;color:#6b5a3a;letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+  .p-logo img{height:56px;width:auto;object-fit:contain}
+  .p-section{font-family:'Playfair Display',serif;font-weight:700;font-size:11px;letter-spacing:.14em;color:#8a6630;text-transform:uppercase;border-bottom:1.5px solid #c9a85c;padding-bottom:2px;margin:16px 0 10px}
+  .p-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f0ece4;font-size:12px}
+  .p-row:last-of-type{border-bottom:none}
+  .p-row .p-name{color:#1a0e00}
+  .p-row .p-total{color:#6b5a3a;font-size:11px}
+  .p-row .p-jhon{font-weight:700;color:#4a1628;font-size:13px}
+  .p-sep{border:none;border-top:1.5px solid #4a1628;margin:12px 0 8px}
+  .p-grand{display:flex;justify-content:space-between;align-items:center}
+  .p-grand .p-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1a0e00}
+  .p-grand .p-jhon{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:#4a1628}
+  .p-date{text-align:right;font-size:9px;color:#6b5a3a;margin-top:20px;margin-bottom:4px}
+  .p-footer{margin-top:auto;border-top:1.5px solid #4a1628;padding-top:8px;display:flex;justify-content:space-between;align-items:flex-end}
+  .p-footer .p-fname{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#1a0e00}
+  .p-footer .p-frole{font-size:8px;color:#6b5a3a;text-transform:uppercase;letter-spacing:.1em}
+  .p-footer .p-fcontact{text-align:right;font-size:8px;color:#6b5a3a;line-height:1.7}
+  @page{size:A4 portrait;margin:0}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Guardar PDF / WhatsApp</button>
+  <a href="../../index.html">← Voltar</a>
+</div>
+
+<div class="wrap">
+
+  <!-- Certificações -->
+  <div class="card">
+    <div class="ctitle">📋 Serviços da Semana</div>
+    <div class="col-header">
+      <span>Fornecedor</span>
+      <span>Total recebido</span>
+      <span>Jhon recebe</span>
+    </div>
+
+    <div class="client-row">
+      <span class="client-name">Franci <small>÷ 3</small></span>
+      <input class="client-input" id="c_franci" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_franci">€ 0</span>
+    </div>
+    <div class="client-row">
+      <span class="client-name">CrisiEllen <small>÷ 5</small></span>
+      <input class="client-input" id="c_crisi" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_crisi">€ 0</span>
+    </div>
+    <div class="client-row">
+      <span class="client-name">Elisangela <small>÷ 3</small></span>
+      <input class="client-input" id="c_elisa" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_elisa">€ 0</span>
+    </div>
+    <div class="client-row">
+      <span class="client-name">Cibelly <small>÷ 5</small></span>
+      <input class="client-input" id="c_cibel" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_cibel">€ 0</span>
+    </div>
+    <div class="client-row">
+      <span class="client-name">Regina Nova <small>÷ 3</small></span>
+      <input class="client-input" id="c_regin" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_regin">€ 0</span>
+    </div>
+    <div class="client-row">
+      <span class="client-name">Eliane <small>÷ 3</small></span>
+      <input class="client-input" id="c_elian" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_elian">€ 0</span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="client-row">
+      <span class="client-name">Reconhecimentos <small>nº de reconhecimentos → ÷ 2 de € 25</small></span>
+      <input class="client-input" id="c_rec" type="number" placeholder="0" min="0" oninput="calc()" onkeydown="nextField(event,this)">
+      <span class="client-val zero" id="v_rec">€ 0,00</span>
+    </div>
+  </div>
+
+  <!-- Resumo -->
+  <div class="card">
+    <div class="ctitle">🧾 Resumo — Jhon recebe</div>
+    <div class="summary-box">
+      <div class="sline"><span class="sn">Franci</span><span class="sv zero" id="s_franci">€ 0</span></div>
+      <div class="sline"><span class="sn">CrisiEllen</span><span class="sv zero" id="s_crisi">€ 0</span></div>
+      <div class="sline"><span class="sn">Elisangela</span><span class="sv zero" id="s_elisa">€ 0</span></div>
+      <div class="sline"><span class="sn">Cibelly</span><span class="sv zero" id="s_cibel">€ 0</span></div>
+      <div class="sline"><span class="sn">Regina Nova</span><span class="sv zero" id="s_regin">€ 0</span></div>
+      <div class="sline"><span class="sn">Eliane</span><span class="sv zero" id="s_elian">€ 0</span></div>
+      <div class="sline"><span class="sn">Reconhecimentos</span><span class="sv zero" id="s_rec">€ 0,00</span></div>
+      <hr class="ssep">
+      <div class="stotal">
+        <span class="sn">Total</span>
+        <span class="sv zero" id="s_total">€ 0,00</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-pdf" onclick="imprimir()">🖨 Guardar PDF / WhatsApp</button>
+</div>
+
+<!-- Área de print -->
+<div id="print-area" style="display:none">
+  <div class="p-bar"></div>
+  <div class="p-content">
+
+    <div class="p-header">
+      <div class="p-header-left">
+        <div class="p-title">PAGAMENTO</div>
+        <div class="p-sub">Jhon — Serviços da Semana</div>
+      </div>
+      <div class="p-logo">
+        <img src="../../img/icone/ma.png" alt="MA">
+      </div>
+    </div>
+
+    <div class="p-section">Serviços da Semana</div>
+    <div id="p-rows"></div>
+
+    <div class="p-sep"></div>
+    <div class="p-grand">
+      <span class="p-name">Total a pagar ao Jhon</span>
+      <span class="p-jhon" id="p-grand-val">€ 0,00</span>
+    </div>
+
+    <div class="p-date" id="p-date"></div>
+
+    <div class="p-footer">
+      <div>
+        <div class="p-fname">MA Advocacia</div>
+        <div class="p-frole">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="p-fcontact">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CLIENTS = [
+  {id:'franci', label:'Franci',      taxa:3},
+  {id:'crisi',  label:'CrisiEllen',  taxa:5},
+  {id:'elisa',  label:'Elisangela',  taxa:3},
+  {id:'cibel',  label:'Cibelly',     taxa:5},
+  {id:'regin',  label:'Regina Nova', taxa:3},
+  {id:'elian',  label:'Eliane',      taxa:3},
+];
+const FIELDS = ['c_franci','c_crisi','c_elisa','c_cibel','c_regin','c_elian','c_rec'];
+
+function nv(id){ return parseFloat(document.getElementById(id).value)||0; }
+function fmt(v,dec){ return '€ '+(dec ? v.toFixed(2).replace('.',',') : (Number.isInteger(v)?v:v.toFixed(2).replace('.',','))); }
+
+function calc(){
+  let grand = 0;
+  CLIENTS.forEach(c => {
+    const total = nv('c_'+c.id);
+    const jhon  = total / c.taxa;
+    grand += jhon;
+    const s = fmt(jhon);
+    ['v_','s_'].forEach(p => {
+      const el = document.getElementById(p+c.id);
+      el.textContent = s;
+      el.className = (p==='v_'?'client-val':'sv') + (jhon===0?' zero':'');
+    });
+  });
+  const rec = nv('c_rec'), recVal = rec * 12.5;
+  grand += recVal;
+  const rs = fmt(recVal, true);
+  ['v_rec','s_rec'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = rs;
+    el.className = (id==='v_rec'?'client-val':'sv') + (recVal===0?' zero':'');
+  });
+  const tot = document.getElementById('s_total');
+  tot.textContent = fmt(grand, true);
+  tot.className = 'sv' + (grand===0?' zero':'');
+}
+
+function nextField(e, el){
+  if(e.key !== 'Enter') return;
+  e.preventDefault();
+  const idx = FIELDS.indexOf(el.id);
+  if(idx < FIELDS.length-1) document.getElementById(FIELDS[idx+1]).focus();
+}
+
+function imprimir(){
+  // Monta linhas do print
+  let rows = '', grand = 0;
+  CLIENTS.forEach(c => {
+    const total = nv('c_'+c.id);
+    const jhon  = total / c.taxa;
+    grand += jhon;
+    rows += `<div class="p-row">
+      <span class="p-name">${c.label}</span>
+      <span class="p-jhon">${fmt(jhon)}</span>
+    </div>`;
+  });
+  const rec = nv('c_rec'), recVal = rec * 12.5;
+  grand += recVal;
+  if(rec > 0){
+    rows += `<div class="p-row">
+      <span class="p-name">Reconhecimentos (${rec}×)</span>
+      <span class="p-jhon">${fmt(recVal,true)}</span>
+    </div>`;
+  }
+  document.getElementById('p-rows').innerHTML = rows;
+  document.getElementById('p-grand-val').textContent = fmt(grand, true);
+  document.getElementById('p-date').textContent =
+    'Almada, ' + new Date().toLocaleDateString('pt-PT',{day:'2-digit',month:'long',year:'numeric'});
+
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  document.title = `${yyyy}.${mm}.${dd}. Pagamento Jhon`;
+  document.getElementById('print-area').style.display = 'flex';
+  window.print();
+  document.title = 'Pagamento Jhon — MA Advocacia';
+  setTimeout(()=> document.getElementById('print-area').style.display = 'none', 1500);
+}
+
+calc();
+</script>
+</body>
+</html>

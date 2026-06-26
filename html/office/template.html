@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Título da Página | MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #d0cfc9;
+    font-family: 'Lora', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0 60px;
+  }
+
+  /* ─── TOOLBAR ─── */
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; justify-content: center; gap: 12px;
+    padding: 12px; background: #1c1c1c; width: 100%;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  .toolbar button {
+    font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em;
+    background: #c9a85c; color: #1a0e00; border: none;
+    padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700;
+  }
+  .toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+  .toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+
+  /* ─── PAGE A4 ─── */
+  .page {
+    width: 210mm;
+    min-width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    margin-top: 24px;
+    position: relative;
+  }
+
+  /* Barra lateral vermelha */
+  .bar {
+    width: 10px;
+    min-height: 100%;
+    background: #4a1628;
+    flex-shrink: 0;
+  }
+
+  .content {
+    flex: 1;
+    padding: 24px 32px 28px 26px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── HEADER ─── */
+  /* Padrão: título grande à esquerda, logo à direita, borda maroon */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    border-bottom: 1.5px solid #4a1628;
+    padding-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: .12em;
+    color: #1a0e00;
+  }
+  .header .subtitle {
+    font-size: 9px;
+    color: #6b5a3a;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  /* Logo: 56px — padrão MA Advocacia */
+  .logo-area img {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  /* Título de secção em dourado, linha dourada */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: #8a6630;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid #c9a85c;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+    margin-top: 16px;
+  }
+
+  /* ─── DOC ITEM ─── */
+  /* Item numerado com título e sub-bullets */
+  .doc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .doc-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4a1628;
+    min-width: 18px;
+    margin-top: 1px;
+  }
+  .doc-body { flex: 1; }
+  .doc-title {
+    font-size: 12px;          /* padrão: 12px */
+    font-weight: 600;
+    color: #1a0e00;
+    line-height: 1.4;
+  }
+  .doc-sub { margin-top: 3px; padding-left: 2px; }
+  .doc-sub li {
+    list-style: none;
+    font-size: 10px;          /* padrão: 10px */
+    font-style: italic;
+    color: #4a3a20;
+    line-height: 1.6;
+    padding-left: 10px;
+    position: relative;
+  }
+  .doc-sub li::before { content: '–'; position: absolute; left: 0; color: #c9a85c; }
+  .doc-sub a { color: #4a1628; text-decoration: none; border-bottom: 1px dotted #c9a85c; font-style: italic; }
+  .doc-sub a:hover { color: #8a3050; }
+
+  /* ─── NOTA ─── */
+  .nota {
+    margin-top: 14px;
+    background: #fdf6ee;
+    border-left: 3px solid #c9a85c;
+    padding: 8px 12px;
+    border-radius: 1px;
+  }
+  .nota p { font-size: 8.5px; color: #4a3a20; line-height: 1.6; }
+  .nota strong { color: #4a1628; }
+
+  /* ─── FOOTER ─── */
+  /* Nome + cargo à esquerda, contactos à direita */
+  .footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1.5px solid #4a1628;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .footer .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a0e00;
+  }
+  .footer .role {
+    font-size: 8px;
+    color: #6b5a3a;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .footer .contact {
+    text-align: right;
+    font-size: 8px;
+    color: #6b5a3a;
+    line-height: 1.7;
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 800px) {
+    body { padding: 0 0 40px; align-items: flex-start; }
+    .toolbar { position: relative; }
+    #page-scale-wrapper {
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .page { margin-top: 0; transform-origin: top center; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+    .page { box-shadow: none; margin: 0; width: 210mm; min-height: 297mm; transform: none !important; }
+    .doc-sub a::after { content: " (" attr(href) ")"; font-size: 7px; color: #888; word-break: break-all; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+<script>
+  function scalePage() {
+    document.querySelectorAll('#page-scale-wrapper').forEach(wrapper => {
+      const page = wrapper.querySelector('.page');
+      if (!page) return;
+      const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+      if (vw < pw) {
+        const s = vw / pw;
+        page.style.transform = 'scale(' + s + ')';
+        page.style.marginBottom = '-' + (pw * (1 - s)) + 'px';
+        wrapper.style.height = (page.offsetHeight * s) + 'px';
+      } else { page.style.transform = ''; page.style.marginBottom = ''; wrapper.style.height = ''; }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', scalePage);
+  window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Título da Página — MA Advocacia</span>
+</div>
+
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <h1>TÍTULO DA PÁGINA</h1>
+        <div class="subtitle">Subtítulo Descritivo</div>
+      </div>
+      <div class="logo-area">
+        <img src="../../img/icone/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <!-- SECÇÃO 1 -->
+    <div class="section-title">Nome da Secção</div>
+
+    <div class="doc-item">
+      <div class="doc-num">1.</div>
+      <div class="doc-body">
+        <div class="doc-title">Título do documento ou item</div>
+        <ul class="doc-sub">
+          <li>Detalhe ou instrução em itálico</li>
+          <li><a href="#">Link útil — descrição</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="doc-item">
+      <div class="doc-num">2.</div>
+      <div class="doc-body">
+        <div class="doc-title">Outro item</div>
+        <ul class="doc-sub">
+          <li>Detalhe</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECÇÃO 2 -->
+    <div class="section-title">Segunda Secção</div>
+
+    <div class="doc-item">
+      <div class="doc-num">3.</div>
+      <div class="doc-body">
+        <div class="doc-title">Item da segunda secção</div>
+      </div>
+    </div>
+
+    <!-- NOTA (opcional) -->
+    <div class="nota">
+      <p><strong>Nota:</strong> Texto de aviso ou observação importante.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto <br>2800-009, Almada</div>
+      </div>
+      <div class="contact">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
