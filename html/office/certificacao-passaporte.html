@@ -248,8 +248,11 @@ window.addEventListener('resize', scalePage);
 <div class="form-panel">
 
   <div class="upload-zone full" id="upload-zone"
-       onclick="document.getElementById('pdf-file').click()">
-    📄 Subir certificação anterior (PDF) — preenche automaticamente
+       onclick="document.getElementById('pdf-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parsePDF(event.dataTransfer.files[0])">
+    📄 Arraste um PDF aqui ou clique para selecionar — preenche automaticamente
     <input type="file" id="pdf-file" accept=".pdf" style="display:none"
            onchange="parsePDF(this.files[0])">
   </div>

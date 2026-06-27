@@ -3,584 +3,666 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aima — Declaração de Alojamento</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<title>Declaração de Alojamento — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#1a1d23;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:24px}
-  h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px}
-  .sub{font-size:13px;color:#64748b;margin-bottom:24px}
-  .card{background:#22262e;border:1px solid #2d3340;border-radius:12px;padding:20px;margin-bottom:16px}
-  .section-title{font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;display:flex;align-items:center;gap:6px}
-  .fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:#94a3b8}
-  label span{font-size:11px;color:#64748b}
-  input,select{background:#1a1d23;border:1px solid #2d3340;border-radius:7px;color:#e2e8f0;font-size:13px;padding:8px 10px;width:100%;outline:none;transition:border .15s}
-  input:focus,select:focus{border-color:#3b82f6}
-  select option{background:#1a1d23}
-  .required{color:#ef4444;margin-left:2px}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
 
-  .dropzone{border:2px dashed #2d3340;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:.2s;margin-top:10px}
-  .dropzone:hover,.dropzone.over{border-color:#3b82f6;background:#1e2733}
-  .dropzone.loaded{border-color:#22c55e;background:#0f2618}
-  .dropzone input[type=file]{display:none}
-  .dz-icon{font-size:28px;margin-bottom:8px}
-  .dz-text{font-size:13px;color:#94a3b8}
-  .dz-filename{font-size:12px;color:#22c55e;margin-top:4px;font-weight:600}
+/* ── Toolbar ── */
+.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
+.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
 
-  .btn{display:block;width:100%;padding:14px;background:#3b82f6;border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;margin-top:8px}
-  .btn:hover{background:#2563eb}
-  .btn:active{transform:scale(.99)}
-  .btn:disabled{background:#334155;color:#64748b;cursor:not-allowed}
+/* ── Form panel ── */
+.form-panel { width: 208mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
+.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
+.fp-input:focus { border-color: #c9a85c; }
+.fp-input::placeholder { color: #555; }
+select.fp-input { cursor: pointer; }
+.full { grid-column: 1 / -1; }
+.fp-section { color: #c9a85c; font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-bottom: 1px solid #3a3a3a; padding-bottom: 4px; margin-top: 4px; }
 
-  #status{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
-  #status.ok{background:#0f2618;border:1px solid #22c55e;color:#4ade80}
-  #status.err{background:#2d1515;border:1px solid #ef4444;color:#f87171}
-  #status.info{background:#1e2733;border:1px solid #3b82f6;color:#93c5fd}
+/* ── A4 Pages ── */
+.page-wrapper { display: flex; justify-content: center; }
+.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
+.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
 
-  .divider{border:none;border-top:1px solid #2d3340;margin:16px 0}
-  .full{grid-column:1/-1}
+/* ── Header ── */
+.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
+.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1a0e00; letter-spacing: .1em; line-height: 1.2; }
+.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
+.logo-box { flex-shrink: 0; margin-left: 16px; }
+.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
+
+/* ── Footer ── */
+.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: 8px; border-top: 1px solid #c9a85c; }
+.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
+.rec-footer .role { font-size: 7pt; letter-spacing: .05em; color: #6b5a3a; margin-top: 2px; }
+.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
+
+/* ── Corpo (páginas 1 e 2) ── */
+.doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
+.doc-intro { text-align: justify; line-height: 1.5; margin-bottom: 10px; }
+.doc-section { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13pt; letter-spacing: .1em; color: #4a1628; text-align: center; margin: 8px 0 6px; }
+.doc-item { display: flex; gap: 10px; text-align: justify; line-height: 1.5; margin-bottom: 6px; }
+.doc-item .ltr { min-width: 56px; font-weight: 700; flex-shrink: 0; }
+.doc-registos { margin: 10px 0 0; line-height: 1.4; font-size: 11pt; }
+.doc-registos .reg-label { font-weight: 400; white-space: nowrap; }
+.doc-notas { margin-top: 0; line-height: 1.4; font-size: 11pt; }
+.doc-sig { text-align: center; line-height: 1.3; font-size: 11pt; }
+.doc-sig .sig-pre { margin-bottom: 4px; margin-top: 24pt; }
+.doc-sig .sig-name { font-weight: 700; font-family: 'Playfair Display', serif; font-size: 13pt; }
+.doc-sig .sig-role { font-weight: 600; }
+
+/* ── Corpo (páginas 3 e 4) ── */
+.decl-body { font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; line-height: 1.7; text-align: justify; }
+.decl-body p:first-child { margin-top: 60pt; }
+.decl-body p { margin-bottom: 14px; }
+.decl-body .decl-bold-center { font-weight: 700; text-align: center; margin: 20px 0 14px; }
+
+/* ── Assinatura (páginas 3 e 4) ── */
+.decl-sig { padding-top: 24pt; font-size: 11pt; }
+.decl-sig .sig-city { text-align: right; margin-bottom: 60pt; }
+.decl-sig .sig-line { border-top: 1px solid #1a0e00; width: 240px; margin: 0 auto 8px; }
+.decl-sig .sig-name { text-align: center; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 12pt; }
+
+/* ── Upload zone ── */
+.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 12px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
+.upload-zone:hover { background: rgba(201,168,92,.08); }
+.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
+.upload-zone.err { border-color: #e06c75; color: #e06c75; }
+
+/* ── Output box ── */
+.output-panel { width: 208mm; max-width: 100%; background: #1a1a2e; border-radius: 4px; margin-top: 12px; padding: 14px 18px; }
+.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.output-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .08em; font-family: monospace; }
+.output-copy { background: #c9a85c; color: #1a0e00; border: none; border-radius: 3px; padding: 5px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Lora', serif; }
+.output-copy:active { opacity: .75; }
+.output-text { width: 100%; background: #0d0d1a; border: 1px solid #333; border-radius: 3px; padding: 12px 14px; color: #d4c8a8; font-family: 'Lora', serif; font-size: 12px; line-height: 1.75; resize: vertical; min-height: 280px; outline: none; }
+
+/* ── Mobile ── */
+@media (max-width: 800px) {
+  body { align-items: flex-start; }
+  .toolbar { position: relative; }
+  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
+  .page-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
+  .page { margin-top: 0; transform-origin: top center; }
+}
+
+/* ── Print ── */
+@media print {
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body { display: block; }
+  .toolbar, .form-panel, .output-panel { display: none; }
+  .page-wrapper { display: block; margin: 0; padding: 0; width: 208mm; height: 295mm; overflow: hidden; }
+  .page { box-shadow: none; margin: 0; padding: 0; width: 208mm; height: 295mm; min-height: unset; transform: none !important; }
+  @page { size: A4 portrait; margin: 0; }
+}
 </style>
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const today = new Date();
+const DIA = String(today.getDate());
+const MES = MESES[today.getMonth()];
+const ANO = String(today.getFullYear());
+
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+function el(id){ return document.getElementById(id); }
+
+function update(){
+  const nome       = v('f_nome')        || '[NOME ARRENDATÁRIO]';
+  const bi         = v('f_bi')          || 'Passaporte';
+  const binumero   = v('f_binumero')    || '[NÚMERO]';
+  const validade   = v('f_validade')    || '[VALIDADE]';
+  const nascimento = v('f_nascimento')  || '[NASCIMENTO]';
+  const nome1      = v('f_nome1')       || '[NOME REQUERENTE]';
+  const bi1        = v('f_bi1')         || 'Passaporte';
+  const binumero1  = v('f_binumero1')   || '[NÚMERO]';
+  const validade1  = v('f_validade1')   || '[VALIDADE]';
+  const nascimento1= v('f_nascimento1') || '[NASCIMENTO]';
+  const morada     = v('f_morada')      || '[MORADA]';
+  const folhas     = v('f_folhas')      || '[FOLHAS]';
+  const vinculo    = v('f_vinculo')     || '[PARENTESCO]';
+  const vigencia   = v('f_vigencia')    || '[VIGÊNCIA]';
+  const documento  = v('f_documento')   || '[DOCUMENTO]';
+  const executado  = v('f_executado')   || '[EXECUTADO]';
+  const registado  = v('f_registado')   || '[REGISTADO]';
+  const numero     = v('f_numero')      || '[NÚMERO]';
+  const codigo     = v('f_codigo')      || '[CÓDIGO]';
+
+  const dateStr = `Almada, ${DIA} de ${MES} de ${ANO}`;
+
+  // ── Página 1 (RECONHECER + CERTIFICO a–d) ──
+  el('p1_nome_um').textContent       = nome.toUpperCase();
+  el('p1_bi_um').textContent         = bi;
+  el('p1_binumero_um').textContent   = binumero.toUpperCase();
+  el('p1_validade_um').textContent   = validade;
+  el('p1_nome1_dois').textContent    = nome1.toUpperCase();
+  el('p1_bi1_dois').textContent      = bi1;
+  el('p1_binumero1_dois').textContent= binumero1.toUpperCase();
+  el('p1_validade1_dois').textContent= validade1;
+  el('p1_bi_b').textContent          = bi;
+  el('p1_binumero_b').textContent    = binumero.toUpperCase();
+  el('p1_nome_b').textContent        = nome.toUpperCase();
+  el('p1_nasc_b').textContent        = nascimento;
+  el('p1_val_b').textContent         = validade;
+  el('p1_bi1_c').textContent         = bi1;
+  el('p1_binumero1_c').textContent   = binumero1.toUpperCase();
+  el('p1_nome1_c').textContent       = nome1.toUpperCase();
+  el('p1_nasc1_c').textContent       = nascimento1;
+  el('p1_val1_c').textContent        = validade1;
+  el('p1_folhas_d').textContent      = folhas;
+  el('p1_doc_d').textContent         = documento;
+
+  // ── Página 2 (CERTIFICO e + registos + notas + assinatura) ──
+  el('r_executado').textContent      = executado;
+  el('r_registado').textContent      = registado;
+  el('r_numero').textContent         = numero;
+  el('r_codigo').textContent         = codigo;
+  el('r_date').textContent           = `${dateStr}.`;
+
+  // ── Página 3 (Declaração requerente) ──
+  el('p3_nome1').textContent         = nome1.toUpperCase();
+  el('p3_bi1').textContent           = bi1;
+  el('p3_binumero1').textContent     = binumero1.toUpperCase();
+  el('p3_nasc1').textContent         = nascimento1;
+  el('p3_val1').textContent          = validade1;
+  el('p3_vinculo').textContent       = vinculo;
+  el('p3_morada').textContent        = morada;
+  el('p3_vigencia').textContent      = vigencia;
+  el('p3_date').textContent          = dateStr;
+  el('p3_sig_nome').textContent      = nome1.toUpperCase();
+
+  // ── Página 4 (Declaração arrendatário) ──
+  el('p4_nome').textContent          = nome.toUpperCase();
+  el('p4_bi').textContent            = bi;
+  el('p4_binumero').textContent      = binumero.toUpperCase();
+  el('p4_nasc').textContent          = nascimento;
+  el('p4_val').textContent           = validade;
+  el('p4_morada').textContent        = morada;
+  el('p4_nome1').textContent         = nome1.toUpperCase();
+  el('p4_bi1').textContent           = bi1;
+  el('p4_binumero1').textContent     = binumero1.toUpperCase();
+  el('p4_nasc1').textContent         = nascimento1;
+  el('p4_val1').textContent          = validade1;
+  el('p4_vigencia').textContent      = vigencia;
+  el('p4_vinculo').textContent       = vinculo;
+  el('p4_doc').textContent           = documento;
+  el('p4_date').textContent          = dateStr;
+  el('p4_sig_nome').textContent      = nome.toUpperCase();
+
+  // ── Caixa copiável ──
+  el('output-text').value =
+`RECONHECER
+UM - Reconheço a legitimidade da assinatura de ${nome.toUpperCase()}, na qual verifiquei por exibição do documento de identidade, denominado ${bi} número: ${binumero.toUpperCase()}, válido até: ${validade}, no documento denominado Declaração de Alojamento.
+DOIS - Reconheço a legitimidade da assinatura de ${nome1.toUpperCase()}, na qual verifiquei por exibição do documento de identidade, denominado ${bi1} número: ${binumero1.toUpperCase()}, válido até: ${validade1}, no documento denominado Declaração de Alojamento.
+TRÊS - Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.
+QUATRO - Que não contém irregularidades, ocupa 01 (uma) folha, que tem aposto o meu carimbo na folha de certificação.
+CERTIFICO
+a) Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.
+b) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao ${bi} com o número: ${binumero.toUpperCase()}, do(a) Sr.(ª) ${nome.toUpperCase()}, nascido(a) em ${nascimento}, válido até: ${validade}.
+c) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao ${bi1} com o número: ${binumero1.toUpperCase()}, do(a) Sr.(ª) ${nome1.toUpperCase()}, nascido(a) em ${nascimento1}, válido até: ${validade1}.
+d) A fotocópia anexa, composta por ${folhas} folhas, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao ${documento}.
+e) As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1o do Decreto-Lei 28/2000, de 13 de março.
+----Sem cobrança de honorários.
+----Não há lugar ao pagamento de imposto de selo.
+----${dateStr}.`;
+}
+
+function copiarTexto(){
+  const ta = el('output-text');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(()=>{
+    const btn = el('btn-copy');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(()=>{ btn.textContent = 'Copiar'; }, 2000);
+  });
+}
+
+async function parsePDF(file){
+  const zone = el('upload-zone');
+  zone.className = 'upload-zone full';
+  zone.innerHTML = '⏳ A ler PDF… <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let txt = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const content = await pg.getTextContent();
+      txt += content.items.map(x => x.str).join(' ') + ' ';
+    }
+    txt = txt.replace(/\s+/g,' ').trim();
+
+    // Arrendatário (UM)
+    const mNome    = txt.match(/UM\s*[—-]\s*Reconheço[^d]+de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?),\s*na qual/i);
+    const mBiType  = /Título de Residência/i.test(txt.substring(0, txt.indexOf('DOIS')||999)) ? 'Título de Residência' : 'Passaporte';
+    const mBinum   = txt.match(/denominado (?:Passaporte|Título de Residência) número:\s*([A-Z0-9]+),\s*válido até:\s*([^,]+),\s*no documento/i);
+    // Requerente (DOIS)
+    const mDois    = txt.match(/DOIS\s*[—-]\s*Reconheço[^d]+de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?),\s*na qual/i);
+    const mBi1Type = txt.match(/DOIS[^P]*?(Passaporte|Título de Residência)/i);
+    const mBi1num  = txt.match(/DOIS.+?número:\s*([A-Z0-9]+),\s*válido até:\s*([^,]+),\s*no documento/i);
+    // Nascimentos (de CERTIFICO b e c)
+    const mNascs   = [...txt.matchAll(/nascido\(a\) em\s+([^,]+),\s*válido até/gi)];
+    // Folhas e documento
+    const mFolhas  = txt.match(/composta por\s+(.+?)\s+folhas.*?referente ao\s+(?!Passaporte|Título)([^\.]+)\./i);
+    // Morada e vigência
+    const mMorada  = txt.match(/residindo na\s+(.+?),\s*desde\s+([^\.]+)\./i);
+    const mVinculo = txt.match(/parentesco:\s*([^)]+)\)/i);
+
+    if(mNome)      el('f_nome').value      = mNome[1].trim();
+    el('f_bi').value = mBiType;
+    if(mBinum){    el('f_binumero').value  = mBinum[1].trim(); el('f_validade').value = mBinum[2].trim(); }
+    if(mNascs[0]) el('f_nascimento').value = mNascs[0][1].trim();
+    if(mDois)      el('f_nome1').value     = mDois[1].trim();
+    if(mBi1Type)   el('f_bi1').value       = mBi1Type[1];
+    if(mBi1num){   el('f_binumero1').value = mBi1num[1].trim(); el('f_validade1').value = mBi1num[2].trim(); }
+    if(mNascs[1]) el('f_nascimento1').value= mNascs[1][1].trim();
+    if(mMorada){   el('f_morada').value    = mMorada[1].trim(); el('f_vigencia').value  = mMorada[2].trim(); }
+    if(mVinculo)   el('f_vinculo').value   = mVinculo[1].trim();
+    if(mFolhas){   el('f_folhas').value    = mFolhas[1].trim(); el('f_documento').value = mFolhas[2].trim(); }
+
+    update();
+    const nome1 = v('f_nome1') || 'cliente';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ PDF lido — ${nome1} <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">`;
+  } catch(e){
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Não foi possível ler o PDF — preencha manualmente <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+    console.error(e);
+  }
+}
+
+function scalePage(){
+  document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+    const page = wrapper.querySelector('.page');
+    if(!page) return;
+    const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+    if(vw < pw){
+      const s = vw / pw;
+      page.style.transform = 'scale('+s+')';
+      page.style.marginBottom = '-'+(pw*(1-s))+'px';
+      wrapper.style.height = (page.offsetHeight*s)+'px';
+    } else {
+      page.style.transform=''; page.style.marginBottom=''; wrapper.style.height='';
+    }
+  });
+}
+
+const TAB_ORDER = [
+  'f_nome','f_bi','f_binumero','f_validade','f_nascimento',
+  'f_nome1','f_bi1','f_binumero1','f_validade1','f_nascimento1',
+  'f_morada','f_folhas','f_vinculo','f_vigencia','f_documento',
+  'f_executado','f_registado','f_numero','f_codigo'
+];
+function nextField(e){
+  const idx = TAB_ORDER.indexOf(e.id);
+  if(idx >= 0 && idx < TAB_ORDER.length-1) document.getElementById(TAB_ORDER[idx+1]).focus();
+}
+
+function titleCase(w){ return w ? w.charAt(0).toUpperCase()+w.slice(1).toLowerCase() : ''; }
+function nomeAbreviado(s){
+  const prep = new Set(['da','de','do','dos','das','e','von','van']);
+  const words = s.trim().split(/\s+/).filter(Boolean);
+  if(!words.length) return s;
+  if(words.length===1) return titleCase(words[0]);
+  const first=titleCase(words[0]), last=titleCase(words[words.length-1]);
+  if(words.length>=3 && prep.has(words[words.length-2].toLowerCase()))
+    return `${first} ${words[words.length-2].toLowerCase()} ${last}`;
+  return `${first} ${last}`;
+}
+
+function imprimir(){
+  const nome1 = v('f_nome1') || 'Alojamento';
+  document.title = `00. Declaração de Alojamento - ${nomeAbreviado(nome1)}`;
+  window.print();
+  setTimeout(()=>{ document.title = 'Declaração de Alojamento — MA Advocacia'; }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
+window.addEventListener('resize', scalePage);
+</script>
 </head>
 <body>
-<div style="max-width:860px;margin:0 auto">
-  <h1>📄 Aima — Declaração de Alojamento</h1>
-  <p class="sub">Script 6 · Gera o documento completo com papel timbrado</p>
 
-  <!-- SECÇÃO 1: Arrendatário -->
-  <div class="card">
-    <div class="section-title">👤 Arrendatário (titular da casa)</div>
-    <div class="fields">
-      <label>Nome completo <span class="required">*</span>
-        <input id="nome" placeholder="NOME EM MAIÚSCULAS" style="text-transform:uppercase">
-      </label>
-      <label>Data de nascimento <span class="required">*</span>
-        <input id="nascimento" placeholder="DD de Mês de AAAA">
-      </label>
-      <label>Tipo de documento <span class="required">*</span>
-        <select id="bi">
-          <option value="Passaporte">Passaporte</option>
-          <option value="Título de Residência">Título de Residência</option>
-          <option value="Bilhete de Identidade">Bilhete de Identidade</option>
-          <option value="Cartão de Cidadão">Cartão de Cidadão</option>
-        </select>
-      </label>
-      <label>Número do documento <span class="required">*</span>
-        <input id="binumero" placeholder="Número" style="text-transform:uppercase">
-      </label>
-      <label>Válido até <span class="required">*</span>
-        <input id="validade" placeholder="DD/MM/AAAA">
-      </label>
-    </div>
-  </div>
-
-  <!-- SECÇÃO 2: Requerente -->
-  <div class="card">
-    <div class="section-title">👤 Requerente (quem mora)</div>
-    <div class="fields">
-      <label>Nome completo <span class="required">*</span>
-        <input id="nome1" placeholder="NOME EM MAIÚSCULAS" style="text-transform:uppercase">
-      </label>
-      <label>Data de nascimento <span class="required">*</span>
-        <input id="nascimento1" placeholder="DD de Mês de AAAA">
-      </label>
-      <label>Tipo de documento <span class="required">*</span>
-        <select id="bi1">
-          <option value="Passaporte">Passaporte</option>
-          <option value="Título de Residência">Título de Residência</option>
-          <option value="Bilhete de Identidade">Bilhete de Identidade</option>
-          <option value="Cartão de Cidadão">Cartão de Cidadão</option>
-        </select>
-      </label>
-      <label>Número do documento <span class="required">*</span>
-        <input id="binumero1" placeholder="Número" style="text-transform:uppercase">
-      </label>
-      <label>Válido até <span class="required">*</span>
-        <input id="validade1" placeholder="DD/MM/AAAA">
-      </label>
-    </div>
-  </div>
-
-  <!-- SECÇÃO 3: Alojamento -->
-  <div class="card">
-    <div class="section-title">🏠 Alojamento</div>
-    <div class="fields">
-      <label class="full">Morada completa <span class="required">*</span>
-        <input id="morada" placeholder="Rua, número, andar, código postal, cidade">
-      </label>
-      <label>Vínculo / parentesco <span class="required">*</span>
-        <input id="vinculo" placeholder="ex: amigo, familiar, cônjuge">
-      </label>
-      <label>Desde (data vigência) <span class="required">*</span>
-        <input id="vigencia" placeholder="DD/MM/AAAA">
-      </label>
-      <label>Documento de suporte <span class="required">*</span>
-        <input id="documento" placeholder="ex: Contrato de Arrendamento">
-      </label>
-      <label>Número de folhas <span class="required">*</span>
-        <input id="folhas" placeholder="ex: 01 (uma)">
-      </label>
-    </div>
-  </div>
-
-  <!-- SECÇÃO 4: Registo -->
-  <div class="card">
-    <div class="section-title">📋 Reconhecimento</div>
-    <div class="fields">
-      <label>Executado a <span style="font-style:italic">(hora/data)</span>
-        <input id="executado" placeholder="ex: 10h30 de 26/06/2026">
-      </label>
-      <label>Registado a
-        <input id="registado" placeholder="ex: 26/06/2026">
-      </label>
-      <label>Com o nº
-        <input id="numero" placeholder="Número de registo">
-      </label>
-      <label>Código de consulta
-        <input id="codigo" placeholder="Código para oa.pt/atos">
-      </label>
-    </div>
-  </div>
-
-  <!-- Modelo DOCX -->
-  <div class="card">
-    <div class="section-title">📄 Modelo com Papel Timbrado</div>
-    <p style="font-size:12px;color:#64748b;margin-bottom:8px">Selecione o ficheiro <strong style="color:#94a3b8">modelo.docx</strong> (papel timbrado em branco)</p>
-    <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-      <input type="file" id="fileInput" accept=".docx">
-      <div class="dz-icon">📂</div>
-      <div class="dz-text">Clique para selecionar o modelo.docx</div>
-      <div class="dz-filename" id="dzFilename"></div>
-    </div>
-  </div>
-
-  <button class="btn" id="btnGerar" onclick="generate()">✅ Gerar Declaração de Alojamento</button>
-  <div id="status"></div>
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Declaração de Alojamento — MA Advocacia</span>
 </div>
 
-<script>
-// ─── File picker ───────────────────────────────────────────────────────────
-let modeloFile = null;
-const fileInput = document.getElementById('fileInput');
-const dropzone  = document.getElementById('dropzone');
-const dzFilename= document.getElementById('dzFilename');
+<!-- ── Formulário ── -->
+<div class="form-panel">
 
-fileInput.addEventListener('change', e => {
-  if(e.target.files[0]) setModelo(e.target.files[0]);
-});
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
-dropzone.addEventListener('drop', e => {
-  e.preventDefault(); dropzone.classList.remove('over');
-  if(e.dataTransfer.files[0]) setModelo(e.dataTransfer.files[0]);
-});
-function setModelo(f) {
-  modeloFile = f;
-  dzFilename.textContent = '✓ ' + f.name;
-  dropzone.classList.add('loaded');
-}
+  <div class="upload-zone full" id="upload-zone"
+       onclick="document.getElementById('pdf-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parsePDF(event.dataTransfer.files[0])">
+    📄 Arraste um PDF aqui ou clique para selecionar — preenche automaticamente
+    <input type="file" id="pdf-file" accept=".pdf" style="display:none"
+           onchange="parsePDF(this.files[0])">
+  </div>
 
-// ─── Status ────────────────────────────────────────────────────────────────
-function showStatus(msg, type='info') {
-  const s = document.getElementById('status');
-  s.textContent = msg; s.className = type; s.style.display = 'block';
-  if(type==='ok') setTimeout(()=>s.style.display='none', 5000);
-}
+  <div class="full fp-section">Arrendatário (Senhorio)</div>
+  <div class="full">
+    <div class="fp-label">Nome completo do arrendatário</div>
+    <input id="f_nome" class="fp-input" type="text" placeholder="ex: JOÃO DA SILVA"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Tipo de documento</div>
+    <select id="f_bi" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="Passaporte">Passaporte</option>
+      <option value="Título de Residência">Título de Residência</option>
+    </select>
+  </div>
+  <div>
+    <div class="fp-label">Número do documento</div>
+    <input id="f_binumero" class="fp-input" type="text" placeholder="ex: AB123456"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Válido até</div>
+    <input id="f_validade" class="fp-input" type="text" placeholder="ex: 31/12/2030"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Data de nascimento</div>
+    <input id="f_nascimento" class="fp-input" type="text" placeholder="ex: 01/01/1985"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
 
-// ─── XML helpers ───────────────────────────────────────────────────────────
-function xe(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+  <div class="full fp-section" style="margin-top:6px">Requerente (Beneficiário)</div>
+  <div class="full">
+    <div class="fp-label">Nome completo do requerente</div>
+    <input id="f_nome1" class="fp-input" type="text" placeholder="ex: MARIA DE OLIVEIRA"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Tipo de documento</div>
+    <select id="f_bi1" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="Passaporte">Passaporte</option>
+      <option value="Título de Residência">Título de Residência</option>
+    </select>
+  </div>
+  <div>
+    <div class="fp-label">Número do documento</div>
+    <input id="f_binumero1" class="fp-input" type="text" placeholder="ex: CD789012"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Válido até</div>
+    <input id="f_validade1" class="fp-input" type="text" placeholder="ex: 31/12/2028"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Data de nascimento</div>
+    <input id="f_nascimento1" class="fp-input" type="text" placeholder="ex: 15/03/1995"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
 
-// Create a run element: {text, b=bold}
-function mkRun(part) {
-  if(typeof part === 'string') {
-    if(!part) return '';
-    return `<w:r><w:t xml:space="preserve">${xe(part)}</w:t></w:r>`;
-  }
-  const rpr = part.b ? '<w:rPr><w:b/><w:bCs/></w:rPr>' : '';
-  if(!part.text) return '';
-  return `<w:r>${rpr}<w:t xml:space="preserve">${xe(part.text)}</w:t></w:r>`;
-}
+  <div class="full fp-section" style="margin-top:6px">Detalhes</div>
+  <div class="full">
+    <div class="fp-label">Morada</div>
+    <input id="f_morada" class="fp-input" type="text" placeholder="ex: Rua das Flores, nº 10, 2800-001 Almada"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Nº de folhas do contrato (ex: seis (6))</div>
+    <input id="f_folhas" class="fp-input" type="text" placeholder="ex: seis (6)"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Parentesco / Vínculo</div>
+    <input id="f_vinculo" class="fp-input" type="text" placeholder="ex: cônjuge, amigo, filho"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Data início de residência</div>
+    <input id="f_vigencia" class="fp-input" type="text" placeholder="ex: 01/01/2025"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Documento (contrato)</div>
+    <input id="f_documento" class="fp-input" type="text" placeholder="ex: Contrato de Arrendamento n.º 123"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
 
-// Create a paragraph
-// parts: string | {text,b} | array of those
-// opts: {center, b (all runs bold), before, after}
-function mkPara(parts, opts={}) {
-  const pprParts = [];
-  if(opts.center) pprParts.push('<w:jc w:val="center"/>');
-  if(opts.before!=null||opts.after!=null) {
-    pprParts.push(`<w:spacing w:before="${opts.before||0}" w:after="${opts.after||0}"/>`);
-  }
-  // default paragraph spacing in docx is 200 twips after — we set 0 to keep tight
-  const ppr = pprParts.length ? `<w:pPr>${pprParts.join('')}</w:pPr>` : '';
+  <div class="full fp-section" style="margin-top:6px">Registos — preencher após OA</div>
+  <div>
+    <div class="fp-label">Executado a</div>
+    <input id="f_executado" class="fp-input" type="text" placeholder="ex: 27/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Registado a</div>
+    <input id="f_registado" class="fp-input" type="text" placeholder="ex: 27/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Com o Nº</div>
+    <input id="f_numero" class="fp-input" type="text" placeholder="ex: 2026/001"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Código de consulta</div>
+    <input id="f_codigo" class="fp-input" type="text" placeholder="ex: ABC123"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
 
-  let runsXml = '';
-  if(!parts && parts !== 0) {
-    // empty paragraph
-  } else if(Array.isArray(parts)) {
-    runsXml = parts.map(p => {
-      if(opts.b && typeof p === 'string') return mkRun({text:p,b:true});
-      return mkRun(p);
-    }).join('');
-  } else if(typeof parts === 'string') {
-    runsXml = mkRun(opts.b ? {text:parts,b:true} : parts);
-  } else {
-    runsXml = mkRun(parts);
-  }
-  return `<w:p>${ppr}${runsXml}</w:p>`;
-}
+</div>
 
-function empty() { return '<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr></w:p>'; }
-function pgBreak() { return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'; }
+<!-- ── Caixa copiável ── -->
+<div class="output-panel">
+  <div class="output-header">
+    <span class="output-label">📋 Texto para copiar — Ordem dos Advogados</span>
+    <button class="output-copy" id="btn-copy" onclick="copiarTexto()">Copiar</button>
+  </div>
+  <textarea class="output-text" id="output-text" readonly></textarea>
+</div>
 
-// ─── Date helpers ──────────────────────────────────────────────────────────
-function todayPt() {
-  const meses = ['janeiro','fevereiro','março','abril','maio','junho',
-                 'julho','agosto','setembro','outubro','novembro','dezembro'];
-  const d = new Date();
-  return { dia: String(d.getDate()).padStart(2,'0'), mes: meses[d.getMonth()], ano: String(d.getFullYear()) };
-}
+<!-- ═══ PÁGINA 1 — Reconhecimento (intro + RECONHECER + CERTIFICO a–d) ═══ -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">RECONHECIMENTO<br>DE ASSINATURA</div>
+        <div class="subtitle">Declaração de Alojamento — MA Advocacia</div>
+      </div>
+      <div class="logo-box"><img src="../../img/icone/ma.png" alt="MA Advocacia"></div>
+    </div>
 
-// ─── Document body generator ───────────────────────────────────────────────
-function generateBody(d) {
-  const paras = [];
-  const dt = todayPt();
+    <div class="doc-body">
+      <div class="doc-intro">
+        Eu, <strong>Dr. MARCIO ANDRIO</strong>, Advogado, portador da Cédula Profissional 68721P emitida pelo Conselho Regional da Ordem dos Advogados no Porto, com domicílio profissional à Avenida D. Afonso Henriques, número 14, 2º Dto, 2800-009, Almada, no exercício das competências conferidas pelo artigo 38 do Decreto-Lei 76-A/2006, de 29 de março, e pela Portaria n.º 657-B/2006, venho por este meio certificar e reconhecer que:
+      </div>
 
-  // ═══════════════════════════════════════════════════════════════
-  // PÁGINA 1: RECONHECIMENTO DE ASSINATURA
-  // ═══════════════════════════════════════════════════════════════
-  paras.push(empty());
-  paras.push(mkPara('RECONHECIMENTO DE ASSINATURA', {center:true, b:true, before:0, after:120}));
+      <div class="doc-section">RECONHECER</div>
 
-  paras.push(mkPara([
-    'Eu, Dr. ', {text:'MARCIO ANDRIO',b:true},
-    ', Advogado, portador da Cédula Profissional ', {text:'68721P',b:true},
-    ' emitida pelo Conselho Regional da Ordem dos Advogados no Porto, com domicílio profissional à Avenida D. Afonso Henriques, número 14, 2º Dto, 2800-009, Almada, no exercício das competências conferidas pelo artigo 38 do Decreto-Lei 76-A/2006, de 29 de março, e pela Portaria n.º 657-B/2006, venho por este meio certificar e reconhecer que:'
-  ], {before:0, after:80}));
+      <div class="doc-item">
+        <span class="ltr">UM —</span>
+        <span>Reconheço a legitimidade da assinatura de <strong><span id="p1_nome_um">[NOME ARRENDATÁRIO]</span></strong>, na qual verifiquei por exibição do documento de identidade, denominado <strong><span id="p1_bi_um">[BI]</span></strong> número: <strong><span id="p1_binumero_um">[NÚMERO]</span></strong>, válido até: <strong><span id="p1_validade_um">[VALIDADE]</span></strong>, no documento denominado Declaração de Alojamento.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">DOIS —</span>
+        <span>Reconheço a legitimidade da assinatura de <strong><span id="p1_nome1_dois">[NOME REQUERENTE]</span></strong>, na qual verifiquei por exibição do documento de identidade, denominado <strong><span id="p1_bi1_dois">[BI]</span></strong> número: <strong><span id="p1_binumero1_dois">[NÚMERO]</span></strong>, válido até: <strong><span id="p1_validade1_dois">[VALIDADE]</span></strong>, no documento denominado Declaração de Alojamento.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">TRÊS —</span>
+        <span>Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">QUATRO —</span>
+        <span>Que não contém irregularidades, ocupa 01 (uma) folha, que tem aposto o meu carimbo na folha de certificação.</span>
+      </div>
 
-  paras.push(empty());
-  paras.push(mkPara('RECONHECER', {center:true, b:true, before:0, after:80}));
-  paras.push(empty());
+      <div class="doc-section">CERTIFICO</div>
 
-  // UM
-  paras.push(mkPara([
-    {text:'UM',b:true},
-    ' - Reconheço a legitimidade da assinatura de ',
-    {text:d.nome,b:true},
-    ', na qual verifiquei por exibição do documento de identidade, denominado ',
-    d.bi,
-    ' número: ',
-    {text:d.binumero,b:true},
-    ', válido até: ',
-    d.validade,
-    ', no documento denominado Declaração de Alojamento.'
-  ], {before:0, after:80}));
+      <div class="doc-item">
+        <span class="ltr">a)</span>
+        <span>Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">b)</span>
+        <span>A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao <strong><span id="p1_bi_b">[BI]</span></strong> com o número: <strong><span id="p1_binumero_b">[NÚMERO]</span></strong>, do(a) Sr.(ª) <strong><span id="p1_nome_b">[NOME]</span></strong>, nascido(a) em <strong><span id="p1_nasc_b">[NASCIMENTO]</span></strong>, válido até: <strong><span id="p1_val_b">[VALIDADE]</span></strong>.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">c)</span>
+        <span>A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao <strong><span id="p1_bi1_c">[BI]</span></strong> com o número: <strong><span id="p1_binumero1_c">[NÚMERO]</span></strong>, do(a) Sr.(ª) <strong><span id="p1_nome1_c">[NOME]</span></strong>, nascido(a) em <strong><span id="p1_nasc1_c">[NASCIMENTO]</span></strong>, válido até: <strong><span id="p1_val1_c">[VALIDADE]</span></strong>.</span>
+      </div>
+      <div class="doc-item">
+        <span class="ltr">d)</span>
+        <span>A fotocópia anexa, composta por <strong><span id="p1_folhas_d">[FOLHAS]</span></strong> folhas, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao <strong><span id="p1_doc_d">[DOCUMENTO]</span></strong>.</span>
+      </div>
+    </div>
 
-  paras.push(empty());
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">www.ma-advocacia.com<br>+351 960 389 573<br>marcio.andrio@ma-advocacia.com</div>
+    </div>
+  </div>
+</div>
+</div>
 
-  // DOIS
-  paras.push(mkPara([
-    {text:'DOIS',b:true},
-    ' - Reconheço a legitimidade da assinatura de ',
-    {text:d.nome1,b:true},
-    ', na qual verifiquei por exibição do documento de identidade, denominado ',
-    d.bi1,
-    ' número: ',
-    {text:d.binumero1,b:true},
-    ', válido até: ',
-    d.validade1,
-    ', no documento denominado Declaração de Alojamento.'
-  ], {before:0, after:80}));
+<!-- ═══ PÁGINA 2 — Reconhecimento (CERTIFICO e + registos + assinatura) ═══ -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">RECONHECIMENTO<br>DE ASSINATURA</div>
+        <div class="subtitle">Declaração de Alojamento — continuação</div>
+      </div>
+      <div class="logo-box"><img src="../../img/icone/ma.png" alt="MA Advocacia"></div>
+    </div>
 
-  paras.push(empty());
+    <div class="doc-body">
+      <div class="doc-section">CERTIFICO</div>
 
-  // TRÊS
-  paras.push(mkPara([
-    {text:'TRÊS',b:true},
-    ' - Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.'
-  ], {before:0, after:80}));
+      <div class="doc-item">
+        <span class="ltr">e)</span>
+        <span>As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1.º do Decreto-Lei 28/2000, de 13 de março.</span>
+      </div>
 
-  paras.push(empty());
+      <div class="doc-registos">
+        <div><span class="reg-label">EXECUTADO A:</span> <span id="r_executado">[EXECUTADO]</span></div>
+        <div><span class="reg-label">REGISTADO A:</span> <span id="r_registado">[REGISTADO]</span></div>
+        <div><span class="reg-label">COM O Nº:</span> <span id="r_numero">[NÚMERO]</span></div>
+        <div style="margin-top:8px">Poderá consultar este registo em <strong>http://oa.pt/atos</strong>, usando o código <strong><span id="r_codigo">[CÓDIGO]</span></strong>.</div>
+      </div>
 
-  // QUATRO
-  paras.push(mkPara([
-    {text:'QUATRO',b:true},
-    ' - Que não contém irregularidades, ocupa 01 (uma) folha, que tem aposto o meu carimbo na folha de certificação.'
-  ], {before:0, after:80}));
+      <div class="doc-notas">
+        <div>—— Sem cobrança de honorários.</div>
+        <div>—— Não há lugar ao pagamento de imposto de selo.</div>
+        <div>—— <span id="r_date">Almada, — de — de —.</span></div>
+      </div>
 
-  paras.push(empty());
-  paras.push(mkPara('CERTIFICO', {center:true, b:true, before:0, after:80}));
-  paras.push(empty());
+      <div class="doc-sig">
+        <div class="sig-pre">O Advogado,</div>
+        <div class="sig-name">MARCIO ANDRIO</div>
+        <div class="sig-role">C.P. nº 68721P</div>
+      </div>
+    </div>
 
-  // a)
-  paras.push(mkPara(
-    'a) Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.',
-    {before:0, after:60}
-  ));
-  paras.push(empty());
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">www.ma-advocacia.com<br>+351 960 389 573<br>marcio.andrio@ma-advocacia.com</div>
+    </div>
+  </div>
+</div>
+</div>
 
-  // b)
-  paras.push(mkPara([
-    'b) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
-    {text:'ORIGINAL',b:true},
-    ', que foi apresentado e verificado por comparação, referente ao ',
-    d.bi,
-    ' com o número: ',
-    {text:d.binumero,b:true},
-    ', do(a) Sr.(ª) ',
-    {text:d.nome,b:true},
-    ', nascido(a) em ',
-    d.nascimento,
-    ', válido até: ',
-    d.validade,
-    '.'
-  ], {before:0, after:60}));
-  paras.push(empty());
+<!-- ═══ PÁGINA 3 — Declaração do Requerente ═══ -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">DECLARAÇÃO DE<br>ALOJAMENTO</div>
+        <div class="subtitle">Requerente — MA Advocacia</div>
+      </div>
+      <div class="logo-box"><img src="../../img/icone/ma.png" alt="MA Advocacia"></div>
+    </div>
 
-  // c)
-  paras.push(mkPara([
-    'c) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
-    {text:'ORIGINAL',b:true},
-    ', que foi apresentado e verificado por comparação, referente ao ',
-    d.bi1,
-    ' com o número: ',
-    {text:d.binumero1,b:true},
-    ', do(a) Sr.(ª) ',
-    {text:d.nome1,b:true},
-    ', nascido(a) em ',
-    d.nascimento1,
-    ', válido até: ',
-    d.validade1,
-    '.'
-  ], {before:0, after:60}));
-  paras.push(empty());
+    <div class="decl-body">
+      <p>Para os devidos efeitos, eu, <strong><span id="p3_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p3_bi1">[BI]</span></strong> número: <strong><span id="p3_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p3_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p3_val1">[VALIDADE]</span></strong>, declaro sob compromisso de honra que possuo alojamento, em regime familiar (parentesco: <strong><span id="p3_vinculo">[PARENTESCO]</span></strong>), residindo na <strong><span id="p3_morada">[MORADA]</span></strong>, desde <strong><span id="p3_vigencia">[VIGÊNCIA]</span></strong>.</p>
+    </div>
 
-  // d)
-  paras.push(mkPara([
-    'd) A fotocópia anexa, composta por ',
-    {text:d.folhas,b:true},
-    ' folhas, utilizada apenas de um lado e devidamente rubricada, corresponde ao ',
-    {text:'ORIGINAL',b:true},
-    ', que foi apresentado e verificado por comparação, referente ao ',
-    {text:d.documento,b:true},
-    '.'
-  ], {before:0, after:60}));
-  paras.push(empty());
+    <div class="decl-sig">
+      <div class="sig-city"><span id="p3_date">Almada, — de — de —</span></div>
+      <div class="sig-line"></div>
+      <div class="sig-name"><span id="p3_sig_nome">[NOME REQUERENTE]</span></div>
+    </div>
 
-  // e)
-  paras.push(mkPara(
-    'e) As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1o do Decreto-Lei 28/2000, de 13 de março.',
-    {before:0, after:60}
-  ));
-  paras.push(empty());
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">www.ma-advocacia.com<br>+351 960 389 573<br>marcio.andrio@ma-advocacia.com</div>
+    </div>
+  </div>
+</div>
+</div>
 
-  // Registo (opcional)
-  if(d.executado) {
-    paras.push(mkPara([{text:'EXECUTADO A: ',b:true}, d.executado], {before:0, after:40}));
-    paras.push(mkPara([{text:'REGISTADO A: ',b:true}, d.registado||''], {before:0, after:40}));
-    paras.push(mkPara([{text:'COM O Nº: ',b:true}, d.numero||''], {before:0, after:40}));
-    if(d.codigo) {
-      paras.push(mkPara([
-        'Poderá consultar este registo em http://oa.pt/atos, usando o código ',
-        {text:d.codigo,b:true}, '.'
-      ], {before:0, after:60}));
-    }
-    paras.push(empty());
-  }
+<!-- ═══ PÁGINA 4 — Declaração do Arrendatário ═══ -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">DECLARAÇÃO DE<br>ALOJAMENTO</div>
+        <div class="subtitle">Arrendatário — MA Advocacia</div>
+      </div>
+      <div class="logo-box"><img src="../../img/icone/ma.png" alt="MA Advocacia"></div>
+    </div>
 
-  // Notas finais
-  paras.push(mkPara('----Sem cobrança de honorários.', {before:0, after:40}));
-  paras.push(mkPara('----Não há lugar ao pagamento de imposto de selo.', {before:0, after:40}));
-  paras.push(mkPara(`----Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}.`, {before:0, after:80}));
-  paras.push(empty());
-  paras.push(mkPara('O Advogado,', {before:0, after:80}));
-  paras.push(empty());
-  paras.push(mkPara('MARCIO ANDRIO', {b:true, before:0, after:40}));
-  paras.push(mkPara('C.P. nº 68721P', {before:0, after:0}));
+    <div class="decl-body">
+      <p>Para os devidos efeitos, Eu, <strong><span id="p4_nome">[NOME ARRENDATÁRIO]</span></strong>, portador do <strong><span id="p4_bi">[BI]</span></strong> número: <strong><span id="p4_binumero">[NÚMERO]</span></strong>, nascido em <strong><span id="p4_nasc">[NASCIMENTO]</span></strong>, válido até <strong><span id="p4_val">[VALIDADE]</span></strong>, com morada habitual na <strong><span id="p4_morada">[MORADA]</span></strong>.</p>
 
-  // ═══════════════════════════════════════════════════════════════
-  // PÁGINA 2: Declaração de Alojamento (requerente) — assinado por nome1
-  // ═══════════════════════════════════════════════════════════════
-  paras.push(pgBreak());
-  paras.push(empty());
-  paras.push(mkPara('Declaração de Alojamento (requerente)', {center:true, b:true, before:0, after:120}));
-  paras.push(empty());
+      <p class="decl-bold-center">Declaro sob compromisso de honra que</p>
 
-  paras.push(mkPara([
-    'Para os devidos efeitos, eu, ',
-    {text:d.nome1,b:true},
-    ', portador do ',
-    d.bi1,
-    ' número: ',
-    {text:d.binumero1,b:true},
-    ', nascido em ',
-    d.nascimento1,
-    ', válido até: ',
-    d.validade1,
-    ', declaro sob compromisso de honra que possuo alojamento, em regime familiar (parentesco: ',
-    d.vinculo,
-    '), residindo na ',
-    d.morada,
-    ', desde ',
-    d.vigencia,
-    '.'
-  ], {before:0, after:160}));
+      <p><strong><span id="p4_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p4_bi1">[BI]</span></strong> número: <strong><span id="p4_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p4_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p4_val1">[VALIDADE]</span></strong>, reside no referido imóvel, desde <strong><span id="p4_vigencia">[VIGÊNCIA]</span></strong>, em regime de alojamento familiar (parentesco: <strong><span id="p4_vinculo">[PARENTESCO]</span></strong>), local pelo qual sou responsável enquanto arrendatário do contrato de arrendamento, conforme comprovativos em anexo (<strong><span id="p4_doc">[DOCUMENTO]</span></strong>), e que a casa reúne condições de habitabilidade.</p>
+    </div>
 
-  paras.push(empty());
-  paras.push(mkPara(`Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}`, {before:0, after:0}));
-  paras.push(empty());
-  paras.push(empty());
-  paras.push(empty());
-  paras.push(mkPara('_____________________________________________', {before:0, after:40}));
-  paras.push(mkPara({text:d.nome1,b:true}, {center:true, before:0, after:0}));
+    <div class="decl-sig">
+      <div class="sig-city"><span id="p4_date">Almada, — de — de —</span></div>
+      <div class="sig-line"></div>
+      <div class="sig-name"><span id="p4_sig_nome">[NOME ARRENDATÁRIO]</span></div>
+    </div>
 
-  // ═══════════════════════════════════════════════════════════════
-  // PÁGINA 3: Declaração de Alojamento — assinado por nome
-  // ═══════════════════════════════════════════════════════════════
-  paras.push(pgBreak());
-  paras.push(empty());
-  paras.push(mkPara('Declaração de Alojamento', {center:true, b:true, before:0, after:120}));
-  paras.push(empty());
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">www.ma-advocacia.com<br>+351 960 389 573<br>marcio.andrio@ma-advocacia.com</div>
+    </div>
+  </div>
+</div>
+</div>
 
-  paras.push(mkPara([
-    'Para os devidos efeitos, Eu, ',
-    {text:d.nome,b:true},
-    ', portador do ',
-    d.bi,
-    ' número: ',
-    {text:d.binumero,b:true},
-    ', nascido em ',
-    d.nascimento,
-    ', válido até: ',
-    d.validade,
-    ', com morada habitual na ',
-    d.morada,
-    '.'
-  ], {before:0, after:100}));
-
-  paras.push(empty());
-
-  paras.push(mkPara([
-    'Declaro sob compromisso de honra que ',
-    {text:d.nome1,b:true},
-    ', portador do ',
-    d.bi1,
-    ' número: ',
-    {text:d.binumero1,b:true},
-    ', nascido em ',
-    d.nascimento1,
-    ', válido até: ',
-    d.validade1,
-    ', reside no referido imóvel, desde ',
-    d.vigencia,
-    ', em regime de alojamento familiar (parentesco: ',
-    d.vinculo,
-    '), local pelo qual sou responsável enquanto arrendatário do contrato de arrendamento, conforme comprovativos em anexo (',
-    d.documento,
-    '), e que a casa reúne condições de habitabilidade.'
-  ], {before:0, after:160}));
-
-  paras.push(empty());
-  paras.push(mkPara(`Almada, ${dt.dia} de ${dt.mes} de ${dt.ano}`, {before:0, after:0}));
-  paras.push(empty());
-  paras.push(empty());
-  paras.push(empty());
-  paras.push(mkPara('_____________________________________________', {before:0, after:40}));
-  paras.push(mkPara({text:d.nome,b:true}, {center:true, before:0, after:0}));
-
-  return paras.join('');
-}
-
-// ─── Main generator ────────────────────────────────────────────────────────
-async function generate() {
-  // Collect data
-  const get = id => document.getElementById(id).value.trim();
-  const d = {
-    nome      : get('nome').toUpperCase(),
-    nascimento: get('nascimento'),
-    bi        : get('bi'),
-    binumero  : get('binumero').toUpperCase(),
-    validade  : get('validade'),
-    nome1     : get('nome1').toUpperCase(),
-    nascimento1:get('nascimento1'),
-    bi1       : get('bi1'),
-    binumero1 : get('binumero1').toUpperCase(),
-    validade1 : get('validade1'),
-    morada    : get('morada'),
-    documento : get('documento'),
-    folhas    : get('folhas'),
-    vinculo   : get('vinculo'),
-    vigencia  : get('vigencia'),
-    executado : get('executado'),
-    registado : get('registado'),
-    numero    : get('numero'),
-    codigo    : get('codigo'),
-  };
-
-  // Validate required fields
-  const required = ['nome','nascimento','bi','binumero','validade',
-                    'nome1','nascimento1','bi1','binumero1','validade1',
-                    'morada','documento','folhas','vinculo','vigencia'];
-  for(const f of required) {
-    if(!d[f]) { showStatus(`⚠️ Campo obrigatório em falta: ${f}`, 'err'); return; }
-  }
-  if(!modeloFile) { showStatus('⚠️ Selecione o ficheiro modelo.docx', 'err'); return; }
-
-  const btn = document.getElementById('btnGerar');
-  btn.disabled = true; btn.textContent = '⏳ A gerar documento...';
-  showStatus('A processar o modelo e a gerar o documento...', 'info');
-
-  try {
-    // Load the modelo.docx
-    const arrayBuffer = await modeloFile.arrayBuffer();
-    const zip = await JSZip.loadAsync(arrayBuffer);
-
-    // Read existing document.xml
-    let docXml = await zip.files['word/document.xml'].async('string');
-
-    // Extract sectPr (page setup: margins, header/footer refs, page size)
-    // from the original — we keep it to preserve the letterhead headers/footers
-    const sectPrMatch = docXml.match(/<w:sectPr[\s\S]*?<\/w:sectPr>/);
-    const sectPr = sectPrMatch ? sectPrMatch[0] : '<w:sectPr/>';
-
-    // Generate new body content
-    const bodyContent = generateBody(d);
-
-    // Replace the entire body
-    const newDocXml = docXml.replace(
-      /<w:body>[\s\S]*<\/w:body>/,
-      `<w:body>${bodyContent}${sectPr}</w:body>`
-    );
-
-    zip.file('word/document.xml', newDocXml);
-
-    // Generate output
-    const blob = await zip.generateAsync({
-      type: 'blob',
-      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      compression: 'DEFLATE',
-      compressionOptions: { level: 6 }
-    });
-
-    // Build filename from nome1 (the requerente)
-    const safeName = d.nome1.replace(/[^A-Z0-9 ]/gi,'').replace(/\s+/g,'_');
-    const filename = `Declaracao_Alojamento_${safeName}.docx`;
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 60000);
-
-    showStatus(`✅ Documento gerado: ${filename}`, 'ok');
-  } catch(e) {
-    console.error(e);
-    showStatus('❌ Erro ao gerar documento: ' + e.message, 'err');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '✅ Gerar Declaração de Alojamento';
-  }
-}
-</script>
 </body>
 </html>
