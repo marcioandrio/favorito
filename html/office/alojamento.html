@@ -129,7 +129,12 @@ function update(){
   const nascimento1= v('f_nascimento1') || '[NASCIMENTO]';
   const morada     = v('f_morada')      || '[MORADA]';
   const folhas     = v('f_folhas')      || '[FOLHAS]';
+  const regime     = v('f_regime')      || 'familiar';
   const vinculo    = v('f_vinculo')     || '[PARENTESCO]';
+  const temVinculo  = regime !== 'de arrendamento' && regime !== 'de habitação patronal';
+  const regimeStr   = regime === 'de habitação patronal' ? `regime ${regime} (funcionário)`
+                    : temVinculo ? `regime ${regime} (parentesco: ${vinculo})`
+                    : `regime ${regime}`;
   const vigencia   = v('f_vigencia')    || '[VIGÊNCIA]';
   const documento  = v('f_documento')   || '[DOCUMENTO]';
   const executado  = v('f_executado')   || '[EXECUTADO]';
@@ -174,7 +179,7 @@ function update(){
   el('p3_binumero1').textContent     = binumero1.toUpperCase();
   el('p3_nasc1').textContent         = nascimento1;
   el('p3_val1').textContent          = validade1;
-  el('p3_vinculo').textContent       = vinculo;
+  el('p3_regime').textContent        = regimeStr;
   el('p3_morada').textContent        = morada;
   el('p3_vigencia').textContent      = vigencia;
   el('p3_date').textContent          = dateStr;
@@ -193,7 +198,7 @@ function update(){
   el('p4_nasc1').textContent         = nascimento1;
   el('p4_val1').textContent          = validade1;
   el('p4_vigencia').textContent      = vigencia;
-  el('p4_vinculo').textContent       = vinculo;
+  el('p4_regime').textContent        = regimeStr;
   el('p4_doc').textContent           = documento;
   el('p4_date').textContent          = dateStr;
   el('p4_sig_nome').textContent      = nome.toUpperCase();
@@ -241,34 +246,52 @@ async function parsePDF(file){
       txt += content.items.map(x => x.str).join(' ') + ' ';
     }
     txt = txt.replace(/\s+/g,' ').trim();
+    console.log('PDF TEXT:', txt); // debug
 
-    // Arrendatário (UM)
-    const mNome    = txt.match(/UM\s*[—-]\s*Reconheço[^d]+de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?),\s*na qual/i);
-    const mBiType  = /Título de Residência/i.test(txt.substring(0, txt.indexOf('DOIS')||999)) ? 'Título de Residência' : 'Passaporte';
-    const mBinum   = txt.match(/denominado (?:Passaporte|Título de Residência) número:\s*([A-Z0-9]+),\s*válido até:\s*([^,]+),\s*no documento/i);
-    // Requerente (DOIS)
-    const mDois    = txt.match(/DOIS\s*[—-]\s*Reconheço[^d]+de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?),\s*na qual/i);
-    const mBi1Type = txt.match(/DOIS[^P]*?(Passaporte|Título de Residência)/i);
-    const mBi1num  = txt.match(/DOIS.+?número:\s*([A-Z0-9]+),\s*válido até:\s*([^,]+),\s*no documento/i);
-    // Nascimentos (de CERTIFICO b e c)
-    const mNascs   = [...txt.matchAll(/nascido\(a\) em\s+([^,]+),\s*válido até/gi)];
-    // Folhas e documento
-    const mFolhas  = txt.match(/composta por\s+(.+?)\s+folhas.*?referente ao\s+(?!Passaporte|Título)([^\.]+)\./i);
-    // Morada e vigência
-    const mMorada  = txt.match(/residindo na\s+(.+?),\s*desde\s+([^\.]+)\./i);
+    // ── Dividir em secções ──
+    const iUM   = txt.search(/\bUM\b/);
+    const iDOIS = txt.search(/\bDOIS\b/);
+    const iTRES = txt.search(/\bTR[EÊ]S\b/);
+    const iCERT = txt.search(/\bCERTIFICO\b/);
+    const umSec   = iDOIS > 0 ? txt.slice(iUM,   iDOIS) : txt.slice(iUM);
+    const doisSec = iTRES > 0 ? txt.slice(iDOIS, iTRES) : txt.slice(iDOIS);
+    const certSec = iCERT > 0 ? txt.slice(iCERT)        : '';
+
+    // ── Nomes (de "assinatura de X, na qual") ──
+    const mNomes = [...txt.matchAll(/assinatura de\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?)\s*,\s*na qual/gi)];
+
+    // ── Tipo de BI ──
+    const mBiType  = /Título de Resid/i.test(umSec)   ? 'Título de Residência' : 'Passaporte';
+    const mBi1Type = /Título de Resid/i.test(doisSec) ? 'Título de Residência' : 'Passaporte';
+
+    // ── Número + validade (de cada secção) ──
+    const mBinum  = umSec.match(/número:\s*([A-Z0-9]+)\s*[,.]?\s*válido até:\s*([^,.\n]+)/i);
+    const mBi1num = doisSec.match(/número:\s*([A-Z0-9]+)\s*[,.]?\s*válido até:\s*([^,.\n]+)/i);
+
+    // ── Nascimentos (de b) e c) em CERTIFICO) ──
+    const mNascs = [...certSec.matchAll(/nascido\(a\) em\s+([^,]+),?\s*válido/gi)];
+
+    // ── CERTIFICO d) — folhas e documento ──
+    const dMatch = certSec.match(/\bd\)\s*A fotocópia[^.]*composta por\s+(.+?)\s+folhas[^.]*referente ao\s+(.+?)\./i);
+
+    // ── Morada + vigência (página 3) ──
+    const mMorada  = txt.match(/residindo na\s+(.+?)\s*,\s*desde\s*([^.]+)\./i);
+
+    // ── Vínculo ──
     const mVinculo = txt.match(/parentesco:\s*([^)]+)\)/i);
 
-    if(mNome)      el('f_nome').value      = mNome[1].trim();
+    // ── Preencher campos ──
+    if(mNomes[0])  el('f_nome').value       = mNomes[0][1].trim();
     el('f_bi').value = mBiType;
-    if(mBinum){    el('f_binumero').value  = mBinum[1].trim(); el('f_validade').value = mBinum[2].trim(); }
-    if(mNascs[0]) el('f_nascimento').value = mNascs[0][1].trim();
-    if(mDois)      el('f_nome1').value     = mDois[1].trim();
-    if(mBi1Type)   el('f_bi1').value       = mBi1Type[1];
-    if(mBi1num){   el('f_binumero1').value = mBi1num[1].trim(); el('f_validade1').value = mBi1num[2].trim(); }
-    if(mNascs[1]) el('f_nascimento1').value= mNascs[1][1].trim();
-    if(mMorada){   el('f_morada').value    = mMorada[1].trim(); el('f_vigencia').value  = mMorada[2].trim(); }
-    if(mVinculo)   el('f_vinculo').value   = mVinculo[1].trim();
-    if(mFolhas){   el('f_folhas').value    = mFolhas[1].trim(); el('f_documento').value = mFolhas[2].trim(); }
+    if(mBinum){    el('f_binumero').value   = mBinum[1].trim();  el('f_validade').value  = mBinum[2].trim().replace(/[;,]$/,''); }
+    if(mNascs[0]) el('f_nascimento').value  = mNascs[0][1].trim();
+    if(mNomes[1])  el('f_nome1').value      = mNomes[1][1].trim();
+    el('f_bi1').value = mBi1Type;
+    if(mBi1num){   el('f_binumero1').value  = mBi1num[1].trim(); el('f_validade1').value = mBi1num[2].trim().replace(/[;,]$/,''); }
+    if(mNascs[1]) el('f_nascimento1').value = mNascs[1][1].trim();
+    if(mMorada){   el('f_morada').value     = mMorada[1].trim(); el('f_vigencia').value  = mMorada[2].trim().replace(/[;,]$/,''); }
+    if(mVinculo)   el('f_vinculo').value    = mVinculo[1].trim();
+    if(dMatch){    el('f_folhas').value     = dMatch[1].trim();  el('f_documento').value = dMatch[2].trim(); }
 
     update();
     const nome1 = v('f_nome1') || 'cliente';
@@ -297,10 +320,17 @@ function scalePage(){
   });
 }
 
+function toggleVinculo(){
+  const regime = v('f_regime') || 'familiar';
+  const show = regime !== 'de arrendamento' && regime !== 'de habitação patronal';
+  document.getElementById('div_vinculo').style.display = show ? '' : 'none';
+  document.getElementById('label_vinculo').textContent = regime === 'de habitação patronal' ? 'Funcionário (nome)' : 'Parentesco (ex: cônjuge, primo, mãe)';
+}
+
 const TAB_ORDER = [
   'f_nome','f_bi','f_binumero','f_validade','f_nascimento',
   'f_nome1','f_bi1','f_binumero1','f_validade1','f_nascimento1',
-  'f_morada','f_folhas','f_vinculo','f_vigencia','f_documento',
+  'f_morada','f_folhas','f_regime','f_vinculo','f_vigencia','f_documento',
   'f_executado','f_registado','f_numero','f_codigo'
 ];
 function nextField(e){
@@ -424,8 +454,18 @@ window.addEventListener('resize', scalePage);
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
   <div>
-    <div class="fp-label">Parentesco / Vínculo</div>
-    <input id="f_vinculo" class="fp-input" type="text" placeholder="ex: cônjuge, amigo, filho"
+    <div class="fp-label">Tipo de regime</div>
+    <select id="f_regime" class="fp-input" onchange="toggleVinculo();update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="familiar">Regime Familiar</option>
+      <option value="de alojamento">Regime de Alojamento</option>
+      <option value="de arrendamento">Regime de Arrendamento</option>
+      <option value="de habitação patronal">Habitação Patronal (cedência pela entidade patronal)</option>
+    </select>
+  </div>
+  <div id="div_vinculo">
+    <div class="fp-label" id="label_vinculo">Parentesco (ex: cônjuge, primo, mãe)</div>
+    <input id="f_vinculo" class="fp-input" type="text" placeholder="ex: cônjuge"
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
   <div>
@@ -606,7 +646,7 @@ window.addEventListener('resize', scalePage);
     </div>
 
     <div class="decl-body">
-      <p>Para os devidos efeitos, eu, <strong><span id="p3_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p3_bi1">[BI]</span></strong> número: <strong><span id="p3_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p3_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p3_val1">[VALIDADE]</span></strong>, declaro sob compromisso de honra que possuo alojamento, em regime familiar (parentesco: <strong><span id="p3_vinculo">[PARENTESCO]</span></strong>), residindo na <strong><span id="p3_morada">[MORADA]</span></strong>, desde <strong><span id="p3_vigencia">[VIGÊNCIA]</span></strong>.</p>
+      <p>Para os devidos efeitos, eu, <strong><span id="p3_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p3_bi1">[BI]</span></strong> número: <strong><span id="p3_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p3_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p3_val1">[VALIDADE]</span></strong>, declaro sob compromisso de honra que possuo alojamento, em <strong><span id="p3_regime">regime familiar</span></strong>, residindo na <strong><span id="p3_morada">[MORADA]</span></strong>, desde <strong><span id="p3_vigencia">[VIGÊNCIA]</span></strong>.</p>
     </div>
 
     <div class="decl-sig">
@@ -644,7 +684,7 @@ window.addEventListener('resize', scalePage);
 
       <p class="decl-bold-center">Declaro sob compromisso de honra que</p>
 
-      <p><strong><span id="p4_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p4_bi1">[BI]</span></strong> número: <strong><span id="p4_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p4_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p4_val1">[VALIDADE]</span></strong>, reside no referido imóvel, desde <strong><span id="p4_vigencia">[VIGÊNCIA]</span></strong>, em regime de alojamento familiar (parentesco: <strong><span id="p4_vinculo">[PARENTESCO]</span></strong>), local pelo qual sou responsável enquanto arrendatário do contrato de arrendamento, conforme comprovativos em anexo (<strong><span id="p4_doc">[DOCUMENTO]</span></strong>), e que a casa reúne condições de habitabilidade.</p>
+      <p><strong><span id="p4_nome1">[NOME REQUERENTE]</span></strong>, portador do <strong><span id="p4_bi1">[BI]</span></strong> número: <strong><span id="p4_binumero1">[NÚMERO]</span></strong>, nascido em <strong><span id="p4_nasc1">[NASCIMENTO]</span></strong>, válido até <strong><span id="p4_val1">[VALIDADE]</span></strong>, reside no referido imóvel, desde <strong><span id="p4_vigencia">[VIGÊNCIA]</span></strong>, em <strong><span id="p4_regime">regime familiar</span></strong>, local pelo qual sou responsável enquanto arrendatário do contrato de arrendamento, conforme comprovativos em anexo (<strong><span id="p4_doc">[DOCUMENTO]</span></strong>), e que a casa reúne condições de habitabilidade.</p>
     </div>
 
     <div class="decl-sig">
