@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendário Editorial — MA Advocacia</title>
+  <link rel="icon" href="../../html/home/imagem/icone/ma.png">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #151820;
+      --surface2: #1c2030;
+      --border: #252a3a;
+      --accent: #c4a35a;
+      --accent2: #8b6f3a;
+      --text: #e8e4dc;
+      --text2: #9a9585;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: var(--accent);
+      letter-spacing: .03em;
+    }
+    header p {
+      font-size: .8rem;
+      color: var(--text2);
+      margin-top: 2px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .leg {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .leg-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .week-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text2);
+      margin: 1.5rem 0 .6rem;
+    }
+    .week-label:first-of-type { margin-top: 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .day {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px;
+      min-height: 90px;
+    }
+    .day.weekend { background: var(--bg); }
+    .day.today { border-color: var(--accent); }
+
+    .day-name {
+      font-size: 10px;
+      color: var(--text2);
+      margin-bottom: 2px;
+      font-family: sans-serif;
+    }
+    .day-num {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .today .day-num { color: var(--accent); }
+
+    .post {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 6px;
+      font-size: 11px;
+      line-height: 1.35;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 4px;
+      font-family: sans-serif;
+      transition: opacity .15s;
+    }
+    .post:hover { opacity: .8; }
+    .post:last-child { margin-bottom: 0; }
+
+    .noticia  { background: #1a3a5c; color: #7bb8f0; }
+    .dica     { background: #1a3a28; color: #6dba8a; }
+    .mito     { background: #3a2e10; color: #e0a835; }
+    .caso     { background: #2a1f40; color: #a98de0; }
+    .story    { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+    .tip {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 1.5rem;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+      font-family: sans-serif;
+      line-height: 1.6;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 90%;
+    }
+    .modal h3 { font-size: 1rem; color: var(--accent); margin-bottom: .5rem; font-weight: normal; }
+    .modal p { font-size: .85rem; color: var(--text2); line-height: 1.6; }
+    .modal .close-btn {
+      margin-top: 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: .8rem;
+    }
+    .modal .close-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+      .day { padding: 5px; min-height: 70px; }
+      .post { font-size: 9px; padding: 3px 4px; }
+      .day-num { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <h1>Calendário Editorial — Instagram</h1>
+      <p>MA Advocacia · Conteúdo de Imigração</p>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#1a3a5c;border:1px solid #7bb8f0"></span>Notícia</span>
+    <span class="leg"><span class="leg-dot" style="background:#1a3a28;border:1px solid #6dba8a"></span>Dica jurídica</span>
+    <span class="leg"><span class="leg-dot" style="background:#3a2e10;border:1px solid #e0a835"></span>Mito vs. Realidade</span>
+    <span class="leg"><span class="leg-dot" style="background:#2a1f40;border:1px solid #a98de0"></span>Caso / Testemunho</span>
+    <span class="leg"><span class="leg-dot" style="background:#1c2030;border:1px solid #252a3a"></span>Story</span>
+  </div>
+
+  <div class="week-label">Semana 1 — 28 Jun a 4 Jul 2026</div>
+  <div class="grid">
+    <div class="day weekend">
+      <div class="day-name">Dom</div>
+      <div class="day-num">28</div>
+      <button class="post story" onclick="openModal('Story — Citação', 'Frase motivacional sobre imigração e recomeço. Publicar nos Stories às 10h.')">Story citação</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Seg</div>
+      <div class="day-num">29</div>
+    </div>
+    <div class="day today">
+      <div class="day-name">Ter</div>
+      <div class="day-num">30</div>
+      <button class="post noticia" onclick="openModal('3 Notícias — AIMA / Imigração', 'Pesquisar no dnbrasil.dn.pt as notícias mais recentes sobre AIMA, vistos e autorizações de residência. Publicar às 12h ou 18h.')">3 notícias AIMA</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Qua</div>
+      <div class="day-num">1 Jul</div>
+      <button class="post mito" onclick="openModal('Mito vs. Realidade — NIF', 'Carrossel: \"Preciso de NIF para tudo em Portugal?\" Desmistificar o papel do NIF para imigrantes. Publicar às 18h.')">Mito: NIF obrigatório?</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Qui</div>
+      <div class="day-num">2</div>
+      <button class="post story" onclick="openModal('Story — Dica rápida', 'Dica visual rápida: documentos para autorização de residência. Publicar nos Stories ao meio-dia.')">Story dica rápida</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Sex</div>
+      <div class="day-num">3</div>
+      <button class="post dica" onclick="openModal('Dica jurídica — Reagrupamento familiar', 'Post explicando o processo de reagrupamento familiar em Portugal: quem tem direito, documentos e prazos. Publicar às 18h.')">Dica: reagrupamento</button>
+    </div>
+    <div class="day weekend">
+      <div class="day-name">Sáb</div>
+      <div class="day-num">4</div>
+    </div>
+  </div>
+
+  <div class="week-label">Semana 2 — 5 a 11 Jul 2026</div>
+  <div class="grid">
+    <div class="day weekend">
+      <div class="day-name">Dom</div>
+      <div class="day-num">5</div>
+      <button class="post story" onclick="openModal('Story — Curiosidade', 'Curiosidade sobre imigração em Portugal: número de brasileiros, estatísticas recentes. Publicar nos Stories.')">Story curiosidade</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Seg</div>
+      <div class="day-num">6</div>
+    </div>
+    <div class="day">
+      <div class="day-name">Ter</div>
+      <div class="day-num">7</div>
+      <button class="post caso" onclick="openModal('Caso — Cliente aprovado', 'Testemunho anonimizado de cliente que conseguiu autorização de residência. Sempre com permissão do cliente e sem dados pessoais. Publicar às 12h.')">Caso: cliente aprovado</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Qua</div>
+      <div class="day-num">8</div>
+      <button class="post noticia" onclick="openModal('3 Notícias — Semana', 'Pesquisar no dnbrasil.dn.pt as notícias mais impactantes da semana sobre imigração. Publicar às 18h.')">3 notícias semana</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Qui</div>
+      <div class="day-num">9</div>
+      <button class="post story" onclick="openModal('Story — Checklist', 'Checklist visual dos documentos necessários para visto de residência. Formato de lista simples nos Stories.')">Story checklist docs</button>
+    </div>
+    <div class="day">
+      <div class="day-name">Sex</div>
+      <div class="day-num">10</div>
+      <button class="post mito" onclick="openModal('Mito vs. Realidade — Prazos AIMA', 'Carrossel desmistificando os prazos reais da AIMA para análise de pedidos. Publicar às 18h.')">Mito: prazos AIMA</button>
+    </div>
+    <div class="day weekend">
+      <div class="day-name">Sáb</div>
+      <div class="day-num">11</div>
+    </div>
+  </div>
+
+  <p class="tip">
+    Melhor horário para publicar: <strong style="color:var(--text)">terça–sexta, 12h–13h ou 18h–20h</strong>.<br>
+    Clica em qualquer post para ver os detalhes. Os posts de notícias são gerados automaticamente com <code>/ma-marketing</code> no Claude.
+  </p>
+
+</div>
+
+<div class="modal-overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <h3 id="modal-title"></h3>
+    <p id="modal-body"></p>
+    <button class="close-btn" onclick="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<script>
+  function openModal(title, body) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').textContent = body;
+    document.getElementById('overlay').classList.add('open');
+  }
+  function closeModal(e) {
+    if (!e || e.target === document.getElementById('overlay')) {
+      document.getElementById('overlay').classList.remove('open');
+    }
+  }
+</script>
+</body>
+</html>
