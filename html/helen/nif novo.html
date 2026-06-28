@@ -164,8 +164,12 @@ async function parseMD(file){
     const sexo      = campo('Sexo');
     const nasc      = campo('Data de nascimento');
     const localNasc = campo('Local de nascimento') || campo('Naturalidade');
-    const morada    = campo('Morada');
     const passNum   = campo('Nº Passaporte');
+
+    // Morada: prioridade Portugal, fallback outros campos, ignora "não encontrada"
+    const isValida = (v) => v && !/n[ãa]o encontrad|N\/A/i.test(v);
+    const moradaPT  = campo('Morada \\(Portugal\\)') || campo('Morada Portugal') || campo('Morada');
+    const morada    = isValida(moradaPT) ? moradaPT : null;
     const emissao   = campo('Data de emissão');
     const validade  = campo('Data de validade') || campo('Válido até');
 
