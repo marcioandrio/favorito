@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procuração AIMA — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
+
+/* ── Toolbar ── */
+.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
+.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+
+/* ── Form panel ── */
+.form-panel { width: 208mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
+.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
+.fp-input:focus { border-color: #c9a85c; }
+.fp-input::placeholder { color: #555; }
+select.fp-input { cursor: pointer; }
+.full { grid-column: 1 / -1; }
+
+/* ── A4 Page ── */
+#page-scale-wrapper { display: flex; justify-content: center; }
+.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
+.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
+.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1a0e00; letter-spacing: .1em; line-height: 1.2; }
+.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
+.logo-box { flex-shrink: 0; margin-left: 16px; }
+.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
+
+/* ── Body ── */
+.doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
+.doc-title { font-family: 'Playfair Display', serif; font-weight: 800; font-size: 15pt; letter-spacing: .15em; color: #4a1628; text-align: center; margin-bottom: 20px; }
+.doc-para { text-align: justify; line-height: 1.65; margin-bottom: 14px; }
+.doc-date { text-align: right; margin-top: 28px; margin-bottom: 6px; font-size: 11pt; }
+.sig-line { margin-top: 50pt; border-top: 1px solid #1a0e00; width: 220px; margin-left: auto; margin-right: auto; }
+.sig-name { text-align: center; font-weight: 700; font-size: 11pt; margin-top: 6px; }
+
+/* ── Footer ── */
+.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: 8px; border-top: 1px solid #c9a85c; }
+.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
+.rec-footer .role { font-size: 7pt; letter-spacing: .05em; color: #6b5a3a; margin-top: 2px; }
+.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
+
+/* ── Mobile ── */
+@media (max-width: 800px) {
+  body { align-items: flex-start; }
+  .toolbar { position: relative; }
+  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
+  #page-scale-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
+  .page { margin-top: 0; transform-origin: top center; }
+}
+
+/* ── Upload zone ── */
+.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 12px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
+.upload-zone:hover { background: rgba(201,168,92,.08); }
+.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
+.upload-zone.err { border-color: #e06c75; color: #e06c75; }
+
+/* ── Output box ── */
+.output-panel { width: 208mm; max-width: 100%; background: #1a1a2e; border-radius: 4px; margin-top: 12px; padding: 14px 18px; }
+.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.output-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .08em; font-family: monospace; }
+.output-copy { background: #c9a85c; color: #1a0e00; border: none; border-radius: 3px; padding: 5px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Lora', serif; }
+.output-copy:active { opacity: .75; }
+.output-text { width: 100%; background: #0d0d1a; border: 1px solid #333; border-radius: 3px; padding: 12px 14px; color: #d4c8a8; font-family: 'Lora', serif; font-size: 12px; line-height: 1.75; resize: vertical; min-height: 160px; outline: none; }
+
+/* ── Print ── */
+@media print {
+  body { background: #fff; padding: 0; }
+  .toolbar, .form-panel, .output-panel { display: none; }
+  #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+  .page { box-shadow: none; margin: 0; width: 208mm; min-height: 295mm; transform: none !important; }
+  @page { size: A4 portrait; margin: 0; }
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const today = new Date();
+const DIA = String(today.getDate());
+const MES = MESES[today.getMonth()];
+const ANO = String(today.getFullYear());
+
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+function el(id){ return document.getElementById(id); }
+
+function update(){
+  const nome       = v('f_nome')       || '[NOME COMPLETO]';
+  const docTipo    = v('f_doc_tipo')   || 'Passaporte';
+  const binumero   = v('f_binumero')   || '[NÚMERO]';
+  const nascimento = v('f_nascimento') || '[DATA DE NASCIMENTO]';
+  const validade   = v('f_validade')   || '[VALIDADE]';
+  const morada     = v('f_morada')     || '[MORADA]';
+  const nipcTipo   = v('f_nipc_tipo');
+  const nipcNum    = v('f_nipc')       || '[NÚMERO]';
+  const cidade     = v('f_cidade')     || 'Almada';
+
+  const nomeUp = nome.toUpperCase();
+  const passUp = binumero.toUpperCase();
+
+  // Frase NIPC condicional
+  const temNipc = nipcTipo && nipcTipo !== 'nenhum';
+  const nipcFrase = temNipc
+    ? `obter informações acerca do ${nipcTipo}: ${nipcNum}; `
+    : '';
+
+  // Mostrar/ocultar campo número NIPC
+  el('div_nipc').style.display = temNipc ? '' : 'none';
+
+  el('r_doc_tipo').textContent = docTipo;
+
+  const corpo = `A outorgante ${nomeUp}, portador(a) do ${docTipo} número: ${passUp}, nascido(a) em ${nascimento}, válido até ${validade}, com morada e residência habitual na ${morada}, nomeia como seu Procurador com poderes especiais e necessários o Exmo. Sr. Dr. MARCIO ANDRIO, advogado, portador da cédula profissional número: 68721P, telefone: (+351) 960 389 573, e-mail: marcio.andrio@icloud.com, com domicilio profissional à Avenida Dom Afonso Henriques, 14 2º Dto, 2800-009, Almada, para em seu nome Interpor Recurso Hierárquico perante o extinto Serviços de Estrangeiros e Fronteiras – SEF, atual Agência para Integração Migração e Asilo – AIMA contra omissão de ato administrativo acerca do pedido de concessão de autorização de residência temporária, efetuado nos termos do n.º 2, do art.º 88.º da Lei nº 23/2007, de 04 de julho, na sua atual redação; ${nipcFrase}prestar declaração; assinar formulários; levantamento de residência; requerer juntada de documentos; e proceder o levantamento de cartas registadas pelos correios.`;
+
+  // A4
+  el('r_nome').textContent       = nomeUp;
+  el('r_binumero').textContent   = passUp;
+  el('r_nascimento').textContent = nascimento;
+  el('r_validade').textContent   = validade;
+  el('r_morada').textContent     = morada;
+  el('r_nipc').style.display     = temNipc ? '' : 'none';
+  if(temNipc){
+    el('r_nipc_tipo').textContent = nipcTipo;
+    el('r_nipc_num').textContent  = nipcNum;
+  }
+  el('r_date').textContent       = `${cidade}, ${DIA} de ${MES} de ${ANO}`;
+  el('r_nome_sig').textContent   = nomeUp;
+
+  // Output copiável
+  el('output-text').value = corpo;
+}
+
+function copiarTexto(){
+  const ta = el('output-text');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(()=>{
+    const btn = el('btn-copy');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(()=>{ btn.textContent = 'Copiar'; }, 2000);
+  });
+}
+
+async function parsePDF(file){
+  const zone = el('upload-zone');
+  zone.className = 'upload-zone full';
+  zone.innerHTML = '⏳ A ler PDF… <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let txt = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const content = await pg.getTextContent();
+      txt += content.items.map(x => x.str).join(' ') + ' ';
+    }
+    txt = txt.replace(/\s+/g,' ').trim();
+
+    const mNome     = txt.match(/outorgante\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ\s]+?),\s*portador/i);
+    const mDocTipo  = /[Tt]ítulo de [Rr]esid[eê]ncia/i.test(txt) ? 'Título de Residência' : 'Passaporte';
+    const mPass     = txt.match(/(?:Passaporte|[Tt]ítulo de [Rr]esid[eê]ncia) n[uú]mero[:\s]+([A-Z0-9]+)/i);
+    const mNasc     = txt.match(/nascido\(a\) em\s+([^,]+),\s*v[aá]lido/i);
+    const mValidade = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*com morada/i);
+    const mMorada   = txt.match(/morada e resid[eê]ncia habitual na\s+(.+?),\s*nomeia/i);
+    const mNipc     = txt.match(/acerca do (NIPC|M\.I\.|NIE)[:\s]+([A-Z0-9]+)/i);
+
+    if(mNome)     el('f_nome').value      = mNome[1].trim();
+    el('f_doc_tipo').value = mDocTipo;
+    if(mPass)     el('f_binumero').value  = mPass[1].trim();
+    if(mNasc)     el('f_nascimento').value= mNasc[1].trim();
+    if(mValidade) el('f_validade').value  = mValidade[1].trim();
+    if(mMorada)   el('f_morada').value    = mMorada[1].trim();
+    if(mNipc){
+      el('f_nipc_tipo').value = mNipc[1];
+      el('f_nipc').value      = mNipc[2].trim();
+    }
+
+    update();
+    const nomeExibir = v('f_nome') || 'cliente';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ PDF lido — ${nomeExibir} <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">`;
+  } catch(e){
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Não foi possível ler o PDF — preencha manualmente <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+    console.error(e);
+  }
+}
+
+function scalePage(){
+  const wrapper = el('page-scale-wrapper');
+  const page = wrapper.querySelector('.page');
+  if(!page) return;
+  const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+  if(vw < pw){
+    const s = vw / pw;
+    page.style.transform = 'scale('+s+')';
+    page.style.marginBottom = '-'+(pw*(1-s))+'px';
+    wrapper.style.height = (page.offsetHeight*s)+'px';
+  } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+}
+
+const TAB_ORDER = ['f_nome','f_doc_tipo','f_binumero','f_nascimento','f_validade','f_morada','f_nipc_tipo','f_nipc','f_cidade'];
+
+function nextField(cur){
+  const idx = TAB_ORDER.indexOf(cur.id);
+  if(idx < TAB_ORDER.length-1) document.getElementById(TAB_ORDER[idx+1]).focus();
+}
+
+function titleCase(word){
+  if(!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+function nomeAbreviado(nomeCompleto){
+  const prep = new Set(['da','de','do','dos','das','e','von','van']);
+  const words = nomeCompleto.trim().split(/\s+/).filter(Boolean);
+  if(words.length === 0) return nomeCompleto;
+  if(words.length === 1) return titleCase(words[0]);
+  const first = titleCase(words[0]);
+  const last  = titleCase(words[words.length - 1]);
+  if(words.length >= 3){
+    const before = words[words.length - 2].toLowerCase();
+    if(prep.has(before)) return `${first} ${before} ${last}`;
+  }
+  return `${first} ${last}`;
+}
+
+function imprimir(){
+  const nome = v('f_nome') || 'Procuração AIMA';
+  document.title = `00. Procuração AIMA - ${nomeAbreviado(nome)}`;
+  window.print();
+  setTimeout(()=>{ document.title = 'Procuração AIMA — MA Advocacia'; }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
+window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Procuração AIMA — MA Advocacia</span>
+</div>
+
+<!-- Formulário -->
+<div class="form-panel">
+
+  <div class="upload-zone full" id="upload-zone"
+       onclick="document.getElementById('pdf-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parsePDF(event.dataTransfer.files[0])">
+    📄 Arraste um PDF aqui ou clique para selecionar — preenche automaticamente
+    <input type="file" id="pdf-file" accept=".pdf" style="display:none"
+           onchange="parsePDF(this.files[0])">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Nome completo do outorgante</div>
+    <input id="f_nome" class="fp-input" type="text" placeholder="ex: MARIA DA SILVA"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Tipo de documento</div>
+    <select id="f_doc_tipo" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="Passaporte">Passaporte</option>
+      <option value="Título de Residência">Título de Residência</option>
+    </select>
+  </div>
+
+  <div>
+    <div class="fp-label">Número do documento</div>
+    <input id="f_binumero" class="fp-input" type="text" placeholder="ex: FAR5236"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Data de Nascimento</div>
+    <input id="f_nascimento" class="fp-input" type="text" placeholder="ex: 01/01/1990"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Válido até</div>
+    <input id="f_validade" class="fp-input" type="text" placeholder="ex: 31/12/2030"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Morada</div>
+    <input id="f_morada" class="fp-input" type="text" placeholder="ex: Av. Da Rua, 12 3º Esq, 2800-009, Almada"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Identificação adicional</div>
+    <select id="f_nipc_tipo" class="fp-input" onchange="update()"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+      <option value="nenhum">— nenhuma —</option>
+      <option value="NIPC">NIPC</option>
+      <option value="M.I.">M.I.</option>
+      <option value="NIE">NIE</option>
+    </select>
+  </div>
+
+  <div id="div_nipc" style="display:none">
+    <div class="fp-label">Número</div>
+    <input id="f_nipc" class="fp-input" type="text" placeholder="ex: 2563EE"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Cidade (na data)</div>
+    <input id="f_cidade" class="fp-input" type="text" placeholder="ex: Almada" value="Almada"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+</div>
+
+<!-- Caixa de texto copiável -->
+<div class="output-panel">
+  <div class="output-header">
+    <span class="output-label">📋 Texto da Procuração</span>
+    <button class="output-copy" id="btn-copy" onclick="copiarTexto()">Copiar</button>
+  </div>
+  <textarea class="output-text" id="output-text" readonly></textarea>
+</div>
+
+<!-- A4 -->
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">PROCURAÇÃO<br>FORENSE</div>
+        <div class="subtitle">Agência para Integração, Migração e Asilo — MA Advocacia</div>
+      </div>
+      <div class="logo-box">
+        <img src="../../img/icone/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <div class="doc-body">
+
+      <div style="height:60pt"></div>
+      <div class="doc-title">PROCURAÇÃO FORENSE</div>
+      <div style="height:60pt"></div>
+
+      <div class="doc-para">
+        A outorgante <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, portador(a) do <span id="r_doc_tipo">Passaporte</span> número: <strong><span id="r_binumero">[NÚMERO]</span></strong>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, com morada e residência habitual na <span id="r_morada">[MORADA]</span>, nomeia como seu Procurador com poderes especiais e necessários o Exmo. Sr. Dr. <strong>MARCIO ANDRIO</strong>, advogado, portador da cédula profissional número: <strong>68721P</strong>, telefone: <strong>(+351) 960 389 573</strong>, e-mail: <strong>marcio.andrio@icloud.com</strong>, com domicilio profissional à Avenida Dom Afonso Henriques, 14 2º Dto, 2800-009, Almada, para em seu nome Interpor Recurso Hierárquico perante o extinto Serviços de Estrangeiros e Fronteiras – SEF, atual Agência para Integração Migração e Asilo – AIMA contra omissão de ato administrativo acerca do pedido de concessão de autorização de residência temporária, efetuado nos termos do n.º 2, do art.º 88.º da Lei nº 23/2007, de 04 de julho, na sua atual redação; <span id="r_nipc" style="display:none">obter informações acerca do <strong><span id="r_nipc_tipo"></span></strong>: <strong><span id="r_nipc_num"></span></strong>; </span>prestar declaração; assinar formulários; levantamento de residência; requerer juntada de documentos; e proceder o levantamento de cartas registadas pelos correios.
+      </div>
+
+      <div class="doc-date" id="r_date">Almada, — de — de —</div>
+
+      <div class="sig-line"></div>
+      <div class="sig-name" id="r_nome_sig">[NOME COMPLETO]</div>
+
+    </div>
+
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
