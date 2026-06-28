@@ -154,27 +154,35 @@ async function parseMD(file){
   try {
     const txt = await file.text();
 
-    const mNome     = txt.match(/\*\*Nome completo\*\*\s*\|\s*([^\|\n]+)/i);
-    const mNac      = txt.match(/\*\*Nacionalidade\*\*\s*\|\s*([^\|\n]+)/i);
-    const mSexo     = txt.match(/\*\*Sexo\*\*\s*\|\s*([^\|\n]+)/i);
-    const mNasc     = txt.match(/\*\*Data de nascimento\*\*\s*\|\s*([0-9\/]+)/i);
-    const mLocalNasc= txt.match(/\*\*Naturalidade\*\*\s*\|\s*([^\|\n]+)/i);
-    const mMorada   = txt.match(/\*\*Morada\*\*\s*\|\s*([^\|\n]+)/i);
+    const campo = (label) => {
+      const m = txt.match(new RegExp(`\\*\\*${label}\\*\\*\\s*\\|\\s*([^\\|\\n]+)`, 'i'));
+      return m ? m[1].trim() : null;
+    };
 
-    if(mNome)      el('f_nome').value          = mNome[1].trim();
-    if(mNac)       el('f_nacionalidade').value = mNac[1].trim();
-    if(mSexo){
-      const s = mSexo[1].trim();
-      el('f_sexo').value = /masculino/i.test(s) ? 'Masculino' : 'Feminino';
-    }
-    if(mNasc)      el('f_nascimento').value    = mNasc[1].trim();
-    if(mLocalNasc) el('f_local_nasc').value    = mLocalNasc[1].trim();
-    if(mMorada)    el('f_morada').value        = mMorada[1].trim();
+    const nome      = campo('Nome completo');
+    const nac       = campo('Nacionalidade');
+    const sexo      = campo('Sexo');
+    const nasc      = campo('Data de nascimento');
+    const localNasc = campo('Local de nascimento') || campo('Naturalidade');
+    const morada    = campo('Morada');
+    const passNum   = campo('Nº Passaporte');
+    const emissao   = campo('Data de emissão');
+    const validade  = campo('Data de validade') || campo('Válido até');
+
+    if(nome)      el('f_nome').value          = nome;
+    if(nac)       el('f_nacionalidade').value = nac;
+    if(sexo)      el('f_sexo').value          = /masculino/i.test(sexo) ? 'Masculino' : 'Feminino';
+    if(nasc)      el('f_nascimento').value    = nasc.match(/[0-9\/]+/)?.[0] || nasc;
+    if(localNasc) el('f_local_nasc').value    = localNasc;
+    if(morada)    el('f_morada').value        = morada;
+    if(passNum)   el('f_binumero').value      = passNum;
+    if(emissao)   el('f_emissao').value       = emissao.match(/[0-9\/]+/)?.[0] || emissao;
+    if(validade)  el('f_validade').value      = validade.match(/[0-9\/]+/)?.[0] || validade;
 
     update();
-    const nome = v('f_nome') || 'cliente';
+    const nomeExibir = v('f_nome') || 'cliente';
     zone.className = 'upload-zone full ok';
-    zone.innerHTML = `✅ MD lido — ${nome} <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">`;
+    zone.innerHTML = `✅ MD lido — ${nomeExibir} <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">`;
   } catch(e){
     zone.className = 'upload-zone full err';
     zone.innerHTML = '❌ Erro ao ler ficheiro — preencha manualmente <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">';
