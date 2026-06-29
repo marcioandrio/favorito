@@ -80,6 +80,7 @@ function update(){
   const validade      = v('f_validade')      || '[VALIDADE]';
   const local_nasc    = v('f_local_nasc')    || '[LOCAL DE NASCIMENTO]';
   const morada        = v('f_morada')        || '[MORADA]';
+  const nif           = v('f_nif');
   const procurador    = v('f_procurador')    || '[PROCURADOR]';
   const cidade        = v('f_cidade')        || 'Porto';
   const tipoDoc       = v('f_tipo_doc')      || 'passaporte';
@@ -87,9 +88,11 @@ function update(){
   const nomeUp  = nome.toUpperCase();
   const docUp   = binumero.toUpperCase();
   const isTR    = tipoDoc === 'tr';
-  const docLabel     = isTR ? 'título de residência' : 'passaporte';
-  const docLabelCap  = isTR ? 'Título de Residência' : 'Passaporte';
-  const docLabelPrep = isTR ? 'emitido no' : 'emitido no'; // ambos "emitido no"
+  const docLabel    = isTR ? 'título de residência' : 'passaporte';
+  const nifTrecho   = nif ? `, portador(a) do Número de Identificação Fiscal (NIF): ${nif}` : '';
+
+  // Mostrar/ocultar campo NIF
+  el('nif-wrapper').style.display = el('f_tem_nif').value === 'sim' ? '' : 'none';
 
   // Página
   el('r_nome').textContent          = nomeUp;
@@ -102,6 +105,8 @@ function update(){
   el('r_emissao').textContent       = emissao;
   el('r_validade').textContent      = validade;
   el('r_local_nasc').textContent    = local_nasc;
+  el('r_nif').style.display         = nif ? '' : 'none';
+  if(nif) el('r_nif_num').textContent = nif;
   el('r_morada').textContent        = morada;
   el('r_procurador').textContent    = procurador;
   el('r_nome_sig').textContent      = nomeUp;
@@ -109,7 +114,7 @@ function update(){
 
   // Output 1 — Autenticação
   el('output-autenticacao').value =
-`Autêntico e certifico como original a folha da procuração junto a assinatura nela oposta por, ${nomeUp}, ${nacionalidade}, com número de ${docLabel}: ${docUp}, emitido no ${paisEmissao}, válido até ${validade}, nascido em: ${nascimento}, residente em ${morada}, em o qual assinou e nomeou como seu Procurador (Outorgado): ${procurador}. ${PODERES}`;
+`Autêntico e certifico como original a folha da procuração junto a assinatura nela oposta por, ${nomeUp}, ${nacionalidade}, com número de ${docLabel}: ${docUp}, emitido no ${paisEmissao}, válido até ${validade}, nascido em: ${nascimento}${nifTrecho}, residente em ${morada}, em o qual assinou e nomeou como seu Procurador (Outorgado): ${procurador}. ${PODERES}`;
 
   // Output 2 — Certificação
   el('output-certificacao').value =
@@ -196,7 +201,8 @@ async function parsePDF(file){
     const mPaisEm    = txt.match(/emitido em:\s*([^,]+),\s*data da emiss/i);
     const mEmissao   = txt.match(/data da emiss[aã]o:\s*([^,]+),\s*v[aá]lido/i);
     const mValidade  = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*natural/i);
-    const mLocalNasc = txt.match(/natural de\s+([^,]+),\s*residente em/i);
+    const mLocalNasc = txt.match(/natural de\s+([^,]+?)(?:,\s*portador|\s*,\s*residente)/i);
+    const mNif       = txt.match(/N[uú]mero de Identifica[cç][aã]o Fiscal\s*\(NIF\):\s*([0-9]+)/i);
     const mMorada    = txt.match(/residente em\s+(.+?),\s*declara/i);
 
     if(mNome)      el('f_nome').value          = mNome[1].trim();
@@ -215,6 +221,10 @@ async function parsePDF(file){
     if(mEmissao)   el('f_emissao').value       = mEmissao[1].trim();
     if(mValidade)  el('f_validade').value      = mValidade[1].trim();
     if(mLocalNasc) el('f_local_nasc').value    = mLocalNasc[1].trim();
+    if(mNif){
+      el('f_tem_nif').value = 'sim';
+      el('f_nif').value     = mNif[1].trim();
+    }
     if(mMorada)    el('f_morada').value        = mMorada[1].trim();
 
     if(/DAIANA/i.test(txt)) {
@@ -401,6 +411,20 @@ window.addEventListener('resize', scalePage);
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
 
+  <div>
+    <div class="fp-label">Tem NIF?</div>
+    <select id="f_tem_nif" class="fp-input" onchange="update()">
+      <option value="nao">Não tem</option>
+      <option value="sim">Sim, tem NIF</option>
+    </select>
+  </div>
+
+  <div id="nif-wrapper" style="display:none">
+    <div class="fp-label">Número do NIF</div>
+    <input id="f_nif" class="fp-input" type="text" placeholder="ex: 123456789"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
   <div class="full">
     <div class="fp-label">Procurador — escolher</div>
     <select id="f_sel_procurador" class="fp-input" onchange="escolherProcurador(this.value)">
@@ -452,7 +476,7 @@ window.addEventListener('resize', scalePage);
       <div class="doc-title">PROCURAÇÃO</div>
 
       <div class="doc-intro">
-        Eu, <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, de nacionalidade <span id="r_nacionalidade">[NACIONALIDADE]</span>, sexo: <span id="r_sexo">[FEMININO/MASCULINO]</span>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, portador(a) do <span id="r_doc_label">passaporte</span> nº <strong><span id="r_binumero">[NÚMERO DO DOCUMENTO]</span></strong>, emitido em: <span id="r_pais_emissao">[PAÍS DE EMISSÃO]</span>, data da emissão: <span id="r_emissao">[DATA DE EMISSÃO]</span>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, natural de <span id="r_local_nasc">[LOCAL DE NASCIMENTO]</span>, residente em <span id="r_morada">[MORADA]</span>, declara que, por sua livre e espontânea vontade, nomeia e constitui como seus procuradores:
+        Eu, <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, de nacionalidade <span id="r_nacionalidade">[NACIONALIDADE]</span>, sexo: <span id="r_sexo">[FEMININO/MASCULINO]</span>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, portador(a) do <span id="r_doc_label">passaporte</span> nº <strong><span id="r_binumero">[NÚMERO DO DOCUMENTO]</span></strong>, emitido em: <span id="r_pais_emissao">[PAÍS DE EMISSÃO]</span>, data da emissão: <span id="r_emissao">[DATA DE EMISSÃO]</span>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, natural de <span id="r_local_nasc">[LOCAL DE NASCIMENTO]</span><span id="r_nif" style="display:none">, portador(a) do Número de Identificação Fiscal (NIF): <span id="r_nif_num"></span></span>, residente em <span id="r_morada">[MORADA]</span>, declara que, por sua livre e espontânea vontade, nomeia e constitui como seus procuradores:
       </div>
 
       <div class="doc-procurador">

@@ -105,15 +105,21 @@ function update(){
   const sexo            = v('f_sexo')            || '[FEMININO/MASCULINO]';
   const nascimento      = v('f_nascimento')      || '[DATA DE NASCIMENTO]';
   const binumero        = v('f_binumero')        || '[PASSAPORTE]';
+  const paisEmissao     = v('f_pais_emissao')    || 'República do Brasil';
   const emissao         = v('f_emissao')         || '[DATA DE EMISSÃO]';
   const validade        = v('f_validade')        || '[VALIDADE]';
   const local_nasc      = v('f_local_nasc')      || '[LOCAL DE NASCIMENTO]';
   const morada          = v('f_morada')          || '[MORADA]';
+  const nif             = v('f_nif');
   const procurador      = v('f_procurador')      || '[PROCURADOR]';
   const cidade          = v('f_cidade')          || 'Porto';
 
   const nomeUp = nome.toUpperCase();
   const passUp = binumero.toUpperCase();
+  const nifTrecho = nif ? `, portador(a) do Número de Identificação Fiscal (NIF): ${nif}` : '';
+
+  // Mostrar/ocultar campo NIF
+  el('nif-wrapper').style.display = el('f_tem_nif').value === 'sim' ? '' : 'none';
 
   // Página
   el('r_nome').textContent          = nomeUp;
@@ -121,21 +127,24 @@ function update(){
   el('r_sexo').textContent          = sexo;
   el('r_nascimento').textContent    = nascimento;
   el('r_binumero').textContent      = passUp;
+  el('r_pais_emissao').textContent  = paisEmissao;
   el('r_emissao').textContent       = emissao;
   el('r_validade').textContent      = validade;
   el('r_local_nasc').textContent    = local_nasc;
   el('r_morada').textContent        = morada;
+  el('r_nif').style.display         = nif ? '' : 'none';
+  if(nif) el('r_nif_num').textContent = nif;
   el('r_procurador').textContent    = procurador;
   el('r_nome_sig').textContent      = nomeUp;
   el('r_date').textContent          = `${cidade}, ${DIA} de ${MES} de ${ANO}`;
 
   // Output 1 — Autenticação
   el('output-autenticacao').value =
-`Autêntico e certifico como original a folha da procuração junto a assinatura nela oposta por, ${nomeUp}, ${nacionalidade}, com número de passaporte: ${passUp}, emitido no República do Brasil, válido até ${validade}, nascido em: ${nascimento}, residente em ${morada}, em o qual assinou e nomeou como seu Procurador (Outorgado): ${procurador}. O mandante(a) identificado acima identificado, declara que, por sua livre e espontânea vontade, nos termos do artigo 19°, 6 da Lei Geral Tributária, com expressa exclusão da gestão de bens, ${PODERES}`;
+`Autêntico e certifico como original a folha da procuração junto a assinatura nela oposta por, ${nomeUp}, ${nacionalidade}, com número de passaporte: ${passUp}, emitido no ${paisEmissao}, válido até ${validade}, nascido em: ${nascimento}${nifTrecho}, residente em ${morada}, em o qual assinou e nomeou como seu Procurador (Outorgado): ${procurador}. O mandante(a) identificado acima identificado, declara que, por sua livre e espontânea vontade, nos termos do artigo 19°, 6 da Lei Geral Tributária, com expressa exclusão da gestão de bens, ${PODERES}`;
 
   // Output 2 — Certificação
   el('output-certificacao').value =
-`Certifico que a cópia do passaporte e Comprovativo de Morada de ${nomeUp}, ${nacionalidade}, com número do passaporte: ${passUp} emitido em: República do Brasil, data da emissão: ${emissao}, válido até ${validade}, nascido em: ${nascimento}, foi extraído do documento original.`;
+`Certifico que a cópia do passaporte e Comprovativo de Morada de ${nomeUp}, ${nacionalidade}, com número do passaporte: ${passUp} emitido em: ${paisEmissao}, data da emissão: ${emissao}, válido até ${validade}, nascido em: ${nascimento}, foi extraído do documento original.`;
 }
 
 function copiar(id, btnId){
@@ -215,10 +224,12 @@ async function parsePDF(file){
     const mNac       = txt.match(/de nacionalidade\s+([^,]+),\s*sexo/i);
     const mSexo      = txt.match(/sexo:\s*(Feminino|Masculino)/i);
     const mNasc      = txt.match(/nascido\(a\) em\s+([^,]+),\s*portador/i);
-    const mPass      = txt.match(/passaporte n[oº°.º]*\s*([A-Z0-9]+)[,\s]/i);
+    const mPass      = txt.match(/(?:passaporte|resid[eê]ncia)\s+n[oº°.º]*\s*([A-Z0-9]+)[,\s]/i);
     const mEmissao   = txt.match(/data da emiss[aã]o:\s*([^,]+),\s*v[aá]lido/i);
     const mValidade  = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*natural/i);
-    const mLocalNasc = txt.match(/natural de\s+([^,]+),\s*residente em/i);
+    const mPaisEm    = txt.match(/emitido em:\s*([^,]+),\s*data da emiss/i);
+    const mLocalNasc = txt.match(/natural de\s+([^,]+?)(?:,\s*portador|\s*,\s*residente)/i);
+    const mNif       = txt.match(/N[uú]mero de Identifica[cç][aã]o Fiscal\s*\(NIF\):\s*([0-9]+)/i);
     const mMorada    = txt.match(/residente em\s+(.+?),\s*declara/i);
 
     if(mNome)      el('f_nome').value          = mNome[1].trim();
@@ -231,7 +242,12 @@ async function parsePDF(file){
     if(mPass)      el('f_binumero').value      = mPass[1].trim();
     if(mEmissao)   el('f_emissao').value       = mEmissao[1].trim();
     if(mValidade)  el('f_validade').value      = mValidade[1].trim();
+    if(mPaisEm)    el('f_pais_emissao').value   = mPaisEm[1].trim();
     if(mLocalNasc) el('f_local_nasc').value    = mLocalNasc[1].trim();
+    if(mNif){
+      el('f_tem_nif').value = 'sim';
+      el('f_nif').value     = mNif[1].trim();
+    }
     if(mMorada)    el('f_morada').value        = mMorada[1].trim();
 
     if(/DAIANA/i.test(txt)) {
@@ -384,6 +400,12 @@ window.addEventListener('resize', scalePage);
   </div>
 
   <div>
+    <div class="fp-label">País de Emissão</div>
+    <input id="f_pais_emissao" class="fp-input" type="text" placeholder="ex: República do Brasil"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
     <div class="fp-label">Data de Emissão</div>
     <input id="f_emissao" class="fp-input" type="text" placeholder="ex: 01/01/2020"
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
@@ -404,6 +426,20 @@ window.addEventListener('resize', scalePage);
   <div class="full">
     <div class="fp-label">Morada</div>
     <input id="f_morada" class="fp-input" type="text" placeholder="ex: Avenida do Teste, 12 3º Dto, 2812-953, Lisboa"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Tem NIF?</div>
+    <select id="f_tem_nif" class="fp-input" onchange="update()">
+      <option value="nao">Não tem</option>
+      <option value="sim">Sim, tem NIF</option>
+    </select>
+  </div>
+
+  <div id="nif-wrapper" style="display:none">
+    <div class="fp-label">Número do NIF</div>
+    <input id="f_nif" class="fp-input" type="text" placeholder="ex: 123456789"
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
 
@@ -459,7 +495,7 @@ window.addEventListener('resize', scalePage);
       <div class="doc-title">PROCURAÇÃO</div>
 
       <div class="doc-intro">
-        Eu, <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, de nacionalidade <span id="r_nacionalidade">[NACIONALIDADE]</span>, sexo: <span id="r_sexo">[FEMININO/MASCULINO]</span>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, portador(a) do passaporte nº <strong><span id="r_binumero">[PASSAPORTE]</span></strong>, emitido em: República do Brasil, data da emissão: <span id="r_emissao">[DATA DE EMISSÃO]</span>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, natural de <span id="r_local_nasc">[LOCAL DE NASCIMENTO]</span>, residente em <span id="r_morada">[MORADA]</span>, declara que, por sua livre e espontânea vontade, nomeia e constitui como seus procuradores:
+        Eu, <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, de nacionalidade <span id="r_nacionalidade">[NACIONALIDADE]</span>, sexo: <span id="r_sexo">[FEMININO/MASCULINO]</span>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, portador(a) do passaporte nº <strong><span id="r_binumero">[PASSAPORTE]</span></strong>, emitido em: <span id="r_pais_emissao">República do Brasil</span>, data da emissão: <span id="r_emissao">[DATA DE EMISSÃO]</span>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, natural de <span id="r_local_nasc">[LOCAL DE NASCIMENTO]</span><span id="r_nif" style="display:none">, portador(a) do Número de Identificação Fiscal (NIF): <span id="r_nif_num"></span></span>, residente em <span id="r_morada">[MORADA]</span>, declara que, por sua livre e espontânea vontade, nomeia e constitui como seus procuradores:
       </div>
 
       <div class="doc-procurador">
