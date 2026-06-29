@@ -213,9 +213,9 @@ async function parsePDF(file){
 
     const mNome      = txt.match(/Eu,\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇa-z\s]+?),\s*de nacionalidade/i);
     const mNac       = txt.match(/de nacionalidade\s+([^,]+),\s*sexo/i);
-    const mSexo      = txt.match(/sexo:\s*([^,]+),\s*nascido/i);
+    const mSexo      = txt.match(/sexo:\s*(Feminino|Masculino)/i);
     const mNasc      = txt.match(/nascido\(a\) em\s+([^,]+),\s*portador/i);
-    const mPass      = txt.match(/passaporte n[oº°]\s+([A-Z0-9]+),/i);
+    const mPass      = txt.match(/passaporte n[oº°.º]*\s*([A-Z0-9]+)[,\s]/i);
     const mEmissao   = txt.match(/data da emiss[aã]o:\s*([^,]+),\s*v[aá]lido/i);
     const mValidade  = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*natural/i);
     const mLocalNasc = txt.match(/natural de\s+([^,]+),\s*residente em/i);
@@ -223,7 +223,10 @@ async function parsePDF(file){
 
     if(mNome)      el('f_nome').value          = mNome[1].trim();
     if(mNac)       el('f_nacionalidade').value = mNac[1].trim();
-    if(mSexo)      el('f_sexo').value          = mSexo[1].trim();
+    if(mSexo){
+      const s = mSexo[1].trim();
+      el('f_sexo').value = /masculino/i.test(s) ? 'Masculino' : 'Feminino';
+    }
     if(mNasc)      el('f_nascimento').value    = mNasc[1].trim();
     if(mPass)      el('f_binumero').value      = mPass[1].trim();
     if(mEmissao)   el('f_emissao').value       = mEmissao[1].trim();
@@ -231,14 +234,13 @@ async function parsePDF(file){
     if(mLocalNasc) el('f_local_nasc').value    = mLocalNasc[1].trim();
     if(mMorada)    el('f_morada').value        = mMorada[1].trim();
 
-    // Detectar procurador e atualizar select
     if(/DAIANA/i.test(txt)) {
       procuradorLabel = 'Daiana';
-      document.querySelector('select').value = 'daiana';
+      el('f_sel_procurador').value = 'daiana';
       el('f_procurador').value = PROCURADORES.daiana;
     } else if(/ELISANGELA/i.test(txt)) {
       procuradorLabel = 'Elisangela';
-      document.querySelector('select').value = 'elisangela';
+      el('f_sel_procurador').value = 'elisangela';
       el('f_procurador').value = PROCURADORES.elisangela;
     }
 
@@ -407,7 +409,7 @@ window.addEventListener('resize', scalePage);
 
   <div class="full">
     <div class="fp-label">Procurador — escolher</div>
-    <select class="fp-input" onchange="escolherProcurador(this.value)">
+    <select id="f_sel_procurador" class="fp-input" onchange="escolherProcurador(this.value)">
       <option value="">— selecionar —</option>
       <option value="daiana">Daiana &amp; Higo</option>
       <option value="elisangela">Elisangela &amp; grupo</option>
