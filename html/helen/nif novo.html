@@ -6,85 +6,7 @@
 <title>Procuração NIF — MA Advocacia</title>
 <link rel="icon" href="../../img/icone/ma.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
-
-/* ── Toolbar ── */
-.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
-.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
-.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
-.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
-
-/* ── Form panel ── */
-.form-panel { width: 208mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
-.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
-.fp-input:focus { border-color: #c9a85c; }
-.fp-input::placeholder { color: #555; }
-.full { grid-column: 1 / -1; }
-
-/* ── A4 Page ── */
-#page-scale-wrapper { display: flex; justify-content: center; }
-.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
-.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
-.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
-
-/* ── Header ── */
-.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
-.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1a0e00; letter-spacing: .1em; line-height: 1.2; }
-.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
-.logo-box { flex-shrink: 0; margin-left: 16px; }
-.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
-
-/* ── Body ── */
-.doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
-.doc-title { font-family: 'Playfair Display', serif; font-weight: 800; font-size: 17pt; letter-spacing: .18em; color: #4a1628; text-align: center; margin-bottom: 22px; }
-.doc-intro { text-align: justify; line-height: 1.7; margin-bottom: 14px; }
-.doc-procurador { text-align: justify; line-height: 1.7; margin-bottom: 14px; padding-left: 12px; }
-.doc-poderes { text-align: justify; line-height: 1.7; margin-bottom: 0; }
-.doc-date { text-align: right; margin-top: 24px; margin-bottom: 10px; font-size: 11pt; }
-.sig-line { margin-top: 48pt; border-top: 1px solid #1a0e00; width: 220px; margin-left: auto; margin-right: auto; }
-.sig-name { text-align: center; font-weight: 700; font-size: 11pt; margin-top: 6px; }
-
-/* ── Footer ── */
-.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: 8px; border-top: 1px solid #c9a85c; }
-.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
-.rec-footer .role { font-size: 7pt; letter-spacing: .05em; color: #6b5a3a; margin-top: 2px; }
-.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
-
-/* ── Mobile ── */
-@media (max-width: 800px) {
-  body { align-items: flex-start; }
-  .toolbar { position: relative; }
-  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
-  #page-scale-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
-  .page { margin-top: 0; transform-origin: top center; }
-}
-
-/* ── Upload zone ── */
-.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 11px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
-.upload-zone:hover { background: rgba(201,168,92,.08); }
-.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
-.upload-zone.err { border-color: #e06c75; color: #e06c75; }
-
-/* ── Output box ── */
-.output-panel { width: 208mm; max-width: 100%; background: #1a1a2e; border-radius: 4px; margin-top: 12px; padding: 14px 18px; }
-.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.output-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .08em; font-family: monospace; }
-.output-copy { background: #c9a85c; color: #1a0e00; border: none; border-radius: 3px; padding: 5px 14px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Lora', serif; }
-.output-copy:active { opacity: .75; }
-.output-text { width: 100%; background: #0d0d1a; border: 1px solid #333; border-radius: 3px; padding: 12px 14px; color: #d4c8a8; font-family: 'Lora', serif; font-size: 11px; line-height: 1.75; resize: vertical; min-height: 140px; outline: none; }
-
-/* ── Print ── */
-@media print {
-  body { background: #fff; padding: 0; }
-  .toolbar, .form-panel, .output-panel { display: none; }
-  #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
-  .page { box-shadow: none; margin: 0; width: 208mm; min-height: 295mm; transform: none !important; }
-  @page { size: A4 portrait; margin: 0; }
-}
-</style>
+<link rel="stylesheet" href="helen.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
@@ -104,7 +26,8 @@ function update(){
   const nacionalidade   = v('f_nacionalidade')   || '[NACIONALIDADE]';
   const sexo            = v('f_sexo')            || '[FEMININO/MASCULINO]';
   const nascimento      = v('f_nascimento')      || '[DATA DE NASCIMENTO]';
-  const binumero        = v('f_binumero')        || '[PASSAPORTE]';
+  const bi              = v('f_bi')              || 'Passaporte';
+  const binumero        = v('f_binumero')        || '[NÚMERO]';
   const paisEmissao     = v('f_pais_emissao')    || 'República do Brasil';
   const emissao         = v('f_emissao')         || '[DATA DE EMISSÃO]';
   const validade        = v('f_validade')        || '[VALIDADE]';
@@ -113,6 +36,10 @@ function update(){
   const nif             = v('f_nif');
   const procurador      = v('f_procurador')      || '[PROCURADOR]';
   const cidade          = v('f_cidade')          || 'Porto';
+  const executado       = v('f_executado')       || '[DATA]';
+  const registado       = v('f_registado')       || '[DATA]';
+  const numero          = v('f_numero')          || '[Nº]';
+  const codigo          = v('f_codigo')          || '[CÓDIGO]';
 
   const nomeUp = nome.toUpperCase();
   const passUp = binumero.toUpperCase();
@@ -121,7 +48,24 @@ function update(){
   // Mostrar/ocultar campo NIF
   el('nif-wrapper').style.display = el('f_tem_nif').value === 'sim' ? '' : 'none';
 
-  // Página
+  // Página certificação
+  el('c_nome').textContent       = nomeUp;
+  el('c_bi').textContent         = bi;
+  el('c_binumero').textContent   = passUp;
+  el('c_validade').textContent   = validade;
+  el('c_bi2').textContent        = bi;
+  el('c_binumero2').textContent  = passUp;
+  el('c_nome2').textContent      = nomeUp;
+  el('c_nascimento').textContent = nascimento;
+  el('c_validade2').textContent  = validade;
+  el('c_bi3').textContent        = bi;
+  el('c_executado').textContent  = executado;
+  el('c_registado').textContent  = registado;
+  el('c_numero').textContent     = numero;
+  el('c_codigo').textContent     = codigo;
+  el('c_date').textContent       = `Almada, ${DIA} de ${MES} de ${ANO}`;
+
+  // Página procuração
   el('r_nome').textContent          = nomeUp;
   el('r_nacionalidade').textContent = nacionalidade;
   el('r_sexo').textContent          = sexo;
@@ -137,6 +81,20 @@ function update(){
   el('r_procurador').textContent    = procurador;
   el('r_nome_sig').textContent      = nomeUp;
   el('r_date').textContent          = `${cidade}, ${DIA} de ${MES} de ${ANO}`;
+
+  // Output 0 — Reconhecer/Certifico
+  el('output-reconhecer').value =
+`RECONHECER
+UM - Reconheço a legitimidade da assinatura de ${nomeUp}, na qual verifiquei por exibição do documento de identificação, denominado ${bi} número: ${passUp}, válido até: ${validade}, no documento denominado Procuração.
+DOIS - Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.
+CERTIFICO
+a) Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.
+b) A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao ${bi} com o número: ${passUp}, do(a) Sr.(ª) ${nomeUp}, nascido(a) em ${nascimento}, válido até: ${validade}.
+c) A Procuração outorgada pelo INTERESSADO, a qual foi por ele assinada, e por mim conferida também por meio de videochamada, apresenta assinatura, que está conforme a assinatura do ${bi} do interessado, a mim apresentado e por mim conferida.
+d) As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1o do Decreto-Lei 28/2000, de 13 de março.
+----Sem cobrança de honorários.
+----Não há lugar ao pagamento de imposto de selo.
+----Almada, ${DIA} de ${MES} de ${ANO}.`;
 
   // Output 1 — Autenticação
   el('output-autenticacao').value =
@@ -272,16 +230,17 @@ async function parsePDF(file){
 }
 
 function scalePage(){
-  const wrapper = el('page-scale-wrapper');
-  const page = wrapper.querySelector('.page');
-  if(!page) return;
-  const vw = wrapper.offsetWidth, pw = page.offsetWidth;
-  if(vw < pw){
-    const s = vw / pw;
-    page.style.transform = 'scale('+s+')';
-    page.style.marginBottom = '-'+(pw*(1-s))+'px';
-    wrapper.style.height = (page.offsetHeight*s)+'px';
-  } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+  document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+    const page = wrapper.querySelector('.page');
+    if(!page) return;
+    const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+    if(vw < pw){
+      const s = vw / pw;
+      page.style.transform = 'scale('+s+')';
+      page.style.marginBottom = '-'+(pw*(1-s))+'px';
+      wrapper.style.height = (page.offsetHeight*s)+'px';
+    } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+  });
 }
 
 let procuradorLabel = '';
@@ -464,6 +423,51 @@ window.addEventListener('resize', scalePage);
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
 
+  <div class="full" style="border-top:1px solid #3a3a3a; padding-top:8px; margin-top:4px;">
+    <div style="color:#c9a85c; font-family:'Playfair Display',serif; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;">Certificação de Documento</div>
+  </div>
+
+  <div>
+    <div class="fp-label">Tipo de documento (bi)</div>
+    <select id="f_bi" class="fp-input" onchange="update()">
+      <option value="Passaporte">Passaporte</option>
+      <option value="Título de Residência">Título de Residência</option>
+    </select>
+  </div>
+
+  <div>
+    <div class="fp-label">Executado a</div>
+    <input id="f_executado" class="fp-input" type="text" placeholder="ex: 29/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Registado a</div>
+    <input id="f_registado" class="fp-input" type="text" placeholder="ex: 29/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Com o Nº</div>
+    <input id="f_numero" class="fp-input" type="text" placeholder="ex: 2026/001"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Código de consulta</div>
+    <input id="f_codigo" class="fp-input" type="text" placeholder="ex: ABC123"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+</div>
+
+<!-- Output 0 — Reconhecer/Certifico -->
+<div class="output-panel">
+  <div class="output-header">
+    <span class="output-label">📋 Texto para copiar — Reconhecimento</span>
+    <button class="output-copy" id="btn-copy-0" onclick="copiar('output-reconhecer','btn-copy-0')">Copiar</button>
+  </div>
+  <textarea class="output-text" id="output-reconhecer" readonly style="min-height:220px;"></textarea>
 </div>
 
 <!-- Output 1 — Autenticação -->
@@ -484,8 +488,101 @@ window.addEventListener('resize', scalePage);
   <textarea class="output-text" id="output-certificacao" readonly style="min-height:90px;"></textarea>
 </div>
 
-<!-- A4 -->
-<div id="page-scale-wrapper">
+<!-- Página 1 — Certificação -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">CERTIFICAÇÃO DE<br>DOCUMENTO PARTICULAR</div>
+        <div class="subtitle">MA Advocacia</div>
+      </div>
+      <div class="logo-box">
+        <img src="../../img/icone/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <div class="cert-body">
+
+      <div class="doc-intro" style="margin-bottom:12px;">
+        Eu, Dr. MARCIO ANDRIO, Advogado, portador da Cédula Profissional 68721P emitida pelo Conselho Regional da Ordem dos Advogados no Porto, com domicílio profissional à Avenida D. Afonso Henriques, número 14, 2º Dto, 2800-009, Almada, no exercício das competências conferidas pelo artigo 38 do Decreto-Lei 76-A/2006, de 29 de março, e pela Portaria n.º 657-B/2006, venho por este meio certificar e reconhecer que:
+      </div>
+
+      <div class="cert-section">RECONHECER</div>
+
+      <div class="cert-item">
+        <span class="ltr">UM —</span>
+        <span>Reconheço a legitimidade da assinatura de <strong><span id="c_nome">[NOME]</span></strong>, na qual verifiquei por exibição do documento de identificação, denominado <span id="c_bi">Passaporte</span> número: <strong><span id="c_binumero">[NÚMERO]</span></strong>, válido até: <span id="c_validade">[VALIDADE]</span>, no documento denominado Procuração.</span>
+      </div>
+
+      <div class="cert-item">
+        <span class="ltr">DOIS —</span>
+        <span>Que pelo(a) outorgante foi dito que a declaração foi por ele(a) lida e que exprime a sua vontade.</span>
+      </div>
+
+      <div class="cert-section">CERTIFICO</div>
+
+      <div class="cert-item">
+        <span class="ltr">a)</span>
+        <span>Que os Documentos originais acima mencionados, me foram apresentados para efeitos desta certificação.</span>
+      </div>
+
+      <div class="cert-item">
+        <span class="ltr">b)</span>
+        <span>A fotocópia anexa, composta por uma (1) folha, utilizada apenas de um lado e devidamente rubricada, corresponde ao ORIGINAL, que foi apresentado e verificado por comparação, referente ao <span id="c_bi2">Passaporte</span> com o número: <strong><span id="c_binumero2">[NÚMERO]</span></strong>, do(a) Sr.(ª) <strong><span id="c_nome2">[NOME]</span></strong>, nascido(a) em <span id="c_nascimento">[NASCIMENTO]</span>, válido até: <span id="c_validade2">[VALIDADE]</span>.</span>
+      </div>
+
+      <div class="cert-item">
+        <span class="ltr">c)</span>
+        <span>A Procuração outorgada pelo INTERESSADO, a qual foi por ele assinada, e por mim conferida também por meio de videochamada, apresenta assinatura, que está conforme a assinatura do <span id="c_bi3">Passaporte</span> do interessado, a mim apresentado e por mim conferida.</span>
+      </div>
+
+      <div class="cert-item">
+        <span class="ltr">d)</span>
+        <span>As fotocópias certificadas possuem a mesma validade probatória do original, nos termos do n.º 5 do artigo 1o do Decreto-Lei 28/2000, de 13 de março.</span>
+      </div>
+
+      <div class="doc-registos">
+        <div><span class="reg-label">EXECUTADO A:</span> <span id="c_executado">[DATA]</span></div>
+        <div><span class="reg-label">REGISTADO A:</span> <span id="c_registado">[DATA]</span></div>
+        <div><span class="reg-label">COM O Nº:</span> <span id="c_numero">[Nº]</span></div>
+        <div style="margin-top:8px">Poderá consultar este registo em <strong>http://oa.pt/atos</strong>, usando o código <strong><span id="c_codigo">[CÓDIGO]</span></strong>.</div>
+      </div>
+
+      <div class="doc-notas">
+        <div>—— Sem cobrança de honorários.</div>
+        <div>—— Não há lugar ao pagamento de imposto de selo.</div>
+        <div>—— <span id="c_date">Almada, — de — de —.</span></div>
+      </div>
+
+      <div class="doc-sig">
+        <div class="sig-pre">O Advogado,</div>
+        <div class="sig-name">MARCIO ANDRIO</div>
+        <div class="sig-role">C.P. nº 68721P</div>
+      </div>
+
+    </div>
+
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- Página 2 — Procuração -->
+<div class="page-wrapper">
 <div class="page">
   <div class="page-content">
 
