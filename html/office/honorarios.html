@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nota de Honorários — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
+
+.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
+.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
+.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
+.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
+
+.form-panel { width: 208mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
+.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
+.fp-input:focus { border-color: #c9a85c; }
+.fp-input::placeholder { color: #555; }
+select.fp-input { cursor: pointer; }
+.full { grid-column: 1 / -1; }
+.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 11px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
+.upload-zone:hover { background: rgba(201,168,92,.08); }
+.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
+.upload-zone.err { border-color: #e06c75; color: #e06c75; }
+.fp-add-btn { background: #c9a85c; color: #1a0e00; border: none; border-radius: 3px; padding: 7px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Lora', serif; white-space: nowrap; align-self: end; }
+.fp-add-btn:active { opacity: .75; }
+.servico-row { grid-column: 1 / -1; display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; align-items: end; }
+.outros-row { grid-column: 1 / -1; display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; align-items: end; }
+.servico-list { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; }
+.servico-item { display: flex; justify-content: space-between; align-items: center; background: #1c1c1c; border-radius: 3px; padding: 6px 10px; font-size: 12px; color: #e0d8c8; font-family: 'Lora', serif; }
+.servico-item .s-desc { flex: 1; }
+.servico-item .s-preco { color: #c9a85c; font-weight: 700; margin-left: 12px; white-space: nowrap; }
+.servico-item .s-del { background: none; border: none; color: #e06c75; cursor: pointer; font-size: 14px; margin-left: 10px; padding: 0 4px; }
+.total-line { grid-column: 1 / -1; text-align: right; font-family: 'Playfair Display', serif; font-size: 13px; color: #c9a85c; font-weight: 700; padding-top: 4px; border-top: 1px solid #444; }
+
+#page-scale-wrapper { display: flex; justify-content: center; }
+.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
+.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
+
+.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
+.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1a0e00; letter-spacing: .1em; line-height: 1.2; }
+.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
+.logo-box { flex-shrink: 0; margin-left: 16px; }
+.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
+
+.doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
+.doc-ref { font-size: 9pt; color: #6b5a3a; text-align: right; margin-bottom: 14px; }
+.doc-cliente { line-height: 1.7; margin-bottom: 20px; font-size: 11pt; }
+.doc-cliente strong { font-family: 'Playfair Display', serif; }
+
+.servicos-table { width: 100%; border-collapse: collapse; margin-bottom: 0; font-size: 11pt; }
+.servicos-table thead th { font-family: 'Playfair Display', serif; font-size: 10pt; color: #4a1628; border-bottom: 1.5px solid #4a1628; padding: 4px 8px; text-align: left; }
+.servicos-table thead th.col-preco { text-align: right; }
+.servicos-table tbody td { padding: 7px 8px; border-bottom: 1px solid #e8e3da; line-height: 1.4; vertical-align: top; }
+.servicos-table tbody td.col-preco { text-align: right; white-space: nowrap; font-weight: 600; }
+.servicos-table tfoot td { padding: 8px 8px 2px; font-weight: 700; font-family: 'Playfair Display', serif; font-size: 12pt; }
+.servicos-table tfoot td.col-preco { text-align: right; color: #4a1628; border-top: 1.5px solid #4a1628; }
+
+.doc-pagamento { margin-top: 22px; padding: 12px 14px; border: 1px solid #c9a85c; border-radius: 4px; background: #faf8f4; font-size: 10pt; line-height: 1.8; color: #1a0e00; }
+.doc-pagamento .pag-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 11pt; color: #4a1628; margin-bottom: 8px; }
+.doc-pagamento .pag-option { margin-bottom: 4px; }
+.doc-pagamento .pag-option strong { color: #4a1628; }
+
+.doc-sig { text-align: center; margin-top: 28pt; }
+.doc-sig .sig-pre { margin-bottom: 4px; font-size: 10pt; }
+.doc-sig .sig-name { font-weight: 700; font-family: 'Playfair Display', serif; font-size: 13pt; }
+.doc-sig .sig-role { font-size: 9pt; color: #6b5a3a; margin-top: 2px; }
+
+.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: 8px; border-top: 1px solid #c9a85c; }
+.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
+.rec-footer .role { font-size: 7pt; letter-spacing: .05em; color: #6b5a3a; margin-top: 2px; }
+.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
+
+@media (max-width: 800px) {
+  body { align-items: flex-start; }
+  .toolbar { position: relative; }
+  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
+  #page-scale-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
+  .page { margin-top: 0; transform-origin: top center; }
+  .servico-row, .outros-row { grid-template-columns: 1fr; }
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .toolbar, .form-panel { display: none; }
+  #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+  .page { box-shadow: none; margin: 0; width: 208mm; min-height: 295mm; transform: none !important; }
+  @page { size: A4 portrait; margin: 0; }
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const today = new Date();
+const DIA   = String(today.getDate()).padStart(2,'0');
+const MES   = MESES[today.getMonth()];
+const ANO   = String(today.getFullYear());
+const MES_N = String(today.getMonth()+1).padStart(2,'0');
+
+// Catálogo de serviços
+const CATALOGO = [
+  { desc: 'NIF',                                    preco: 80 },
+  { desc: 'Troca de Senha NIF',                     preco: 80 },
+  { desc: 'Troca de Morada Fiscal',                 preco: 80 },
+  { desc: 'NISS',                                   preco: 300 },
+  { desc: 'Senha de NISS',                          preco: 80 },
+  { desc: 'Abertura de Atividade',                  preco: 80 },
+  { desc: 'Utente (SNS)',                           preco: 80 },
+  { desc: 'Legal Entry',                            preco: 30 },
+  { desc: 'Declaração de Alojamento',               preco: 30 },
+  { desc: 'Certificação de Passaporte',             preco: 20 },
+  { desc: 'Reconhecimento de Assinatura Simples',   preco: 25 },
+  { desc: 'Tradução de Documentos',                 preco: 15 },
+  { desc: 'Declaração SIS',                         preco: 50 },
+  { desc: 'Contestação de Tempo — AIMA',            preco: 200 },
+  { desc: 'Recurso Administrativo Hierárquico',     preco: 400 },
+  { desc: 'Ação Judicial — Solicitação do Cartão',  preco: 1000 },
+];
+
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+function el(id){ return document.getElementById(id); }
+
+let servicos = [];
+
+function formatEur(val){
+  return val.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function onSelectServico(){
+  const sel = v('f_servico_sel');
+  el('outros-row').style.display = sel === 'outros' ? '' : 'none';
+  if(sel !== 'outros' && sel !== ''){
+    const item = CATALOGO.find(c => c.desc === sel);
+    if(item){
+      adicionarServico(item.desc, item.preco);
+      el('f_servico_sel').value = '';
+    }
+  }
+}
+
+function adicionarServico(desc, preco){
+  if(!desc) desc = v('f_outros_desc');
+  if(!preco) preco = parseFloat(v('f_outros_preco').replace(',','.'));
+  if(!desc || isNaN(preco) || preco <= 0) return;
+  servicos.push({ desc, preco });
+  el('f_outros_desc').value  = '';
+  el('f_outros_preco').value = '';
+  el('outros-row').style.display = 'none';
+  el('f_servico_sel').value = '';
+  renderServicos();
+}
+
+function removerServico(i){
+  servicos.splice(i, 1);
+  renderServicos();
+}
+
+function renderServicos(){
+  const list = el('servico-list');
+  list.innerHTML = '';
+  servicos.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'servico-item';
+    div.innerHTML = `<span class="s-desc">${s.desc}</span><span class="s-preco">${formatEur(s.preco)}</span><button class="s-del" onclick="removerServico(${i})" title="Remover">✕</button>`;
+    list.appendChild(div);
+  });
+  const total = servicos.reduce((a,s) => a + s.preco, 0);
+  el('total-display').textContent = servicos.length ? 'Total: ' + formatEur(total) : '';
+  update();
+}
+
+function update(){
+  const nome   = v('f_nome')   || '[NOME DO CLIENTE]';
+  const cidade = v('f_cidade') || 'Almada';
+  const num    = v('f_num')    || `${ANO}${MES_N}00${DIA}`;
+
+  el('r_num').textContent  = num;
+  el('r_data').textContent = `${DIA} de ${MES} de ${ANO}`;
+  el('r_nome').textContent = nome.toUpperCase();
+
+  const tbody = el('r_servicos');
+  tbody.innerHTML = '';
+  servicos.forEach(s => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${s.desc}</td><td class="col-preco">${formatEur(s.preco)}</td>`;
+    tbody.appendChild(tr);
+  });
+  if(servicos.length === 0){
+    tbody.innerHTML = '<tr><td colspan="2" style="color:#aaa;font-style:italic;font-size:10pt">[adicione serviços no formulário]</td></tr>';
+  }
+  const total = servicos.reduce((a,s) => a + s.preco, 0);
+  el('r_total').textContent = formatEur(total);
+  el('r_date').textContent  = `${cidade}, ${DIA} de ${MES} de ${ANO}`;
+}
+
+async function parsePDF(file){
+  const zone = el('upload-zone');
+  zone.className = 'upload-zone full';
+  zone.innerHTML = '⏳ A ler PDF… <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let txt = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const content = await pg.getTextContent();
+      txt += content.items.map(x => x.str).join(' ') + ' ';
+    }
+    txt = txt.replace(/\s+/g,' ').trim();
+
+    const mNome = txt.match(/Cliente:\s*([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇa-z\s]+?)(?:\s+Ref\.|\s+[0-9])/i);
+    const mNum  = txt.match(/Ref\.\s*([0-9A-Z\/\-]+)/i);
+
+    if(mNome) el('f_nome').value = mNome[1].trim();
+    if(mNum)  el('f_num').value  = mNum[1].trim();
+
+    // Tentar extrair serviços da tabela
+    servicos = [];
+    CATALOGO.forEach(item => {
+      const re = new RegExp(item.desc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'i');
+      if(re.test(txt)){
+        const mPreco = txt.match(new RegExp(item.desc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '[^0-9]*([0-9]+[,.]?[0-9]*)', 'i'));
+        const preco = mPreco ? parseFloat(mPreco[1].replace(',','.')) : item.preco;
+        servicos.push({ desc: item.desc, preco: isNaN(preco) ? item.preco : preco });
+      }
+    });
+
+    renderServicos();
+    update();
+    const nome = v('f_nome') || 'cliente';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ PDF lido — ${nome} <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">`;
+  } catch(e){
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Não foi possível ler o PDF — preencha manualmente <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+    console.error(e);
+  }
+}
+
+function scalePage(){
+  const wrapper = el('page-scale-wrapper');
+  const page = wrapper.querySelector('.page');
+  if(!page) return;
+  const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+  if(vw < pw){
+    const s = vw / pw;
+    page.style.transform = 'scale('+s+')';
+    page.style.marginBottom = '-'+(pw*(1-s))+'px';
+    wrapper.style.height = (page.offsetHeight*s)+'px';
+  } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+}
+
+function titleCase(w){ return w ? w.charAt(0).toUpperCase()+w.slice(1).toLowerCase() : ''; }
+function nomeAbreviado(n){
+  const prep = new Set(['da','de','do','dos','das','e']);
+  const w = n.trim().split(/\s+/).filter(Boolean);
+  if(!w.length) return n;
+  if(w.length === 1) return titleCase(w[0]);
+  const first = titleCase(w[0]), last = titleCase(w[w.length-1]);
+  if(w.length >= 3 && prep.has(w[w.length-2].toLowerCase())) return `${first} ${w[w.length-2].toLowerCase()} ${last}`;
+  return `${first} ${last}`;
+}
+
+function imprimir(){
+  const nome = v('f_nome') || 'cliente';
+  const num  = v('f_num')  || `${ANO}${MES_N}00${DIA}`;
+  document.title = `00. Honorários - ${nomeAbreviado(nome)} - ${num}`;
+  window.print();
+  setTimeout(()=>{ document.title = 'Nota de Honorários — MA Advocacia'; }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
+window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Nota de Honorários — MA Advocacia</span>
+</div>
+
+<div class="form-panel">
+
+  <div class="upload-zone full" id="upload-zone"
+       onclick="document.getElementById('pdf-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parsePDF(event.dataTransfer.files[0])">
+    📄 Arraste um PDF aqui ou clique para selecionar — preenche automaticamente
+    <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Nome do Cliente</div>
+    <input id="f_nome" class="fp-input" type="text" placeholder="ex: Maria da Silva"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();el('f_num').focus()}">
+  </div>
+
+  <div>
+    <div class="fp-label">Nº da Nota (AAAAMMDD)</div>
+    <input id="f_num" class="fp-input" type="text" placeholder="ex: 202606001"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();el('f_cidade').focus()}">
+  </div>
+
+  <div>
+    <div class="fp-label">Cidade</div>
+    <input id="f_cidade" class="fp-input" type="text" placeholder="ex: Almada" value="Almada"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();el('f_servico_sel').focus()}">
+  </div>
+
+  <!-- Select de serviço -->
+  <div class="full">
+    <div class="fp-label">Adicionar Serviço</div>
+    <select id="f_servico_sel" class="fp-input" onchange="onSelectServico()">
+      <option value="">— selecionar serviço —</option>
+      <option value="outros">Outros (digitar manualmente)</option>
+      <optgroup label="Documentos e Registos">
+        <option value="NIF">NIF — 80 €</option>
+        <option value="Troca de Senha NIF">Troca de Senha NIF — 80 €</option>
+        <option value="Troca de Morada Fiscal">Troca de Morada Fiscal — 80 €</option>
+        <option value="NISS">NISS — 300 €</option>
+        <option value="Senha de NISS">Senha de NISS — 80 €</option>
+        <option value="Abertura de Atividade">Abertura de Atividade — 80 €</option>
+        <option value="Utente (SNS)">Utente (SNS) — 80 €</option>
+      </optgroup>
+      <optgroup label="Serviços de Apoio">
+        <option value="Legal Entry">Legal Entry — 30 €</option>
+        <option value="Declaração de Alojamento">Declaração de Alojamento — 30 €</option>
+        <option value="Certificação de Passaporte">Certificação de Passaporte — 20 €</option>
+        <option value="Reconhecimento de Assinatura Simples">Reconhecimento de Assinatura Simples — 25 €</option>
+        <option value="Tradução de Documentos">Tradução de Documentos — 15 €</option>
+        <option value="Declaração SIS">Declaração SIS — 50 €</option>
+        <option value="Contestação de Tempo — AIMA">Contestação de Tempo — AIMA — 200 €</option>
+      </optgroup>
+      <optgroup label="Serviços Jurídicos">
+        <option value="Recurso Administrativo Hierárquico">Recurso Administrativo Hierárquico — 400 €</option>
+        <option value="Ação Judicial — Solicitação do Cartão">Ação Judicial — Solicitação do Cartão — 1.000 €</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <!-- Campos "Outros" — aparecem só quando seleccionado -->
+  <div class="outros-row" id="outros-row" style="display:none">
+    <div>
+      <div class="fp-label">Descrição</div>
+      <input id="f_outros_desc" class="fp-input" type="text" placeholder="ex: Consultoria jurídica"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();el('f_outros_preco').focus()}">
+    </div>
+    <div>
+      <div class="fp-label">Valor (€)</div>
+      <input id="f_outros_preco" class="fp-input" type="text" placeholder="ex: 150"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();adicionarServico()}">
+    </div>
+    <button class="fp-add-btn" onclick="adicionarServico()">+ Adicionar</button>
+  </div>
+
+  <div class="servico-list full" id="servico-list"></div>
+  <div class="total-line full" id="total-display"></div>
+
+</div>
+
+<!-- A4 -->
+<div id="page-scale-wrapper">
+<div class="page">
+  <div class="bar"></div>
+  <div class="page-content">
+
+    <div class="rec-header">
+      <div class="rec-header-left">
+        <div class="title">NOTA DE<br>HONORÁRIOS</div>
+        <div class="subtitle">MA Advocacia</div>
+      </div>
+      <div class="logo-box">
+        <img src="../../img/icone/ma.png" alt="MA Advocacia">
+      </div>
+    </div>
+
+    <div class="doc-body">
+
+      <div class="doc-ref">
+        Ref. <span id="r_num">—</span> &nbsp;|&nbsp; <span id="r_data">—</span>
+      </div>
+
+      <div class="doc-cliente">
+        <strong>Cliente:</strong> <span id="r_nome">[NOME DO CLIENTE]</span>
+      </div>
+
+      <table class="servicos-table">
+        <thead>
+          <tr>
+            <th>Descrição do Serviço</th>
+            <th class="col-preco">Valor</th>
+          </tr>
+        </thead>
+        <tbody id="r_servicos">
+          <tr><td colspan="2" style="color:#aaa;font-style:italic;font-size:10pt">[adicione serviços no formulário]</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td class="col-preco" id="r_total">0,00 €</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="doc-pagamento">
+        <div class="pag-title">Formas de Pagamento</div>
+        <div class="pag-option"><strong>MBWay:</strong> 960 389 573</div>
+        <div class="pag-option"><strong>Transferência Bancária (IBAN):</strong></div>
+        <div style="padding-left:14px; line-height:1.9">
+          Titular: Dr. Márcio Andrio<br>
+          Banco: Millennium BCP<br>
+          IBAN: PT50 0033 0000 4578 8884 9210 5
+        </div>
+      </div>
+
+      <div class="doc-date" style="text-align:right; margin-top:24px; margin-bottom:0; font-size:11pt;" id="r_date">Almada, — de — de —</div>
+      <div class="doc-sig" style="margin-top:60pt;">
+        <div class="sig-name">Dr. Márcio Andrio</div>
+        <div class="sig-role">Advogado — OA nº 73083P</div>
+      </div>
+
+    </div>
+
+    <div class="rec-footer">
+      <div>
+        <div class="name">MA Advocacia</div>
+        <div class="role">Av. Dom Afonso Henriques 14 2º Dto<br>2800-009, Almada</div>
+      </div>
+      <div class="contact">
+        www.ma-advocacia.com<br>
+        +351 960 389 573<br>
+        marcio.andrio@ma-advocacia.com
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
