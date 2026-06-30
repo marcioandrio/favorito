@@ -35,8 +35,8 @@ select.fp-input { cursor: pointer; }
 /* ── A4 Page ── */
 #page-scale-wrapper { display: flex; justify-content: center; }
 .page-wrapper { display: flex; justify-content: center; }
-.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
-.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
+.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; border-left: 10px solid #4a1628; }
+.bar { display: none; }
 .page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
 
 /* ── Header ── */
@@ -100,8 +100,9 @@ select.fp-input { cursor: pointer; }
   .toolbar, .form-panel, .output-panel { display: none; }
   /* Página única */
   #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
+  #page-scale-wrapper .page { box-shadow: none; margin: 0; width: 210mm; min-height: 295mm; transform: none !important; }
   /* Multi-página */
   .page-wrapper { display: block; margin: 0; padding: 0; width: 208mm; height: 295mm; overflow: hidden; }
-  .page { box-shadow: none; margin: 0; padding: 0; width: 208mm; height: 295mm; min-height: unset; transform: none !important; }
+  .page-wrapper .page { box-shadow: none; margin: 0; padding: 0; width: 208mm; height: 295mm; min-height: unset; transform: none !important; }
   @page { size: A4 portrait; margin: 0; }
 }
