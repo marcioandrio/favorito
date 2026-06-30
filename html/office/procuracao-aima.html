@@ -6,83 +6,10 @@
 <title>Procuração AIMA — MA Advocacia</title>
 <link rel="icon" href="../../img/icone/ma.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="office.css">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #d0cfc9; font-family: 'Lora', serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 60px; }
-
-/* ── Toolbar ── */
-.toolbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: center; gap: 12px; padding: 12px; background: #1c1c1c; width: 100%; box-shadow: 0 2px 10px rgba(0,0,0,.3); }
-.toolbar button { font-family: 'Lora', serif; font-size: 13px; letter-spacing: .06em; background: #c9a85c; color: #1a0e00; border: none; padding: 9px 22px; border-radius: 2px; cursor: pointer; font-weight: 700; }
-.toolbar a { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; text-decoration: none; }
-.toolbar span { color: #bdb08a; font-size: 12px; align-self: center; font-family: monospace; }
-
-/* ── Form panel ── */
-.form-panel { width: 208mm; max-width: 100%; background: #2a2a2a; padding: 16px 20px; margin-top: 18px; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-.fp-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; font-family: monospace; }
-.fp-input { width: 100%; background: #1c1c1c; border: 1px solid #444; border-radius: 3px; padding: 7px 10px; color: #e0d8c8; font-size: 12px; font-family: 'Lora', serif; outline: none; transition: border-color .15s; }
-.fp-input:focus { border-color: #c9a85c; }
-.fp-input::placeholder { color: #555; }
-select.fp-input { cursor: pointer; }
-.full { grid-column: 1 / -1; }
-
-/* ── A4 Page ── */
-#page-scale-wrapper { display: flex; justify-content: center; }
-.page { width: 208mm; min-height: 295mm; background: #fff; display: flex; flex-direction: row; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-top: 18px; }
-.bar { width: 10px; min-height: 100%; background: #4a1628; flex-shrink: 0; }
-.page-content { flex: 1; padding: 14mm 16mm 10mm 14mm; display: flex; flex-direction: column; }
-
-/* ── Header ── */
-.rec-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1.5px solid #4a1628; margin-bottom: 20px; }
-.rec-header-left .title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #1a0e00; letter-spacing: .1em; line-height: 1.2; }
-.rec-header-left .subtitle { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #6b5a3a; margin-top: 3px; font-family: 'Lora', serif; }
-.logo-box { flex-shrink: 0; margin-left: 16px; }
-.logo-box img { height: 56px; width: auto; object-fit: contain; display: block; }
-
-/* ── Body ── */
-.doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
-.doc-title { font-family: 'Playfair Display', serif; font-weight: 800; font-size: 15pt; letter-spacing: .15em; color: #4a1628; text-align: center; margin-bottom: 20px; }
-.doc-para { text-align: justify; line-height: 1.65; margin-bottom: 14px; }
-.doc-date { text-align: right; margin-top: 28px; margin-bottom: 6px; font-size: 11pt; }
-.sig-line { margin-top: 50pt; border-top: 1px solid #1a0e00; width: 220px; margin-left: auto; margin-right: auto; }
-.sig-name { text-align: center; font-weight: 700; font-size: 11pt; margin-top: 6px; }
-
-/* ── Footer ── */
-.rec-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: 8px; border-top: 1px solid #c9a85c; }
-.rec-footer .name { font-family: 'Playfair Display', serif; font-size: 10pt; font-weight: 700; color: #1a0e00; }
-.rec-footer .role { font-size: 7pt; letter-spacing: .05em; color: #6b5a3a; margin-top: 2px; }
-.rec-footer .contact { text-align: right; font-size: 7.5pt; color: #4a3a20; line-height: 1.7; }
-
-/* ── Mobile ── */
-@media (max-width: 800px) {
-  body { align-items: flex-start; }
-  .toolbar { position: relative; }
-  .form-panel { width: 100%; border-radius: 0; margin-top: 0; grid-template-columns: 1fr; }
-  #page-scale-wrapper { width: 100vw; overflow: hidden; margin-top: 12px; }
-  .page { margin-top: 0; transform-origin: top center; }
-}
-
-/* ── Upload zone ── */
-.upload-zone { grid-column: 1 / -1; border: 1.5px dashed #c9a85c; border-radius: 4px; padding: 10px 14px; text-align: center; cursor: pointer; color: #c9a85c; font-size: 12px; letter-spacing: .04em; font-family: monospace; transition: background .15s; }
-.upload-zone:hover { background: rgba(201,168,92,.08); }
-.upload-zone.ok  { border-color: #6dbd7a; color: #6dbd7a; }
-.upload-zone.err { border-color: #e06c75; color: #e06c75; }
-
-/* ── Output box ── */
-.output-panel { width: 208mm; max-width: 100%; background: #1a1a2e; border-radius: 4px; margin-top: 12px; padding: 14px 18px; }
-.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.output-label { font-size: 9.5px; color: #c9a85c; text-transform: uppercase; letter-spacing: .08em; font-family: monospace; }
-.output-copy { background: #c9a85c; color: #1a0e00; border: none; border-radius: 3px; padding: 5px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Lora', serif; }
-.output-copy:active { opacity: .75; }
-.output-text { width: 100%; background: #0d0d1a; border: 1px solid #333; border-radius: 3px; padding: 12px 14px; color: #d4c8a8; font-family: 'Lora', serif; font-size: 12px; line-height: 1.75; resize: vertical; min-height: 160px; outline: none; }
-
-/* ── Print ── */
-@media print {
-  body { background: #fff; padding: 0; }
-  .toolbar, .form-panel, .output-panel { display: none; }
-  #page-scale-wrapper { margin: 0; width: auto; overflow: visible; }
-  .page { box-shadow: none; margin: 0; width: 208mm; min-height: 295mm; transform: none !important; }
-  @page { size: A4 portrait; margin: 0; }
-}
+  .doc-date { margin-top: 28px; margin-bottom: 6px; }
+  .sig-line { margin-top: 50pt; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
