@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procuração NIF — MA Advocacia</title>
+<link rel="icon" href="../../img/icone/ma.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="helen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const today = new Date();
+const DIA = String(today.getDate());
+const MES = MESES[today.getMonth()];
+const ANO = String(today.getFullYear());
+
+const PODERES = `OUTORGA PODERES PARA REPRESENTÁ-LO junto a: AUTORIDADE TRIBUTÁRIA E ADUANEIRA/FINANÇAS, para todos os atos de direito tais como: ATRIBUIÇÃO DO NIF, alteração de representante fiscal, alteração de morada, obtenção de senha provisória no balcão de serviços das Finanças, e na prática de Abertura de Atividades e/ou Encerramento/Cessão, nos termos do artigo 30o, e seguintes do Código de Imposto sobre o Valor Acrescentado CIVA, IRS, COIMAS, EXECUÇÃO FISCAL, PODENDO REQUERER TODOS OS DOCUMENTOS NECESSÁRIOS PARA OS FINS ACIMA IDENTIFICADOS, conferindo-lhe, ainda, poderes para, em seu nome e representação pedir a Abertura de Atividades do Trabalhador Independente.`;
+
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+function el(id){ return document.getElementById(id); }
+
+function update(){
+  const nome            = v('f_nome')            || '[NOME COMPLETO]';
+  const nacionalidade   = v('f_nacionalidade')   || '[NACIONALIDADE]';
+  const sexo            = v('f_sexo')            || '[FEMININO/MASCULINO]';
+  const nascimento      = v('f_nascimento')      || '[DATA DE NASCIMENTO]';
+  const bi              = v('f_bi')              || 'Passaporte';
+  const binumero        = v('f_binumero')        || '[NÚMERO]';
+  const paisEmissao     = v('f_pais_emissao')    || 'República do Brasil';
+  const emissao         = v('f_emissao')         || '[DATA DE EMISSÃO]';
+  const validade        = v('f_validade')        || '[VALIDADE]';
+  const local_nasc      = v('f_local_nasc')      || '[LOCAL DE NASCIMENTO]';
+  const morada          = v('f_morada')          || '[MORADA]';
+  const nif             = v('f_nif');
+  const procurador      = v('f_procurador')      || '[PROCURADOR]';
+  const cidade          = v('f_cidade')          || 'Porto';
+  const executado       = v('f_executado')       || '[DATA]';
+  const registado       = v('f_registado')       || '[DATA]';
+  const numero          = v('f_numero')          || '[Nº]';
+  const codigo          = v('f_codigo')          || '[CÓDIGO]';
+
+  const nomeUp = nome.toUpperCase();
+  const passUp = binumero.toUpperCase();
+  const nifTrecho = nif ? `, portador(a) do Número de Identificação Fiscal (NIF): ${nif}` : '';
+
+  // Mostrar/ocultar campo NIF
+  el('nif-wrapper').style.display = el('f_tem_nif').value === 'sim' ? '' : 'none';
+
+  // Página certificação
+  
+
+
+  
+  // Página procuração
+  el('r_nome').textContent          = nomeUp;
+  el('r_nacionalidade').textContent = nacionalidade;
+  el('r_sexo').textContent          = sexo;
+  el('r_nascimento').textContent    = nascimento;
+  el('r_binumero').textContent      = passUp;
+  el('r_pais_emissao').textContent  = paisEmissao;
+  el('r_emissao').textContent       = emissao;
+  el('r_validade').textContent      = validade;
+  el('r_local_nasc').textContent    = local_nasc;
+  el('r_morada').textContent        = morada;
+  el('r_nif').style.display         = nif ? '' : 'none';
+  if(nif) el('r_nif_num').textContent = nif;
+  el('r_procurador').textContent    = procurador;
+  el('r_nome_sig').textContent      = nomeUp;
+  el('r_date').textContent          = `${cidade}, ${DIA} de ${MES} de ${ANO}`;
+
+
+
+
+  // Output 1 — Autenticação
+  el('output-autenticacao').value =
+`Autêntico e certifico como original a folha da procuração junto a assinatura nela oposta por, ${nomeUp}, ${nacionalidade}, com número de passaporte: ${passUp}, emitido no ${paisEmissao}, válido até ${validade}, nascido em: ${nascimento}${nifTrecho}, residente em ${morada}, em o qual assinou e nomeou como seu Procurador (Outorgado): ${procurador}. O mandante(a) identificado acima identificado, declara que, por sua livre e espontânea vontade, nos termos do artigo 19°, 6 da Lei Geral Tributária, com expressa exclusão da gestão de bens, ${PODERES}`;
+
+  // Output 2 — Certificação
+  el('output-certificacao').value =
+`Certifico que a cópia do passaporte e Comprovativo de Morada de ${nomeUp}, ${nacionalidade}, com número do passaporte: ${passUp} emitido em: ${paisEmissao}, data da emissão: ${emissao}, válido até ${validade}, nascido em: ${nascimento}, foi extraído do documento original.`;
+}
+
+function copiar(id, btnId){
+  const ta = el(id);
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(()=>{
+    const btn = el(btnId);
+    btn.textContent = '✓ Copiado!';
+    setTimeout(()=>{ btn.textContent = 'Copiar'; }, 2000);
+  });
+}
+
+async function parseMD(file){
+  const zone = document.getElementById('upload-zone-md');
+  zone.innerHTML = '⏳ A ler ficheiro… <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">';
+  try {
+    const txt = await file.text();
+
+    const campo = (label) => {
+      const m = txt.match(new RegExp(`\\*\\*${label}\\*\\*\\s*\\|\\s*([^\\|\\n]+)`, 'i'));
+      return m ? m[1].trim() : null;
+    };
+
+    const nome      = campo('Nome completo');
+    const nac       = campo('Nacionalidade');
+    const sexo      = campo('Sexo');
+    const nasc      = campo('Data de nascimento');
+    const localNasc = campo('Local de nascimento') || campo('Naturalidade');
+    const passNum   = campo('Nº Passaporte');
+
+    // Morada: prioridade Portugal, fallback outros campos, ignora "não encontrada"
+    const isValida = (v) => v && !/n[ãa]o encontrad|N\/A/i.test(v);
+    const moradaPT  = campo('Morada \\(Portugal\\)') || campo('Morada Portugal') || campo('Morada');
+    const morada    = isValida(moradaPT) ? moradaPT : null;
+    const emissao   = campo('Data de emissão');
+    const validade  = campo('Data de validade') || campo('Válido até');
+
+    if(nome)      el('f_nome').value          = nome;
+    if(nac)       el('f_nacionalidade').value = nac;
+    if(sexo)      el('f_sexo').value          = /masculino/i.test(sexo) ? 'Masculino' : 'Feminino';
+    if(nasc)      el('f_nascimento').value    = nasc.match(/[0-9\/]+/)?.[0] || nasc;
+    if(localNasc) el('f_local_nasc').value    = localNasc;
+    if(morada)    el('f_morada').value        = morada;
+    if(passNum)   el('f_binumero').value      = passNum;
+    if(emissao)   el('f_emissao').value       = emissao.match(/[0-9\/]+/)?.[0] || emissao;
+    if(validade)  el('f_validade').value      = validade.match(/[0-9\/]+/)?.[0] || validade;
+
+    update();
+    const nomeExibir = v('f_nome') || 'cliente';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ MD lido — ${nomeExibir} <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">`;
+  } catch(e){
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Erro ao ler ficheiro — preencha manualmente <input type="file" id="md-file" accept=".md,.txt" style="display:none" onchange="parseMD(this.files[0])">';
+    console.error(e);
+  }
+}
+
+async function parsePDF(file){
+  const zone = el('upload-zone');
+  zone.className = 'upload-zone full';
+  zone.innerHTML = '⏳ A ler PDF… <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+    let txt = '';
+    for(let i = 1; i <= pdf.numPages; i++){
+      const pg = await pdf.getPage(i);
+      const content = await pg.getTextContent();
+      txt += content.items.map(x => x.str).join(' ') + ' ';
+    }
+    txt = txt.replace(/\s+/g,' ').trim();
+    console.log('PDF TEXT:', txt);
+
+    const mNome      = txt.match(/Eu,\s+([A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇa-z\s]+?),\s*de nacionalidade/i);
+    const mNac       = txt.match(/de nacionalidade\s+([^,]+),\s*sexo/i);
+    const mSexo      = txt.match(/sexo:\s*(Feminino|Masculino)/i);
+    const mNasc      = txt.match(/nascido\(a\) em\s+([^,]+),\s*portador/i);
+    const mPass      = txt.match(/(?:passaporte|resid[eê]ncia)\s+n[oº°.º]*\s*([A-Z0-9]+)[,\s]/i);
+    const mEmissao   = txt.match(/data da emiss[aã]o:\s*([^,]+),\s*v[aá]lido/i);
+    const mValidade  = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*natural/i);
+    const mPaisEm    = txt.match(/emitido em:\s*([^,]+),\s*data da emiss/i);
+    const mLocalNasc = txt.match(/natural de\s+([^,]+?)(?:\s*,\s*(?:portador|residente))/i);
+    const mNif       = txt.match(/N[uú]mero de Identifica[cç][aã]o Fiscal\s*\(NIF\):\s*([0-9]+)/i);
+    const mMorada    = txt.match(/residente em\s+(.+?),\s*declara/i);
+    const mExecutado = txt.match(/EXECUTADO A:?\s*([0-9]{4}[-\/][0-9]{2}[-\/][0-9]{2}(?:\s+[0-9:]+)?)/i);
+    const mRegistado = txt.match(/REGISTADO A:?\s*([0-9]{4}[-\/][0-9]{2}[-\/][0-9]{2}(?:\s+[0-9:]+)?)/i);
+    const mNumero    = txt.match(/REGISTADO A:.+?COM\s+O\s+N[^:]*:?\s*([^\s]+)/i);
+    const mCodigo    = txt.match(/usando o c[oó]digo\s+([0-9A-Za-z\-]+)/i);
+
+    if(mNome)      el('f_nome').value          = mNome[1].trim();
+    if(mNac)       el('f_nacionalidade').value = mNac[1].trim();
+    if(mSexo){
+      const s = mSexo[1].trim();
+      el('f_sexo').value = /masculino/i.test(s) ? 'Masculino' : 'Feminino';
+    }
+    if(mNasc)      el('f_nascimento').value    = mNasc[1].trim();
+    if(mPass)      el('f_binumero').value      = mPass[1].trim();
+    if(mEmissao)   el('f_emissao').value       = mEmissao[1].trim();
+    if(mValidade)  el('f_validade').value      = mValidade[1].trim();
+    if(mPaisEm)    el('f_pais_emissao').value   = mPaisEm[1].trim();
+    if(mLocalNasc) el('f_local_nasc').value    = mLocalNasc[1].trim();
+    if(mNif){
+      el('f_tem_nif').value = 'sim';
+      el('f_nif').value     = mNif[1].trim();
+    }
+    if(mMorada)    el('f_morada').value        = mMorada[1].trim();
+
+    if(/DAIANA/i.test(txt)) {
+      procuradorLabel = 'Daiana';
+      el('f_sel_procurador').value = 'daiana';
+      el('f_procurador').value = PROCURADORES.daiana;
+    } else if(/ELISANGELA/i.test(txt)) {
+      procuradorLabel = 'Elisangela';
+      el('f_sel_procurador').value = 'elisangela';
+      el('f_procurador').value = PROCURADORES.elisangela;
+    }
+
+    update();
+    const nome = v('f_nome') || 'cliente';
+    zone.className = 'upload-zone full ok';
+    zone.innerHTML = `✅ PDF lido — ${nome} <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">`;
+  } catch(e){
+    zone.className = 'upload-zone full err';
+    zone.innerHTML = '❌ Não foi possível ler o PDF — preencha manualmente <input type="file" id="pdf-file" accept=".pdf" style="display:none" onchange="parsePDF(this.files[0])">';
+    console.error(e);
+  }
+}
+
+function scalePage(){
+  document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+    const page = wrapper.querySelector('.page');
+    if(!page) return;
+    const vw = wrapper.offsetWidth, pw = page.offsetWidth;
+    if(vw < pw){
+      const s = vw / pw;
+      page.style.transform = 'scale('+s+')';
+      page.style.marginBottom = '-'+(pw*(1-s))+'px';
+      wrapper.style.height = (page.offsetHeight*s)+'px';
+    } else { page.style.transform=''; page.style.marginBottom=''; wrapper.style.height=''; }
+  });
+}
+
+let procuradorLabel = '';
+
+const PROCURADORES = {
+  daiana: `DAIANA CHAVES VIANA LOPES, brasileira, casada, portadora do titulo de Residência número: 45H22S686, portadora do NIF número: 324203500, residente na Rua Da Igreja, 20, Ribeira de Cima, 4870-154, Ribeira de Pena; HIGO AUGUSTO LOPES DOS SANTOS, brasileiro, casado, portador do título de residência 8649V5F14, portador do NIF numero: 324193882, residente na Rua Da Igreja, 20, Ribeira de Cima, 4870-154, Ribeira de Pena`,
+  elisangela: `ELISANGELA ARAUJO DOS SANTOS, brasileira, nascida no Brasil, residente em Portugal, portadora do passaporte n.º GE126422, titular do NIF n.º 315232552, portadora do título de residência n.º 7J3689J14, residente Rua de são Bento, nº93 - 1 SL 3, 4780-546, Santo Tirso`
+};
+
+function escolherProcurador(val){
+  if(!val) return;
+  el('f_procurador').value = PROCURADORES[val];
+  procuradorLabel = val === 'daiana' ? 'Daiana' : 'Elisangela';
+  update();
+}
+
+const TAB_ORDER = ['f_nome','f_nacionalidade','f_sexo','f_nascimento','f_binumero','f_emissao','f_validade','f_local_nasc','f_morada','f_procurador','f_cidade'];
+
+function nextField(cur){
+  const idx = TAB_ORDER.indexOf(cur.id);
+  if(idx < TAB_ORDER.length-1) document.getElementById(TAB_ORDER[idx+1]).focus();
+}
+
+function titleCase(word){
+  if(!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+function nomeAbreviado(nomeCompleto){
+  const prep = new Set(['da','de','do','dos','das','e','von','van']);
+  const words = nomeCompleto.trim().split(/\s+/).filter(Boolean);
+  if(words.length === 0) return nomeCompleto;
+  if(words.length === 1) return titleCase(words[0]);
+  const first = titleCase(words[0]);
+  const last  = titleCase(words[words.length - 1]);
+  if(words.length >= 3){
+    const before = words[words.length - 2].toLowerCase();
+    if(prep.has(before)) return `${first} ${before} ${last}`;
+  }
+  return `${first} ${last}`;
+}
+
+function imprimir(){
+  const nome = v('f_nome') || 'Procuração NIF';
+  const sufixo = procuradorLabel ? ` - ${procuradorLabel}` : '';
+  document.title = `00. Procuração NIF - ${nomeAbreviado(nome)}${sufixo}`;
+  window.print();
+  setTimeout(()=>{ document.title = 'Procuração NIF — MA Advocacia'; }, 2000);
+}
+
+
+
+// Definir Elisangela como padrão automaticamente
+window.addEventListener('DOMContentLoaded', () => {
+    const select = document.getElementById('f_sel_procurador');
+    select.value = 'elisangela';
+    escolherProcurador('elisangela');   // Preenche automaticamente
+    update();
+});
+
+
+
+
+window.addEventListener('DOMContentLoaded', ()=>{ update(); scalePage(); });
+window.addEventListener('resize', scalePage);
+</script>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="imprimir()">🖨 Imprimir / PDF</button>
+  <a href="../../index.html">← Voltar</a>
+  <span>Procuração NIF — MA Advocacia</span>
+</div>
+
+<!-- Formulário -->
+<div class="form-panel">
+
+  <div class="upload-zone full" id="upload-zone-md"
+       onclick="document.getElementById('md-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parseMD(event.dataTransfer.files[0])">
+    📝 Arraste o ficheiro .md aqui — preenche nome, nacionalidade, sexo, nascimento e morada
+    <input type="file" id="md-file" accept=".md,.txt" style="display:none"
+           onchange="parseMD(this.files[0])">
+  </div>
+
+  <div class="upload-zone full" id="upload-zone"
+       onclick="document.getElementById('pdf-file').click()"
+       ondragover="event.preventDefault();this.style.background='rgba(201,168,92,.15)'"
+       ondragleave="this.style.background=''"
+       ondrop="event.preventDefault();this.style.background='';parsePDF(event.dataTransfer.files[0])">
+    📄 Arraste um PDF aqui ou clique para selecionar — preenche passaporte, emissão e validade
+    <input type="file" id="pdf-file" accept=".pdf" style="display:none"
+           onchange="parsePDF(this.files[0])">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Nome completo</div>
+    <input id="f_nome" class="fp-input" type="text" placeholder="ex: Esse é Só da ELIZANGELA"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Nacionalidade</div>
+    <input id="f_nacionalidade" class="fp-input" type="text" placeholder="ex: brasileira"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Sexo</div>
+    <select id="f_sexo" class="fp-input" onchange="update()">
+      <option value="Feminino">Feminino</option>
+      <option value="Masculino">Masculino</option>
+    </select>
+  </div>
+
+  <div>
+    <div class="fp-label">Data de Nascimento</div>
+    <input id="f_nascimento" class="fp-input" type="text" placeholder="ex: 01/01/1990"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Número do Passaporte</div>
+    <input id="f_binumero" class="fp-input" type="text" placeholder="ex: AB123456"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">País de Emissão</div>
+    <input id="f_pais_emissao" class="fp-input" type="text" placeholder="ex: República do Brasil"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Data de Emissão</div>
+    <input id="f_emissao" class="fp-input" type="text" placeholder="ex: 01/01/2020"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Válido até</div>
+    <input id="f_validade" class="fp-input" type="text" placeholder="ex: 31/12/2030"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Natural de (local de nascimento)</div>
+    <input id="f_local_nasc" class="fp-input" type="text" placeholder="ex: São Paulo"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div class="full">
+    <div class="fp-label">Morada</div>
+    <input id="f_morada" class="fp-input" type="text" placeholder="ex: Avenida do Teste, 12 3º Dto, 2812-953, Lisboa"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Tem NIF?</div>
+    <select id="f_tem_nif" class="fp-input" onchange="update()">
+      <option value="nao">Não tem</option>
+      <option value="sim">Sim, tem NIF</option>
+    </select>
+  </div>
+
+  <div id="nif-wrapper" style="display:none">
+    <div class="fp-label">Número do NIF</div>
+    <input id="f_nif" class="fp-input" type="text" placeholder="ex: 123456789"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+<!--
+
+  <div class="full">
+    <div class="fp-label">Procurador — escolher</div>
+    <select id="f_sel_procurador" class="fp-input" onchange="escolherProcurador(this.value)">
+      <option value="">— selecionar —</option>
+      <option value="elisangela">Elisangela &amp; grupo</option>      
+
+    </select>
+  </div>
+-->
+<div class="full">
+    <div class="fp-label">Procurador — escolher</div>
+    <select id="f_sel_procurador" class="fp-input" onchange="escolherProcurador(this.value)">
+      <option value="">— selecionar —</option>
+      <option value="elisangela" selected>Elisangela &amp; grupo</option>
+      <!-- Se quiser manter a opção da Daiana, pode deixar assim: -->
+      <!-- <option value="daiana">Daiana &amp; Higo</option> -->
+    </select>
+  </div>
+
+
+
+  <div class="full">
+    <div class="fp-label">Procurador (texto completo)</div>
+    <textarea id="f_procurador" class="fp-input" rows="3" placeholder="Texto do procurador"
+      oninput="update()"></textarea>
+  </div>
+
+  <div>
+    <div class="fp-label">Cidade (na data)</div>
+    <input id="f_cidade" class="fp-input" type="text" placeholder="ex: Porto" value="Porto"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+  <div>
+    <div class="fp-label">Tipo de documento (bi)</div>
+    <select id="f_bi" class="fp-input" onchange="update()">
+      <option value="Passaporte">Passaporte</option>
+      <option value="Título de Residência">Título de Residência</option>
+    </select>
+  </div>
+
+  <div class="full" style="border-top:1px solid #3a3a3a; padding-top:8px; margin-top:4px;">
+    <div style="color:#c9a85c; font-family:'Playfair Display',serif; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;">Certificação de Documento</div>
+  </div>
+
+
+  <div>
+    <div class="fp-label">Executado a</div>
+    <input id="f_executado" class="fp-input" type="text" placeholder="ex: 29/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Registado a</div>
+    <input id="f_registado" class="fp-input" type="text" placeholder="ex: 29/06/2026"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div>
+    <div class="fp-label">Com o Nº</div>
+    <input id="f_numero" class="fp-input" type="text" placeholder="ex: 2026/001"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+  <div class="fp-label">
+    <div class="fp-label">Código de consulta</div>
+    <input id="f_codigo" class="fp-input" type="text" placeholder="ex: ABC123"
+      oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
+  </div>
+
+</div>
+
+
+<!-- Output 1 — Autenticação -->
+<div class="output-panel">
+  <div class="output-header">
+    <span class="output-label">📋 Texto para copiar — Autenticação</span>
+    <button class="output-copy" id="btn-copy-1" onclick="copiar('output-autenticacao','btn-copy-1')">Copiar</button>
+  </div>
+  <textarea class="output-text" id="output-autenticacao" readonly></textarea>
+</div>
+
+<!-- Output 2 — Certificação -->
+<div class="output-panel">
+  <div class="output-header">
+    <span class="output-label">📋 Texto para copiar — Certificação</span>
+    <button class="output-copy" id="btn-copy-2" onclick="copiar('output-certificacao','btn-copy-2')">Copiar</button>
+  </div>
+  <textarea class="output-text" id="output-certificacao" readonly style="min-height:90px;"></textarea>
+</div>
+
+
+<!-- Página 2 — Procuração -->
+<div class="page-wrapper">
+<div class="page">
+  <div class="page-content">
+
+    <div class="doc-body">
+
+      <div style="height:60pt"></div>
+      <div class="doc-title">PROCURAÇÃO</div>
+
+      <div class="doc-intro">
+        Eu, <strong><span id="r_nome">[NOME COMPLETO]</span></strong>, de nacionalidade <span id="r_nacionalidade">[NACIONALIDADE]</span>, sexo: <span id="r_sexo">[FEMININO/MASCULINO]</span>, nascido(a) em <strong><span id="r_nascimento">[DATA DE NASCIMENTO]</span></strong>, portador(a) do passaporte nº <strong><span id="r_binumero">[PASSAPORTE]</span></strong>, emitido em: <span id="r_pais_emissao">República do Brasil</span>, data da emissão: <span id="r_emissao">[DATA DE EMISSÃO]</span>, válido até <strong><span id="r_validade">[VALIDADE]</span></strong>, natural de <span id="r_local_nasc">[LOCAL DE NASCIMENTO]</span><span id="r_nif" style="display:none">, portador(a) do Número de Identificação Fiscal (NIF): <span id="r_nif_num"></span></span>, residente em <span id="r_morada">[MORADA]</span>, declara que, por sua livre e espontânea vontade, nomeia e constitui como seus procuradores:
+      </div>
+
+      <div class="doc-procurador">
+        <span id="r_procurador">[PROCURADOR]</span>.
+      </div>
+
+      <div class="doc-poderes">
+        O mandante(a) identificado acima identificado, declara que, por sua livre e espontânea vontade, nos termos do artigo 19°, 6 da Lei Geral Tributária, com expressa exclusão da gestão de bens, <strong>OUTORGA PODERES PARA REPRESENTÁ-LO</strong> junto a: <strong>AUTORIDADE TRIBUTÁRIA E ADUANEIRA/FINANÇAS</strong>, para todos os atos de direito tais como: <strong>ATRIBUIÇÃO DO NIF</strong>, alteração de representante fiscal, alteração de morada, obtenção de senha provisória no balcão de serviços das Finanças, e na prática de Abertura de Atividades e/ou Encerramento/Cessão, nos termos do artigo 30o, e seguintes do Código de Imposto sobre o Valor Acrescentado CIVA, IRS, COIMAS, EXECUÇÃO FISCAL, <strong>PODENDO REQUERER TODOS OS DOCUMENTOS NECESSÁRIOS PARA OS FINS ACIMA IDENTIFICADOS</strong>, conferindo-lhe, ainda, poderes para, em seu nome e representação pedir a Abertura de Atividades do Trabalhador Independente.
+      </div>
+
+      <div class="doc-date" id="r_date">Porto, — de — de —</div>
+
+      <div class="sig-line"></div>
+      <div class="sig-name" id="r_nome_sig">[NOME COMPLETO]</div>
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>
