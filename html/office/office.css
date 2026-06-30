@@ -54,7 +54,8 @@ select.fp-input { cursor: pointer; }
 
 /* ── Corpo documento ── */
 .doc-body { flex: 1; font-family: 'Lora', serif; font-size: 11pt; color: #1a0e00; }
-.doc-intro { text-align: justify; line-height: 1.5; margin-bottom: 10px; }
+/* - troquei o valor do espaço de 1.5 para 1.0 - */
+.doc-intro { text-align: justify; line-height: 1.0; margin-bottom: 10px; }
 .doc-section { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13pt; letter-spacing: .1em; color: #4a1628; text-align: center; margin: 8px 0 6px; }
 .doc-item { display: flex; gap: 10px; text-align: justify; line-height: 1.5; margin-bottom: 6px; }
 .doc-item .ltr { min-width: 40px; font-weight: 700; flex-shrink: 0; }
