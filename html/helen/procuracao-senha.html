@@ -189,9 +189,13 @@ async function parsePDF(file){
     const mPaisEm    = txt.match(/emitido em:\s*([^,]+),\s*data da emiss/i);
     const mEmissao   = txt.match(/data da emiss[aã]o:\s*([^,]+),\s*v[aá]lido/i);
     const mValidade  = txt.match(/v[aá]lido at[eé]\s+([^,]+),\s*natural/i);
-    const mLocalNasc = txt.match(/natural de\s+([^,]+?)(?:,\s*portador|\s*,\s*residente)/i);
+    const mLocalNasc = txt.match(/natural de\s+([^,]+?)(?:\s*,\s*(?:portador|residente))/i);
     const mNif       = txt.match(/N[uú]mero de Identifica[cç][aã]o Fiscal\s*\(NIF\):\s*([0-9]+)/i);
     const mMorada    = txt.match(/residente em\s+(.+?),\s*declara/i);
+    const mExecutado = txt.match(/EXECUTADO A:?\s*([0-9]{4}[-\/][0-9]{2}[-\/][0-9]{2}(?:\s+[0-9:]+)?)/i);
+    const mRegistado = txt.match(/REGISTADO A:?\s*([0-9]{4}[-\/][0-9]{2}[-\/][0-9]{2}(?:\s+[0-9:]+)?)/i);
+    const mNumero    = txt.match(/REGISTADO A:.+?COM\s+O\s+N[^:]*:?\s*([^\s]+)/i);
+    const mCodigo    = txt.match(/usando o c[oó]digo\s+([0-9A-Za-z\-]+)/i);
 
     if(mNome)      el('f_nome').value          = mNome[1].trim();
     if(mNac)       el('f_nacionalidade').value = mNac[1].trim();
@@ -214,6 +218,10 @@ async function parsePDF(file){
       el('f_nif').value     = mNif[1].trim();
     }
     if(mMorada)    el('f_morada').value        = mMorada[1].trim();
+    if(mExecutado) el('f_executado').value     = mExecutado[1].trim();
+    if(mRegistado) el('f_registado').value     = mRegistado[1].trim();
+    if(mNumero)    el('f_numero').value        = mNumero[1].trim();
+    if(mCodigo)    el('f_codigo').value        = mCodigo[1].trim();
 
     if(/DAIANA/i.test(txt)) {
       procuradorLabel = 'Daiana';
@@ -435,9 +443,7 @@ window.addEventListener('resize', scalePage);
       oninput="update()" onkeydown="if(event.key==='Enter'){event.preventDefault();nextField(this)}">
   </div>
 
-  <div class="full" style="border-top:1px solid #3a3a3a; padding-top:8px; margin-top:4px;">
-    <div style="color:#c9a85c; font-family:'Playfair Display',serif; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;">Certificação de Documento</div>
-  </div>
+  <div class="fp-section full">Certificação de Documento</div>
 
   <div>
     <div class="fp-label">Executado a</div>
