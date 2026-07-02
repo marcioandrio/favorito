@@ -95,13 +95,19 @@ async function parsePDF(file){
     const mValidade  = txt.match(/válido até\s+([^\.\n]+)/i);
     const mCodigo    = txt.match(/usando o código\s+([A-Z0-9]+)/i);
 
+    const mExecutado = txt.match(/EXECUTADO\s+A\s*:?\s*([^\[\]\n]+?)\s*(?=\s*REGISTADO|\n)/i);
+    const mRegistado = txt.match(/REGISTADO\s+A\s*:?\s*([^\[\]\n]+?)\s*(?=\s*COM|\n)/i);
+    const mNumero    = txt.match(/REGISTADO\s+A.+?COM\s+O\s+N[^:]*:\s*([^\[\]\s\n,\.]+)/i);
+
     if(mFolhas)    el('f_folhas').value     = mFolhas[1].trim();
     if(mBinumero)  el('f_binumero').value   = mBinumero[1].trim();
     if(mNome)      el('f_nome').value       = mNome[1].trim();
     if(mNasc)      el('f_nascimento').value = mNasc[1].trim();
     if(mValidade)  el('f_validade').value   = mValidade[1].trim().replace(/\.$/, '');
+    if(mExecutado) el('f_executado').value  = mExecutado[1].trim();
+    if(mRegistado) el('f_registado').value  = mRegistado[1].trim();
+    if(mNumero)    el('f_numero').value     = mNumero[1].trim();
     if(mCodigo)    el('f_codigo').value     = mCodigo[1].trim();
-    // executado, registado e numero são sempre preenchidos manualmente
 
     update();
     const nome = v('f_nome') || 'cliente';
